@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Montserrat, Barlow } from "next/font/google";
 import "./globals.css";
+import HeaderMobile from "@/components/HeaderMobile";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -28,6 +29,8 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${barlow.variable} antialiased`}
       >
+        {/* header mobile */}
+        <HeaderMobile/>
         {children}
       </body>
     </html>
