@@ -54,9 +54,12 @@ li {
   fill: var(--color-primary-purple-300);
   filter: drop-shadow(0 0 4px var(--color-primary-purple-200));
 }
+ 
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-heading);
+}
 
 h5 {
-  font-style: var(--font-heading);
   font-size: 18px;
   font-weight: bold;
 }

@@ -1,20 +1,19 @@
-import { Facebook, Youtube } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function Footer() {
   return (
     <footer className="bg-neutral-700 border-t-2 border-solid border-primary-purple-300">
-      <div className="flex flex-col items-center border-solid border-t my-8 border-b border-primary-purple-300">
-        <div className="my-2">
+      <div className="flex flex-col md:flex-row md:justify-around md:items-start items-center border-solid border-t mt-8 mx-4 py- border-b border-primary-purple-300 ">
+        <div className="md:self-center">
           <Link href="/" >
-            <Image src="/images/logo.png" alt="Logo de Zombieland" width={100} height={50}/>
+            <Image src="/images/logo.png" alt="Logo de Zombieland" width={150} height={75}/>
           </Link>
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center md:items-start my-2">
           <h5>Contact</h5>
-          <ul className="text-center">
+          <ul className="text-center md:text-left space-y-2">
             <li>06 66 66 66 66</li>
             <li>contact@zombieLand.fr</li>
             <li>Zombieland Park,<br/>66 rue du Cerveau enragé <br/>42190 Néonville, France</li>
@@ -22,31 +21,35 @@ export default function Footer() {
           </ul>
         </div>
 
-        <div className="flex flex-col items-center">
+        <div className="flex flex-col items-center md:items-start my-2">
           <h5>Informations légales</h5>
-          <ul className="text-center">
+          <ul className="text-center md:text-left space-y-2">
             <li><Link href="/legal-notice">Mentions légales</Link></li>
             <li><Link href="/privacy-policy">Politique de confidentialités</Link></li>
             <li><Link href="/terms-and-conditions">CVG</Link></li>
           </ul>
         </div>
 
-        <div className="flex flex-col items-center">
-          <h5>Rejoigner-nous !</h5>
-          <div className="flex">
+        <div className="flex flex-col items-center mb-4 mt-2">
+          <h5>Rejoignez-nous !</h5>
+          <div className="flex justify-center items-center gap-4 mt-4">
             <Link href={"https://www.youtube.com/"}>
-              <Youtube color={"var(--color-neutral-50)"} size={32}/>
+              <Image src="/images/icons/youtube-circle.png" alt="Logo de Youtube" width={24} height={24}/>
             </Link>
             <Link href={"https://www.facebook.com/?locale=fr_FR"}>
-              <Facebook color={"var(--color-neutral-50)"} size={24}/>
+              <Image src="/images/icons/facebook.png" alt="Logo de Facebook" width={24} height={24}/>
             </Link>
-            <Link href={"https://www.instagram.com/"}>Insta</Link>
-            <Link href={"https://www.tiktok.com/fr/"}>Tiktok</Link>
+            <Link href={"https://www.instagram.com/"}>
+              <Image src="/images/icons/instagram.png" alt="Logo de Instagram" width={24} height={24}/>
+            </Link>
+            <Link href={"https://www.tiktok.com/fr/"}>
+              <Image src="/images/icons/tik-tok.png" alt="Logo de Tik-tok" width={24} height={24}/>
+            </Link>
           </div>
         </div>
       </div>
-      <div>
-        <p>ZombieLand @ 2025. Tous droits réservés.</p>
+      <div className="flex items-center justify-center">
+        <p className="p-4 text-xs">ZombieLand @ 2025. Tous droits réservés.</p>
       </div>
     </footer>
   );
