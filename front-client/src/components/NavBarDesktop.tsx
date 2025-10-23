@@ -28,7 +28,7 @@ export default function NavBarDesktop() {
   ];
 
   return (
-    <nav className="hidden md:block bg-neutral-700 py-4 h-screen w-1/5 fixed top-0 left-0 border-solid border-r border-primary-purple-300">
+    <nav className="hidden md:block bg-neutral-700 py-4 h-screen w-1/5 fixed top-0 left-0 border-solid border-r border-primary-purple-300 drop-shadow-[0_0_4px_var(--color-primary-purple-200)] ">
       <div className="flex flex-col items-center">
         <Link href="/" className="mx-4">
           <Image src="/images/logo.png" alt="Logo de Zombieland" width={200} height={100}/>
