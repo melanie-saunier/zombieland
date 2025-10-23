@@ -54,3 +54,10 @@ li {
   fill: var(--color-primary-purple-300);
   filter: drop-shadow(0 0 4px var(--color-primary-purple-200));
 }
+
+.button_booking {
+  border-radius: 5px;
+  border: 1px solid #71FF69;
+  background: var(--Secondary-300, #4EA11E);
+  box-shadow: 0 0 12px 0 rgba(139, 255, 132, 0.50);
+}
