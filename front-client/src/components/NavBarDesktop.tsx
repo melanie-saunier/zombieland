@@ -28,77 +28,75 @@ export default function NavBarDesktop() {
   ];
 
   return (
-    <nav className="hidden md:block bg-neutral-700 py-4 h-screen w-1/5 fixed top-0 left-0 border-solid border-r border-primary-purple-300 drop-shadow-[0_0_4px_var(--color-primary-purple-200)] ">
-      <div className="flex flex-col items-center">
-        <Link href="/" className="mx-4">
-          <Image src="/images/logo.png" alt="Logo de Zombieland" width={200} height={100}/>
-        </Link>
-        <div className="border-b border-t  border-solid border-primary-purple-300  flex justify-center w-full">
-          <button className="my-4 mx-2 px-2 py-4 flex items-center button_booking text-neutral-50">
-            <Bell size={24} className="mx-2"/>
+    <nav className="hidden md:flex flex-col items-center bg-neutral-700 py-4 h-screen w-1/5 fixed top-0 left-0 border-solid border-r border-primary-purple-300 drop-shadow-[0_0_4px_var(--color-primary-purple-200)] ">
+      <Link href="/" className="mx-4">
+        <Image src="/images/logo.png" alt="Logo de Zombieland" width={200} height={100}/>
+      </Link>
+      <div className="border-b border-t  border-solid border-primary-purple-300  flex justify-center w-full">
+        <button className="my-4 mx-2 px-2 py-4 flex items-center button_booking text-neutral-50">
+          <Bell size={24} className="mx-2"/>
             Réserver maintenant
-          </button>
-        </div>
-        <ul className="text-neutral-50 flex flex-col gap-8 w-full my-8">
-          {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}
-          {navItems.map((item) => {
-            // Toujours afficher
-            if (item.always) return (
-              <li key={item.path}>
-                <Link
-                  href={item.path}
-                  className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
-                  
-                >
-                  <item.Icon
-                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
-                    className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                    size={24}
-                  />
-                  {item.name}
-                </Link>
-              </li>
-            );
-
-            // Afficher si connecté
-            if (isLogged && item.logged) return (
-              <li key={item.path} className="border-b border-t  border-solid border-primary-purple-300 py-4">
-                <Link
-                  href={item.path}
-                  className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
-                
-                >
-                  <item.Icon
-                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
-                    className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                    size={24}
-                  />
-                  {item.name}
-                </Link>
-              </li>
-            );
-
-            // Afficher si pas connecté
-            if (!isLogged && item.onlyLoggedOut) return (
-              <li key={item.path} className="border-b border-t  border-solid border-primary-purple-300 py-4">
-                <Link
-                  href={item.path}
-                  className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
-            
-                >
-                  <item.Icon
-                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
-                    className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                    size={24}
-                  />
-                  {item.name}
-                </Link>
-              </li>
-            );
-
-          })}
-        </ul>
+        </button>
       </div>
+      <ul className="text-neutral-50 flex flex-col gap-8 w-full my-8">
+        {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}
+        {navItems.map((item) => {
+          // Toujours afficher
+          if (item.always) return (
+            <li key={item.path}>
+              <Link
+                href={item.path}
+                className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
+                  
+              >
+                <item.Icon
+                  color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                  className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
+                  size={24}
+                />
+                {item.name}
+              </Link>
+            </li>
+          );
+
+          // Afficher si connecté
+          if (isLogged && item.logged) return (
+            <li key={item.path} className="border-b border-t  border-solid border-primary-purple-300 py-4">
+              <Link
+                href={item.path}
+                className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
+                
+              >
+                <item.Icon
+                  color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                  className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
+                  size={24}
+                />
+                {item.name}
+              </Link>
+            </li>
+          );
+
+          // Afficher si pas connecté
+          if (!isLogged && item.onlyLoggedOut) return (
+            <li key={item.path} className="border-b border-t  border-solid border-primary-purple-300 py-4">
+              <Link
+                href={item.path}
+                className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
+            
+              >
+                <item.Icon
+                  color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                  className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
+                  size={24}
+                />
+                {item.name}
+              </Link>
+            </li>
+          );
+
+        })}
+      </ul>
     </nav>
   );
 }
