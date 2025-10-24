@@ -1,7 +1,13 @@
 import { Router } from "express";
+import { categoryRouter } from "./category-router";
 
+// Création du router de Express
 export const router = Router();
 
+// Test de la route / pour savoir si le serveur fonctionne bien
 router.get("/", (req, res) => {
   res.send("ok");
 });
+
+// Router des categories
+router.use("/categories", categoryRouter);
