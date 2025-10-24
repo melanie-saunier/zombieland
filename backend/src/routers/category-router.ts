@@ -5,24 +5,25 @@ export const categoryRouter = Router();
 
 /**
  * @typedef {object} Activity
- * @property {string} id - activity's id
+ * @property {string} id - activity's unique id (UUID)
  * @property {string} name - activity's name
  * @property {string} description - activity's description
  * @property {number} duration - activity's duration (in min)
- * @property {number} min_height - activity's minimum height (in m)
- * @property {boolean} pregnancy_warning - activity's pregnancy warning
+ * @property {number} min_height - minimum required height for the activity (in m)
+ * @property {boolean} pregnancy_warning - true if there is a pregnancy warning
  * @property {string} image_ref - activity's image reference
- * @property {string} level_id - activity's level if reference
- * @property {string} category_id - activity's category id reference
+ * @property {string} level_id - foreign key referencing the level
+ * @property {string} category_id - foreign key referencing the category
  * @property {string} created_at - activity's creation TS
  * @property {string} updated_at - activity's last update TS
+
 */
 
 /**
  * @typedef {object} Category
- * @property {string} id - category's id
+ * @property {string} id - category's unique id (UUID)
  * @property {string} name - category's name
- * @property {string} color - category's color
+ * @property {string} color - category's color in HEX
  * @property {string} created_at - category's creation TS
  * @property {string} updated_at - category's last update TS
  * @property {Activity[]} activities - list of activities associated with this category
