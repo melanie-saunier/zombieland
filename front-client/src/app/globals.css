@@ -37,7 +37,7 @@
 /* Styles de base */
 body {
   background-color: var(--color-neutral-50);
-  color: var(--color-neutral-700);
+  color: var(--color-neutral-50);
   font-family: var(--font-body);
 }
 
@@ -61,5 +61,14 @@ li {
   background: var(--Secondary-300, #4EA11E);
   box-shadow: 0 0 12px 0 rgba(139, 255, 132, 0.50);
   font-size: 16px;
+}
+ 
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-heading);
+}
 
+h5 {
+  font-size: 18px;
+  font-weight: bold;
+  padding-bottom: 0.8rem;
 }
