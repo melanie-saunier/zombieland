@@ -4,6 +4,7 @@ import "./globals.css";
 import HeaderMobile from "@/components/HeaderMobile";
 import Footer from "@/components/Footer";
 import NavBarMobile from "@/components/NavBarMobile";
+import NavBarDesktop from "@/components/NavBarDesktop";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -33,6 +34,8 @@ export default function RootLayout({
       >
         {/* header mobile */}
         <HeaderMobile/>
+        {/* navbar desktop */}
+        <NavBarDesktop/>
         <main className="grow">
           {children}
         </main>

@@ -31,7 +31,7 @@ export default function HeaderMobile() {
   
   return (
     <>
-      <header className="bg-neutral-700 border-b-2 border-solid border-primary-purple-300 flex justify-between items-center">
+      <header className="md:hidden bg-neutral-700 border-b-2 border-solid border-primary-purple-300 flex justify-between items-center">
         <Link href="/" className="mx-4">
           <Image src="/images/logo.png" alt="Logo de Zombieland" width={100} height={50}/>
         </Link>

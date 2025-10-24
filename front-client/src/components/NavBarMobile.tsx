@@ -25,7 +25,7 @@ export default function NavBarMobile() {
   
   return (
     <>
-      <nav className="fixed bottom-0 left-0 w-full z-50 bg-neutral-700/90 p-2 rounded-t-xl border-t-2 border-solid border-primary-purple-300 drop-shadow-[0_0_4px_var(--color-primary-purple-200)] ">
+      <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-neutral-700/90 p-2 rounded-t-xl border-t-2 border-solid border-primary-purple-300 drop-shadow-[0_0_4px_var(--color-primary-purple-200)] ">
         <ul className="flex justify-between px-4 text-neutral-50">
           {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}
           {navItems.map((item) => {
