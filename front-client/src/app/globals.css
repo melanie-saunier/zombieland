@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+/*  Couleurs globales */
+:root {
+  /* Neutres */
+  --color-neutral-50: #f7f8f9;
+  --color-neutral-700: #121012;
+
+  /* Primaire (violet / rose néon) */
+  --color-primary-purple-200: #fa91e7;
+  --color-primary-purple-300: #f834fd;
+  --color-primary-purple-500: #851175;
+
+  /* Secondaire (vert néon) */
+  --color-secondary-200: #64cc29;
+  --color-secondary-300: #4ea11e;
+  --color-secondary-500: #24520a;
+}
+
+/*  Thème Tailwind (intégré automatiquement) */
+@theme inline {
+  --color-neutral-50: var(--color-neutral-50);
+  --color-neutral-700: var(--color-neutral-700);
+
+  --color-primary-purple-200: var(--color-primary-purple-200);
+  --color-primary-purple-300: var(--color-primary-purple-300);
+  --color-primary-purple-500: var(--color-primary-purple-500);
+
+  --color-secondary-200: var(--color-secondary-200);
+  --color-secondary-300: var(--color-secondary-300);
+  --color-secondary-500: var(--color-secondary-500);
+
+  --font-heading: var(--font-montserrat);
+  --font-body: var(--font-barlow);
+}
+
+/* Styles de base */
+body {
+  background-color: var(--color-neutral-50);
+  color: var(--color-neutral-50);
+  font-family: var(--font-body);
+}
+
+li {
+  font-size: 14px;
+}
+
+.current_page_text {
+  text-shadow: 0 0 4px var(--color-primary-purple-200);;
+}
+
+/* le drop shadow ne fonctionne pas :( */
+.current_page_icon {
+  fill: var(--color-primary-purple-300);
+  filter: drop-shadow(0 0 4px var(--color-primary-purple-200));
+}
+ 
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-heading);
+}
+
+h5 {
+  font-size: 18px;
+  font-weight: bold;
+  padding-bottom: 0.8rem;
+}
