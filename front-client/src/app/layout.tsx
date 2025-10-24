@@ -3,6 +3,7 @@ import { Montserrat, Barlow } from "next/font/google";
 import "./globals.css";
 import HeaderMobile from "@/components/HeaderMobile";
 import Footer from "@/components/Footer";
+import NavBarMobile from "@/components/NavBarMobile";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -35,8 +36,8 @@ export default function RootLayout({
         <main className="grow">
           {children}
         </main>
-
-
+        {/* Barre de navigation mobile en bas d'écran */}
+        <NavBarMobile />
         {/* footer */}
         <Footer />
       </body>
