@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat, Barlow } from "next/font/google";
 import "./globals.css";
 import HeaderMobile from "@/components/HeaderMobile";
+import Footer from "@/components/Footer";
 import NavBarMobile from "@/components/NavBarMobile";
 
 const montserrat = Montserrat({
@@ -28,12 +29,17 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${montserrat.variable} ${barlow.variable} antialiased`}
+        className={`${montserrat.variable} ${barlow.variable} antialiased flex flex-col min-h-screen`}
       >
         {/* header mobile */}
         <HeaderMobile/>
-        {children}
+        <main className="grow">
+          {children}
+        </main>
+        {/* Barre de navigation mobile en bas d'écran */}
         <NavBarMobile />
+        {/* footer */}
+        <Footer />
       </body>
     </html>
   );
