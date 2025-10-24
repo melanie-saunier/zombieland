@@ -9,6 +9,8 @@ export class Activity extends Model {
   declare min_height: number;
   declare pregnancy_warning: boolean;
   declare image_ref: string;
+  declare level_id: string;
+  declare category_id: string;
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
 }
@@ -43,7 +45,15 @@ Activity.init(
       image_ref: {
         type: DataTypes.STRING,
         allowNull: false,
-      }
+      },
+      level_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      category_id: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {
       sequelize,

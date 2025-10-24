@@ -1,43 +1,38 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "./sequelize";
 
-export class Booking extends Model {
+export class BookingPrice extends Model {
   declare id: string;
-  declare visit_date: Date;
-  declare nb_people: number;
-  declare status: boolean;
-  declare user_id: string;
+  declare applied_price: number;
+  declare booking_id: string;
+  declare price_id: string;
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
 }
 
-Booking.init(
+BookingPrice.init(
   {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-    visit_date: {
-      type: DataTypes.DATE,
+    applied_price: {
+      type: DataTypes.FLOAT,
       allowNull: false,
     },
-    nb_people: {
-      type: DataTypes.INTEGER,
+    booking_id: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
-    status: {
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    user_id: {
+    price_id: {
       type: DataTypes.STRING,
       allowNull: false,
     }
   },
   {
     sequelize,
-    modelName: "Booking",
-    tableName: "booking",
+    modelName: "BookingPrice",
+    tableName: "booking_price",
   }
 );
