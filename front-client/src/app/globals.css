@@ -72,3 +72,8 @@ h5 {
   font-weight: bold;
   padding-bottom: 0.8rem;
 }
+
+.width-inherit {
+  width: inherit;
+  padding: 1rem;
+}

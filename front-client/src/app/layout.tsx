@@ -36,7 +36,7 @@ export default function RootLayout({
         <HeaderMobile/>
         {/* navbar desktop */}
         <NavBarDesktop/>
-        <main className="grow w-5/6">
+        <main className="grow md:ml-[20%] md:w-[80%]">
           {children}
         </main>
         {/* Barre de navigation mobile en bas d'écran */}
