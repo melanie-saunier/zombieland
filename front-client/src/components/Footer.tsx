@@ -28,9 +28,9 @@ export default function Footer() {
         <div className="flex flex-col items-center md:items-start my-2">
           <h5>Informations légales</h5>
           <ul className="text-center md:text-left space-y-2">
-            <li><Link href="/legal-notice">Mentions légales</Link></li>
-            <li><Link href="/privacy-policy">Politique de confidentialités</Link></li>
-            <li><Link href="/terms-and-conditions">CVG</Link></li>
+            <li className="hover:text-primary-purple-300 transition"><Link href="/legal-notice">Mentions légales</Link></li>
+            <li className="hover:text-primary-purple-300 transition"><Link href="/privacy-policy">Politique de confidentialités</Link></li>
+            <li className="hover:text-primary-purple-300 transition"><Link href="/terms-and-conditions">CVG</Link></li>
           </ul>
         </div>
 

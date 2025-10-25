@@ -61,7 +61,7 @@ export default function Home() {
             priority
             className="object-cover object-[35%_center] scale-110 md:object-center md:scale-100"
           />
-          <div className="absolute m-4 flex flex-col justify-center gap-4 w-full">
+          <div className="absolute m-4 flex flex-col justify-center gap-4 w-full md:w-[60%] md:left-[10%] md:top-1/2 md:-translate-y-1/2">
             <h2 className="text-xl md:text-2xl">PRÉPARE TA VENUE</h2>
             <div className="">
               <div className="flex gap-2 font-bold text-base md:text-lg drop-shadow-lg/60">
