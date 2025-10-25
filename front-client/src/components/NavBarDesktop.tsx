@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import BookingButton from "./Button";
 
 export default function NavBarDesktop() {
   // Varible pour récupérer le chemin de la page actuelle, grâce au hook "usePathname" de React
@@ -29,15 +30,12 @@ export default function NavBarDesktop() {
   ];
 
   return (
-    <nav className="hidden md:flex flex-col items-center bg-neutral-700 py-4 min-h-screen w-1/6 fixed top-0 left-0 border-solid border-r border-primary-purple-300 drop-shadow-[0_0_4px_var(--color-primary-purple-200)] ">
+    <nav className="hidden md:flex flex-col items-center bg-neutral-700 py-4 min-h-screen w-1/5 fixed top-0 left-0 border-solid border-r border-primary-purple-300 drop-shadow-[0_0_4px_var(--color-primary-purple-200)] ">
       <Link href="/" className="mx-4">
-        <Image src="/images/logo.png" alt="Logo de Zombieland" width={200} height={100}/>
+        <Image src="/images/logo.png" alt="Logo de Zombieland" width={200} height={100} className="hover:scale-125 transition-transform duration-200"/>
       </Link>
-      <div className="border-b border-t  border-solid border-primary-purple-300  flex justify-center w-full">
-        <button className="m-4 px-2 py-4 flex items-center button_booking text-neutral-50 w-full justify-center">
-          <Bell size={24} className="mx-2"/>
-            Réserver
-        </button>
+      <div className="border-b border-t border-solid border-primary-purple-300 flex justify-center w-full">
+        <BookingButton text="Réserver" style="button_booking" Icon={Bell}/>
       </div>
       <ul className="text-neutral-50 flex flex-col gap-4 w-full my-4">
         {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}
@@ -47,8 +45,9 @@ export default function NavBarDesktop() {
             <li key={item.path}>
               <Link
                 href={item.path}
-                className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
-                  
+                className={`flex items-center gap-2 px-8 py-2 
+                  ${pathname === item.path ? "current_page_text" : ""} 
+                  hover:scale-110 transition-transform duration-200`}
               >
                 <item.Icon
                   color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
@@ -65,8 +64,9 @@ export default function NavBarDesktop() {
             <li key={item.path} className={`${item.isAction ? "border-b border-t border-solid border-primary-purple-300 py-4" : ""}`}>
               <Link
                 href={item.path}
-                className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
-                
+                className={`flex items-center gap-2 px-8 py-2 
+                  ${pathname === item.path ? "current_page_text" : ""} 
+                  hover:scale-110 transition-transform duration-200`}
               >
                 <item.Icon
                   color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
@@ -83,8 +83,9 @@ export default function NavBarDesktop() {
             <li key={item.path} className={`${item.isAction ? "border-b border-t border-solid border-primary-purple-300 py-4" : ""}`}>
               <Link
                 href={item.path}
-                className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
-            
+                className={`flex items-center gap-2 px-8 py-2 
+                  ${pathname === item.path ? "current_page_text" : ""} 
+                  hover:scale-110 transition-transform duration-200`}
               >
                 <item.Icon
                   color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
