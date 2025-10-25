@@ -4,10 +4,10 @@ import Link from "next/link";
 export default function Footer() {
   return (
     <footer className="bg-neutral-700 border-t-2 border-solid border-primary-purple-300 md:ml-[20%] md:w-[80%] pb-16 md:pb-0">
-      <div className="flex flex-col md:flex-row md:justify-around md:items-start items-center border-solid border-t mt-8 mx-4 py- border-b border-primary-purple-300 ">
+      <div className="flex flex-col md:flex-row md:justify-around md:items-start items-center mt-8 mx-4 py-2 border-solid border-y border-primary-purple-300">
         <div className="md:self-center">
           <Link href="/">
-            <Image src="/images/logo.png" alt="Logo de Zombieland" width={150} height={75} className="w-32 h-auto md:w-48"/>
+            <Image src="/images/logo.png" alt="Logo de Zombieland" width={150} height={75} className="w-32 h-auto md:w-48 hover:scale-125 transition-transform duration-200"/>
           </Link>
         </div>
 
@@ -37,16 +37,16 @@ export default function Footer() {
         <div className="flex flex-col items-center mb-4 mt-2">
           <h5>Rejoignez-nous !</h5>
           <div className="flex justify-center items-center gap-4 mt-4">
-            <a href={"https://www.youtube.com/"}>
+            <a href={"https://www.youtube.com/"} target="_blank" rel="noopener noreferrer" className="hover:scale-115 transition-transform duration-200">
               <Image src="/images/icons/youtube-circle.png" alt="Logo de Youtube" width={24} height={24}/>
             </a>
-            <a href={"https://www.facebook.com/?locale=fr_FR"}>
+            <a href={"https://www.facebook.com/?locale=fr_FR"} target="_blank" rel="noopener noreferrer" className="hover:scale-115 transition-transform duration-200">
               <Image src="/images/icons/facebook.png" alt="Logo de Facebook" width={24} height={24}/>
             </a>
-            <a href={"https://www.instagram.com/"}>
+            <a href={"https://www.instagram.com/"} target="_blank" rel="noopener noreferrer" className="hover:scale-115 transition-transform duration-200">
               <Image src="/images/icons/instagram.png" alt="Logo de Instagram" width={24} height={24}/>
             </a>
-            <a href={"https://www.tiktok.com/fr/"}>
+            <a href={"https://www.tiktok.com/fr/"} target="_blank" rel="noopener noreferrer" className="hover:scale-115 transition-transform duration-200">
               <Image src="/images/icons/tik-tok.png" alt="Logo de Tik-tok" width={24} height={24}/>
             </a>
           </div>

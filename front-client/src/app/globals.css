@@ -57,10 +57,36 @@ li {
 
 .button_booking {
   border-radius: 5px;
-  border: 1px solid #71FF69;
-  background: var(--Secondary-300, #4EA11E);
+  border: 1px solid var(--color-secondary-200);
+  background: var(--color-secondary-300, --color-secondary-500);
   box-shadow: 0 0 12px 0 rgba(139, 255, 132, 0.50);
   font-size: 16px;
+}
+
+.button_activity {
+  border-radius: 5px;
+  border: 1px solid var(--color-primary-purple-200);
+  background: var(--color-primary-purple-300, --color-primary-purple-500);
+  box-shadow: 0 0 12px 0 rgba(180, 130, 255, 0.5);
+  font-size: 16px;
+}
+
+/* Définir l'animation shake */
+@keyframes shake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  15% { transform: translateX(-4px) rotate(-2deg); }
+  30% { transform: translateX(4px) rotate(2deg); }
+  45% { transform: translateX(-3px) rotate(-1.5deg); }
+  60% { transform: translateX(3px) rotate(1.5deg); }
+  75% { transform: translateX(-2px) rotate(-1deg); }
+  90% { transform: translateX(2px) rotate(1deg); }
+}
+
+/* Boutons : même ombre et animation au survol */
+.button_booking:hover,
+.button_activity:hover {
+  animation: shake 0.5s ease-in-out;
+  box-shadow: 0 0 12px 0 rgba(180, 180, 200, 0.5), 0 0 24px 4px rgba(180, 180, 200, 0.3);
 }
  
 h1, h2, h3, h4, h5 {
@@ -75,5 +101,31 @@ h5 {
 
 .width-inherit {
   width: inherit;
-  padding: 1rem;
+}
+
+h1 {
+  color: var(--color-neutral-50);
+  text-shadow:
+    3px 3px 0 var(--color-secondary-300),
+    6px 6px 0 var(--color-secondary-500),
+    0 0 20px var(--color-primary-purple-300),   
+    0 0 40px var(--color-primary-purple-500);   
+  font-style: normal;
+  font-weight: 700;
+  letter-spacing: -1.92px;
+  text-transform: uppercase;
+}
+
+/* Effet de clignotement "néon" pour la page d'accueil */
+@keyframes flicker {
+  0%, 18%, 22%, 25%, 40%, 53%, 57%, 70%, 100% {
+    opacity: 0;
+  }
+  5%, 20%, 24%, 30%, 55%, 60%, 80% {
+    opacity: 1;
+  }
+}
+
+.animate-flicker {
+  animation: flicker 4s infinite ease-in-out;
 }

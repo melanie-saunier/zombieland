@@ -5,6 +5,7 @@ import HeaderMobile from "@/components/HeaderMobile";
 import Footer from "@/components/Footer";
 import NavBarMobile from "@/components/NavBarMobile";
 import NavBarDesktop from "@/components/NavBarDesktop";
+import SocialMediaBarDesktop from "@/components/SocialMediaBarDesktop";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -36,7 +37,9 @@ export default function RootLayout({
         <HeaderMobile/>
         {/* navbar desktop */}
         <NavBarDesktop/>
-        <main className="grow md:ml-[20%] md:w-[80%]">
+        {/* social media bar en haut */}
+        <SocialMediaBarDesktop/>
+        <main className="grow md:ml-[20%] md:w-[80%] mt-15 md:mt-0">
           {children}
         </main>
         {/* Barre de navigation mobile en bas d'écran */}
