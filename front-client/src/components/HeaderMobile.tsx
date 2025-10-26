@@ -44,65 +44,65 @@ export default function HeaderMobile() {
         </button>
       </header>
       <nav className={`${menuOpen ? "bg-neutral-700/85 py-4 flex justify-center fixed z-50 w-full top-16" : "hidden"}`}>
-          <ul className="text-neutral-50 flex flex-col gap-2">
-            {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}
-            {navItems.map((item) => {
-              // Toujours afficher
-              if (item.always) return (
-                <li key={item.path}>
-                  <Link
-                    href={item.path}
-                    className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    <item.Icon
-                      color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
-                      className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                      size={24}
-                    />
-                    {item.name}
-                  </Link>
-                </li>
-              );
+        <ul className="text-neutral-50 flex flex-col gap-2">
+          {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}
+          {navItems.map((item) => {
+            // Toujours afficher
+            if (item.always) return (
+              <li key={item.path}>
+                <Link
+                  href={item.path}
+                  className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <item.Icon
+                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                    className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
+                    size={24}
+                  />
+                  {item.name}
+                </Link>
+              </li>
+            );
 
-              // Afficher si connecté
-              if (isLogged && item.logged) return (
-                <li key={item.path}>
-                  <Link
-                    href={item.path}
-                    className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    <item.Icon
-                      color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
-                      className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                      size={24}
-                    />
-                    {item.name}
-                  </Link>
-                </li>
-              );
+            // Afficher si connecté
+            if (isLogged && item.logged) return (
+              <li key={item.path}>
+                <Link
+                  href={item.path}
+                  className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <item.Icon
+                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                    className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
+                    size={24}
+                  />
+                  {item.name}
+                </Link>
+              </li>
+            );
 
-              // Afficher si pas connecté
-              if (!isLogged && item.onlyLoggedOut) return (
-                <li key={item.path}>
-                  <Link
-                    href={item.path}
-                    className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    <item.Icon
-                      color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
-                      className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                      size={24}
-                    />
-                    {item.name}
-                  </Link>
-                </li>
-              );
+            // Afficher si pas connecté
+            if (!isLogged && item.onlyLoggedOut) return (
+              <li key={item.path}>
+                <Link
+                  href={item.path}
+                  className={ `${pathname === item.path ? "flex current_page_text" : "flex"}`}
+                  onClick={() => setMenuOpen(false)}
+                >
+                  <item.Icon
+                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                    className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
+                    size={24}
+                  />
+                  {item.name}
+                </Link>
+              </li>
+            );
 
-            })}
-          </ul>
+          })}
+        </ul>
       </nav>
     </>
   );
