@@ -11,12 +11,12 @@ export default function LoginPage() {
     inpuRef.current?.focus();
   }, []);
   return(
-    <div className="relative bg-[url('/images/background.png')] bg-no-repeat bg-cover bg-center min-h-[600px] md:min-h-screen p-4 md:p-8">
+    <div className="relative flex flex-col justify-center bg-[url('/images/background.png')] bg-no-repeat bg-cover bg-center min-h-[500px] md:min-h-screen p-4 md:p-8">
       {/* div pour un effet overlay (noir) pour que le text ressorte bien par dessus l'image de background */}
       <div className="absolute inset-0 bg-neutral-700/50"></div>
-      <div className="relative z-10">
-        <h2 className="text-xl md:text-2xl text-center">INSCRIPTION</h2>
-        <form className="flex flex-col items-center gap-4">
+      <div className="relative z-10 ">
+        <h2 className="text-xl md:text-2xl text-center">CONNEXION</h2>
+        <form className="flex flex-col items-center gap-4 pb-2">
           <div className="flex flex-col">
             {/* honeypot pour protéger des attaques de robot: le robot va remplir cet input */}
             {/* on pourra donc rejeter la soumission du form si cet input est complété */}
@@ -44,9 +44,9 @@ export default function LoginPage() {
               className="input_style" 
               required/>
           </div>
-          <Button style="button_booking" text="S'INSCRIRE"/>
+          <Button style="button_booking" text="SE CONNECTER"/>
         </form>
-        <p>Pas encore de compte ? <Link href={"/register"}>Créez un compte ici</Link></p>
+        <p className="text-center drop-shadow-lg">Pas encore de compte ? <Link href={"/register"} className="font-semibold underline hover:text-primary-purple-300 transition">Créer un compte ici</Link></p>
       </div>
     </div>
   );
