@@ -55,7 +55,7 @@ export default function CardActivity({activity} : PropsCardActivity) {
       {/* Contenu texte */}
       <div className="absolute bottom-0 w-full bg-neutral-700/80 flex justify-between items-center px-2 md:py-4 py-2 rounded-xl">
         <div className="flex gap-4 md:gap-8">
-          <h2 className="md:text-xl font-medium">{activity.name}</h2>
+          <h3 className="md:text-xl font-medium">{activity.name}</h3>
           <div className="flex justify-between items-center gap-2">
             {renderSkulls(activity.level.value)}
           </div>
