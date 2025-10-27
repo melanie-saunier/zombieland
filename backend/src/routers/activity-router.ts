@@ -4,15 +4,6 @@ import { activityController } from "../controllers/activities-controller";
 export const activityRouter = Router();
 
 /**
- * @typedef {object} Category
- * @property {string} id - category's unique id (UUID)
- * @property {string} name - category's name
- * @property {string} color - category's color in HEX
- * @property {string} created_at - category's creation TS
- * @property {string} updated_at - category's last update TS
-*/
-
-/**
  * @typedef {object} Level
  * @property {string} id - level's unique id (UUID)
  * @property {string} name - level's name
@@ -44,6 +35,8 @@ export const activityRouter = Router();
  * @tags Activity
  * @summary Returns all activities with their associated categories and levels
  * @return {Activity[]} 200 - Successful response with list of activities
+ * @return {object} 404 - No activities found
+ * @return {object} 500 - Internal server error
  */
 activityRouter.get("/", activityController.getAll);
 
@@ -53,5 +46,18 @@ activityRouter.get("/", activityController.getAll);
  * @summary Returns an activity by its id, including its category and its level
  * @param {string} id.path.required - The ID of the activity
  * @return {Activity} 200 - Successful response with the activity object
+ * @return {object} 404 - No activity found
+ * @return {object} 500 - Internal server error
  */
 activityRouter.get("/:id", activityController.getById);
+
+/**
+ * GET /activities/most-scary
+ * @tags Activity
+ * @summary Returns the most scary activities (level.value = 3) with their associated categories and levels
+ * @param {number} limit.query - Number of activities to return (optional, default is 4)
+ * @return {Activity[]} 200 - Successful response with list of activities
+ * @return {object} 404 - No activities found
+ * @return {object} 500 - Internal server error
+ */
+activityRouter.get("/most-scary", activityController.getRandomedScaryActivities);

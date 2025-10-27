@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { Activity } from "../models/activity";
+import { sequelize, Activity } from "../models/association";
 
 export const activityController = {
   
@@ -9,25 +9,19 @@ export const activityController = {
    * @param res 
    */
   async getAll(req: Request, res: Response) {
-    // On récupère toutes les activitiés avec leurs catégories et leurs levels, dans l'ordre alphabétique des nom des catégories
+    // On récupère toutes les activitiés avec leurs catégories et leurs levels, dans l'ordre alphabétique des nom des activités
     const activities = await Activity.findAll({
       order: [
         ["name", "ASC"]
       ],
       include: [
-        {
-          association: "categories",
-          through: { attributes: [] }
-        },
-        {
-          association: "levels",
-          through: { attributes: [] }
-        },
+        { association: "category" },
+        { association: "level" }
       ]
     });
     
     // Si activities est vide, on retourne une erreur 404 avec un message d'erreur
-    if (!activities) return res.status(404).json({ message:"No activities stored in the database"});
+    if (!activities || activities.length === 0) return res.status(404).json({ message:"No activities stored in the database"});
     
     res.status(200).json(activities);
   },
@@ -44,14 +38,8 @@ export const activityController = {
     // On récupère l'activité correspondante à cet id, avec sa catégorie et son niveau
     const activity = await Activity.findByPk(id, {
       include: [
-        {
-          association: "categories",
-          through: { attributes: [] }
-        },
-        {
-          association: "levels",
-          through: { attributes: [] }
-        },
+        { association: "category" },
+        { association: "level" }
       ]
     });
 
@@ -60,5 +48,37 @@ export const activityController = {
 
     res.status(200).json(activity);
   },
+
+    /**
+   * Returns the four most recent activities with their associated categories and levels
+   * @param req 
+   * @param res 
+   */
+  async getRandomedScaryActivities(req: Request, res: Response) {
+    // Récupération du paramètre 'limit' depuis la query string
+    // Exemple : /activities/most-scary?limit=4
+    const { limit } = req.query;
+
+    // Conversion de 'limit' en nombre entier
+    // Si 'limit' n'est pas fourni ou invalide, on prend 4 par défaut
+    const appliedLimit = parseInt(limit as string, 10) || 4;
+
+    const scaryActivities = await Activity.findAll({
+      include: [
+        { association: "category" },
+        { 
+          association: "level",
+          where: { value: 3 } // filtre pour n'afficher que les activités difficiles
+        }
+      ], 
+      order: sequelize.random(), // mélange aléatoire
+      limit: appliedLimit, // limite du nombre de résultats
+    });
+    
+    // Si activities est vide, on retourne une erreur 404 avec un message d'erreur
+    if (!scaryActivities || scaryActivities.length === 0) return res.status(404).json({ message:"No activities stored in the database"});
+    
+    res.status(200).json(scaryActivities);
+    },
 
 }
