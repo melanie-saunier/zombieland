@@ -74,7 +74,7 @@ export default function VisitorInformationPage() {
         </div>
       </section>
 
-      {/* Section Accès parking - PLEINE LARGEUR AVEC BACKGROUND */}
+      {/* Section Accès parking*/}
       <section 
         className="py-12 w-full relative"
         style={{
@@ -97,7 +97,7 @@ export default function VisitorInformationPage() {
             {/* Infos à gauche */}
             <div className="space-y-5">
               {/* Adresse */}
-              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm">
+              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: '#201041'}}>
                 <h3 className="text-lg font-bold text-primary-purple-300 mb-2 flex items-center gap-2">
                   <MapPin size={20} />
                   Adresse
@@ -110,7 +110,7 @@ export default function VisitorInformationPage() {
               </div>
 
               {/* Parking */}
-              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm">
+              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: '#201041'}}>
                 <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
                   <Car size={20} />
                   Parking
@@ -136,7 +136,7 @@ export default function VisitorInformationPage() {
               </div>
 
               {/* Transports */}
-              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm">
+              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: '#201041'}}>
                 <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
                   <Bus size={20} />
                   Transports en commun
@@ -185,7 +185,7 @@ export default function VisitorInformationPage() {
               </h2>
               <div className="grid gap-4 md:grid-cols-2">
                 {/* Téléphone */}
-                <div className="bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300">
+                <div className="bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: '#201041'}}>
                   <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
                     <Phone size={20} />
                     Téléphone
@@ -205,7 +205,7 @@ export default function VisitorInformationPage() {
                 </div>
 
                 {/* Email */}
-                <div className="bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300">
+                <div className="bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: '#201041'}}>
                   <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
                     <Mail size={20} />
                     Email
