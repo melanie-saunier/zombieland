@@ -6,7 +6,43 @@ export default function legalNoticePage() {
   return (
     <div className="">
       <h1 className="">MENTION LÉGALES</h1>
-      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      <p>Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la confiance en l'économie numérique, il est précisé aux utilisateurs du site Zombieland l'identité des différents intervenants dans le cadre de sa réalisation et de son suivi.</p>
+
+      <h2 className="">Edition du site</h2>
+      <p>Le présent site, accessible à l’URL www.zombieland.fr (le « Site »), est édité par :</p>
+      <p>Emilie Dupont, résidant 10 Bd de Parc, 77700 Coupvray, de nationalité Française (France), né(e) le 05/05/1998,  inscrite au R.C.S. de VERSAILLES sous le numéro RCS VANNES B 514 919 845,</p>
+      <p>Le numéro individuel TVA de l’éditeur est : FR 40 987654321.</p>
+
+      <h2 className="">Hébergement</h2>
+      <p>Le Site est hébergé par la société O Clock, situé 10 r Penthièvre, 75008 Paris, (contact téléphonique ou email : +33189716530).</p>
+
+      <h2 className="">Directeur de publication</h2>
+      <p>Le Directeur de la publication du Site est Emilie Dupont.</p>
+
+      <h2 className="">Nous contacter</h2>
+      <p>Par téléphone : +33189716530
+        Par email : contact@Oclock.io
+        Par courrier : 10 Bd de Parc, 77700 Coupvray</p>
+
+      <h2 className="">Données personnelles</h2>
+      <p>Le traitement de vos données à caractère personnel est régi par notre Charte du respect de la vie privée, disponible depuis la section &quot;Charte de Protection des Données Personnelles&quot;, conformément au Règlement Général sur la Protection des Données 2016/679 du 27 avril 2016 («RGPD»).</p>
+      <p>a désigné un Délégué à la Protection des Données (DPO) auprès de la CNIL (Désignation N° ). Les coordonnées de notre Délégué à la Protection des Données sont les suivantes :</p>
+
+      <p>Nom : Arthur Smith
+        Adresse : 2 rue de l&apos;échappée 75010 PARIS
+        Téléphone : +33610358691
+        Email : asmith@gmail.com</p>
+
+      <p>Génération des mentions légales par Legalstart.</p>
+
+
+
+      
+      
+
+
+
+
     </div>
   );
 }
