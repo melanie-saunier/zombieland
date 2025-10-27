@@ -57,15 +57,15 @@ export default function VisitorInformationPage() {
                 Tarif
               </h2>
               <div className="border-2 border-primary-purple-300 rounded-lg p-8 shadow-[0_0_20px_rgba(248,52,253,0.3)] hover:shadow-[0_0_30px_rgba(248,52,253,0.5)] transition-all duration-300 max-w-lg" style={{backgroundColor: '#201041'}}>
-                <div className="flex items-baseline gap-3 mb-3">
+                <div className="flex items-baseline justify-center gap-3 mb-3">
                   <p className="text-3xl md:text-4xl font-bold text-primary-purple-300">45 €</p>
                   <p className="text-lg text-neutral-50/80">/ personne</p>
                 </div>
-                <p className="text-neutral-50/70 mb-6 leading-relaxed">
+                <p className="text-neutral-50/70 mb-6 leading-relaxed text-center">
                   Billet unique donnant accès à l'ensemble du parc pour la journée. 
                   Toutes les attractions incluses, sensations garanties !
                 </p>
-                <Link href="/booking" className="inline-block">
+                <Link href="/booking" className="flex justify-center">
                   <Button text="Réserver maintenant" style="button_booking" Icon={Bell} />
                 </Link>
               </div>
