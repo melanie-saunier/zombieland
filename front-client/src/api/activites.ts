@@ -9,6 +9,7 @@ export async function fetchAllActivities() {
     return res.data;
   } catch (error) {
     console.error("Erreur lors de la récupération des activitées");
+    // TODO: gérer l'affichage de l'erreur
     return;
   }
 };
