@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Button from "@/components/Button";
 import { Bell, Rocket } from "lucide-react";
+import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "À propos | ZOMBIELAND",
@@ -15,19 +16,19 @@ export default function AboutPage() {
     {
       name: "Dr. Sarah Vex",
       role: "Directrice créative",
-      image: "/images/about/team1.jpg",
+      image: "/images/Portrait-max2.png",
       description: "Visionnaire derrière l'univers immersif de Zombieland, Sarah crée des expériences inoubliables depuis 15 ans."
     },
     {
       name: "Marcus \"Zombie\" Blake",
       role: "Chef des opérations",
-      image: "/images/about/team2.jpg",
+      image: "/images/Portrait-Melanie.png",
       description: "Ancien cascadeur, Marcus garantit que chaque frisson est à la fois spectaculaire et totalement sécurisé."
     },
     {
       name: "Luna Cortez",
       role: "Scénographe en chef",
-      image: "/images/about/team3.jpg",
+      image: "/images/Portrait-Manon.png",
       description: "Architecte des décors et effets spéciaux, Luna transforme chaque recoin du parc en cauchemar vivant."
     },
     {
@@ -59,65 +60,73 @@ export default function AboutPage() {
 
           {/* Grille des 4 membres de l'équipe */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            {teamMembers.map((member, index) => (
               <div
+                key={index}
                 className="flex flex-col items-center text-center bg-[#201041] border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300"
               >
                 <div className="relative w-32 h-32 mb-4 rounded-full overflow-hidden border-2 border-primary-purple-300">
                   <Image 
-                    src="/images/Portrait-max.jpeg"
-                    alt="photo de profil de Max" 
+                    src={member.image || "/images/Portrait-max.jpeg"}
+                    alt={member.name} 
                     fill 
                     className="object-cover" 
                   />
                 </div>
-                <h4 className="text-xl font-semibold mb-2 text-primary-purple-300">Max "La Menace" B.</h4>
-                <p className="text-sm text-neutral-50/80 leading-relaxed">Ancien cascadeur, Max garantit que chaque frisson est à la fois spectaculaire et totalement sécurisé.</p>
+                <h4 className="text-xl font-semibold mb-2 text-primary-purple-300">{member.name}</h4>
+                <p className="text-sm text-neutral-50/80 leading-relaxed">{member.description}</p>
               </div>
-              <div
-                className="flex flex-col items-center text-center bg-[#201041] border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300"
-              >
-                <div className="relative w-32 h-32 mb-4 rounded-full overflow-hidden border-2 border-primary-purple-300">
-                  <Image 
-                    src="/images/Portrait-max.jpeg"
-                    alt="blablalaa" 
-                    fill 
-                    className="object-cover" 
-                  />
-                </div>
-                <h4 className="text-xl font-semibold mb-2 text-primary-purple-300">Manon "La Zombie Queen" T.</h4>
-                <p className="text-sm text-neutral-50/80 leading-relaxed">Visionnaire derrière l'univers immersif de Zombieland, Manon crée des expériences inoubliables depuis 15 ans.</p>
-              </div>
-              <div
-                className="flex flex-col items-center text-center bg-[#201041] border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300"
-              >
-                <div className="relative w-32 h-32 mb-4 rounded-full overflow-hidden border-2 border-primary-purple-300">
-                  <Image 
-                    src="/images/Portrait-max.jpeg"
-                    alt="blablalaa" 
-                    fill 
-                    className="object-cover" 
-                  />
-                </div>
-                <h4 className="text-xl font-semibold mb-2 text-primary-purple-300">Mélanie "La Styliste" S.</h4>
-                <p className="text-sm text-neutral-50/80 leading-relaxed">Architecte des décors et effets spéciaux, Luna transforme chaque recoin du parc en cauchemar vivant.</p>
-              </div>
-              <div
-                className="flex flex-col items-center text-center bg-[#201041] border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300"
-              >
-                <div className="relative w-32 h-32 mb-4 rounded-full overflow-hidden border-2 border-primary-purple-300">
-                  <Image 
-                    src="/images/Portrait-max.jpeg"
-                    alt="blablalaa" 
-                    fill 
-                    className="object-cover" 
-                  />
-                </div>
-                <h4 className="text-xl font-semibold mb-2 text-primary-purple-300">Karie "La Product Owner" R.</h4>
-                <p className="text-sm text-neutral-50/80 leading-relaxed">Génie de l'éclairage et des effets, Alex donne vie aux ambiances néon qui font l'identité du parc.</p>
-              </div>
+            ))}
           </div>
         </div>
-      </div>
-    </section>
+    
+</div>
+
+{/* Section Histoire & Valeurs */}
+        <div className="mb-12 max-w-6xl mx-auto px-4">
+            <h3 className="text-2xl md:text-3xl font-bold mb-8 text-center text-neutral-50" >
+                Notre Histoire & Nos Valeurs
+            </h3>
+        <div className="max-w-4xl mx-auto space-y-6 text-neutral-50/80 leading-relaxed">
+            <p className="text-lg">
+                Zombieland est né d'une passion pour l'horreur et le divertissement extrême. Notre mission est de créer
+                un espace où les amateurs de sensations fortes peuvent vivre des expériences uniques dans un
+                environnement sécurisé mais terrifiant.
+            </p>
+
+            <p className="text-lg font-semibold text-neutral-50 mt-8">Nos Valeurs Fondamentales :</p>
+
+            <div className="space-y-4">
+             <p>
+                <strong className="text-primary-purple-300">Innovation :</strong> Nous repoussons constamment les limites de l'horreur immersive avec des technologies de pointe et des scénarios originaux.
+            </p>
+              <p>
+                <strong className="text-primary-purple-300">Sécurité :</strong> Malgré l'intensité de nos attractions, la sécurité de nos visiteurs reste notre priorité absolue. Chaque expérience est conçue et supervisée par des professionnels qualifiés.
+            </p>
+            <p>
+                <strong className="text-primary-purple-300">Authenticité :</strong> Nous créons des environnements et des scénarios réalistes qui plongent nos visiteurs dans un monde post-apocalyptique crédible et terrifiant.
+            </p>
+            <p>
+                <strong className="text-primary-purple-300">Passion :</strong> Notre équipe est composée de passionnés d'horreur, de cinéma et d'effets spéciaux qui mettent tout leur cœur dans chaque détail de l'expérience.visiteurs dans un monde post-apocalyptique crédible et terrifiant.
+            </p>
+        </div>
+
+    <p className="text-lg mt-8 text-center font-medium text-neutral-50">
+      Rejoignez-nous pour une aventure que vous n'oublierez jamais. Osez-vous affronter vos peurs les plus
+      profondes à Zombieland ?
+    </p>
+  </div>
+</div>
+
+{/* CTA */}
+    <div className="flex flex-col md:flex-row gap-3 md:gap-4 justify-center md:justify-center mt-12">
+        <Link href="/booking" className="w-full md:w-auto">
+            <Button text="Réserver maintenant" style="button_booking" Icon={Bell} />
+        </Link>
+        <Link href="/activities" className="w-full md:w-auto">
+            <Button text="Découvrir nos activités" style="button_activity" Icon={Rocket} />
+        </Link>
+    </div>
+</section>
   );
 }
