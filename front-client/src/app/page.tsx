@@ -1,4 +1,5 @@
-import Button from "@/components/Button";
+import LinkButton from "@/components/LinkButton";
+import Button from "@/components/LinkButton";
 import { Bell, CircleEllipsis, Clock, MapPinned, Phone, Rocket } from "lucide-react";
 import Image from "next/image";
 
@@ -42,8 +43,8 @@ export default function Home() {
             </p>
           </div>
           <div className="w-auto flex items-center flex-col md:flex-row md:mt-4">
-            <Button text="Réserver maintenant" style="button_booking" Icon={Bell} />
-            <Button text="Découvrir nos activités" style="button_activity" Icon={Rocket} />
+            <LinkButton path="/booking" text="Réserver maintenant" style="button_booking" Icon={Bell} />
+            <LinkButton path="/activities" text="Découvrir nos activités" style="button_activity" Icon={Rocket} />
           </div>
         </div>
       </section>
@@ -53,7 +54,7 @@ export default function Home() {
         </div>
       </section>
       <section>
-        <div className="relative w-full h-[400px] md:h-screen">
+        <div className="relative w-full h-[400px] md:h-screen overflow-hidden">
           <Image
             src="/images/infos.png"
             alt="image direction du parc"
@@ -61,7 +62,10 @@ export default function Home() {
             priority
             className="object-cover object-[35%_center] scale-110 md:object-center md:scale-100"
           />
-          <div className="absolute m-4 flex flex-col justify-center gap-4 w-full md:w-[60%] md:left-[10%] md:top-1/2 md:-translate-y-1/2">
+          {/* overlay dégradé de gauche à droite  */}
+          <div className="absolute inset-0 bg-linear-to-r from-black/40 to-transparent z-1"></div>
+
+          <div className="absolute z-10 m-4 flex flex-col justify-center gap-4 w-full md:w-[60%] md:left-[10%] md:top-1/2 md:-translate-y-1/2">
             <h2 className="text-xl md:text-2xl">PRÉPARE TA VENUE</h2>
             <div className="">
               <div className="flex gap-2 font-bold text-base md:text-lg drop-shadow-lg/60">
@@ -94,8 +98,8 @@ export default function Home() {
                 <p>Email: contact@zombieland.com</p>
               </div>
             </div>
-            <div className="self-center md:self-auto">
-              <Button text="En savoir plus ..." style="button_booking" Icon={undefined}/>
+            <div className="self-center md:self-auto ">
+              <LinkButton path="/visitor-information" text="En savoir plus ..." style="button_activity" Icon={undefined}/>
             </div>
           </div>
         
