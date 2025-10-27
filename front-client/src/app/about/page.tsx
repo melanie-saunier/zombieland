@@ -84,9 +84,11 @@ export default function AboutPage() {
 
 {/* Section Histoire & Valeurs */}
         <div className="mb-12 max-w-6xl mx-auto px-4">
-            <h3 className="text-2xl md:text-3xl font-bold mb-8 text-center text-neutral-50" >
-                Notre Histoire & Nos Valeurs
+            <div>
+            <h3 className="text-2xl md:text-3xl font-bold mb-8 text-center pb-3 text-neutral-50" >
+                Notre Histoire & Nos Valeurs !
             </h3>
+            </div>
         <div className="max-w-4xl mx-auto space-y-6 text-neutral-50/80 leading-relaxed">
             <p className="text-lg">
                 Zombieland est né d'une passion pour l'horreur et le divertissement extrême. Notre mission est de créer
