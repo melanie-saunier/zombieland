@@ -1,8 +1,16 @@
+// src/app/activity/id/page.tsx 
+
 "use client";
 import CardActivity from "@/components/CardActivity";
+import type { Metadata } from "next";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+
+export const metadata: Metadata = {
+  title: "Nos activités | ZOMBIELAND",
+  description: "Découvrez toutes nos activités !",
+};
 
 export default function ActivitiesPage() {
   //TODO: fetch des activities depuis le back, quand back sera prêt. En attendant, j'ai créé une variable statique qui contient un tableau d'activités, pour mis en forme du front.

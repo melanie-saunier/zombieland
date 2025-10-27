@@ -1,11 +1,26 @@
+// src/app/activity/id/page.tsx 
+
 import renderSkulls from "@/components/RenderSkulls";
 import { TriangleAlert } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+// Fonction spéciale Next.js pour générer les métadonnées dynamiques
+export async function generateMetadata(
+  { params }: { params: { id: number } }
+): Promise<Metadata> {
+  //TODO: mettre à jour le fetch lors de la dynamisaton de la page
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/activities/${params.id}`);
+  const activity = await res.json();
+  return {
+    title: `${activity.name} | ZOMBIELAND`,
+    description: `En savoir plus sur ${activity.name}, une activité du parc Zombieland.`,
+  };
+}
 
 type ActivityDetailPageProps = {
-  // TODO: si on modifie le type de id activity (UUID à integer) alors il faudra modifier string en integer
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: number }>;
 };
 
 export default async function ActivityDetailPage({params}: ActivityDetailPageProps) {

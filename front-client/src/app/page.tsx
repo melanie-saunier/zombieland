@@ -1,16 +1,23 @@
-"use client";
+// src/app/page.tsx (home page)
 
+"use client";
 import CardActivity from "@/components/CardActivity";
 import LinkButton from "@/components/LinkButton";
 import { Bell, Clock, MapPinned, Phone, Rocket } from "lucide-react";
 import Image from "next/image";
-import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+import type { Metadata } from "next";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+
+export const metadata: Metadata = {
+  title: "Accueil | ZOMBIELAND",
+  description: "Bienvenue à ZOMBIELAND, le parc d’attractions le plus terrifiant ! Découvre des activités à sensations, affronte tes peurs et réserve ton billet d’entrée dès maintenant.",
+};
 
 export default function Home() {
   //TODO: fetch des activities depuis le back, quand back sera prêt. En attendant, j'ai créé une variable statique qui contient un tableau d'activités, pour mis en forme du front.

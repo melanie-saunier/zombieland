@@ -1,6 +1,14 @@
+// src/app/activities/page.tsx 
+
 "use client";
-import Button from "@/components/Button";
 import { useEffect, useRef } from "react";
+import type { Metadata } from "next";
+import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "S'inscrire | ZOMBIELAND",
+  description: "Crée ton compte ZOMBIELAND et rejoins la communauté des survivants ! Réserve tes billets, prépare ta visite et découvre nos activités !",
+};
 
 export default function RegisterPage() {
   // pour faire un focus sur le premier input(input email)lorsque l'on arrive sur la page
@@ -14,8 +22,8 @@ export default function RegisterPage() {
       {/* div pour un effet overlay (noir) pour que le text ressorte bien par dessus l'image de background */}
       <div className="absolute inset-0 bg-neutral-700/50"></div>
       <div className="relative z-10">
-        <h1 className="text-xl md:text-3xl text-center">INSCRIPTION</h1>
-        <p className="text-center text-base md:text-2xl p-2 text-shadow-lg/30">Rejoignez-nous dans l&apos;aventure Zombieland</p>
+        <h1 className="text-xl md:text-3xl text-center">Inscription</h1>
+        <p className="text-center text-base md:text-2xl p-2 text-shadow-lg/30">Rejoignez-nous dans l’aventure Zombieland</p>
         <form className="flex flex-col items-center gap-4">
           <div className="flex flex-col">
             {/* honeypot pour protéger des attaques de robot: le robot va remplir cet input */}
@@ -74,7 +82,7 @@ export default function RegisterPage() {
           </div>
           <div>
             <input type="checkbox" name="cgv" id="cgv" />
-            <label htmlFor="cgv" className="text-shadow-lg/30">J&apos;ai lu et j&apos;accepte les <a href="/terms-and-conditions" className="underline font-bold hover:text-primary-purple-200 transition">conditions générales de vente</a>.</label>
+            <label htmlFor="cgv" className="text-shadow-lg/30">J’ai lu et j’accepte les <Link href="/terms-and-conditions" className="underline font-bold hover:text-primary-purple-200 transition">conditions générales de vente</Link>.</label>
           </div>
           <button className="button_booking m-2 p-2 md:m-4 md:py-4 md:px-12  font-bold">S&apos;inscrire</button>
         </form>

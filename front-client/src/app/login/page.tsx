@@ -1,21 +1,29 @@
-"use client";
+// src/app/login/page.tsx 
 
-import Button from "@/components/Button";
+"use client";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Connexion | ZOMBIELAND",
+  description: "Connecte-toi à ton compte ZOMBIELAND pour réserver tes billets et découvrir les nouveautés du parc.",
+};
 
 export default function LoginPage() {
   // pour faire un focus sur le premier input(input email) lorsque l'on arrive sur la page
   const inpuRef = useRef<HTMLInputElement>(null);
+  
   useEffect(() => {
     inpuRef.current?.focus();
   }, []);
+
   return(
     <div className="relative flex flex-col justify-center bg-[url('/images/background.png')] bg-no-repeat bg-cover bg-center min-h-[500px] md:min-h-screen p-4 md:p-8">
       {/* div pour un effet overlay (noir) pour que le text ressorte bien par dessus l'image de background */}
       <div className="absolute inset-0 bg-neutral-700/50"></div>
       <div className="relative z-10">
-        <h1 className="text-xl md:text-3xl text-center">CONNEXION</h1>
+        <h1 className="text-xl md:text-3xl text-center">Connexion</h1>
         <p className="text-center text-base md:text-2xl p-2 text-shadow-lg/30">Ton pass pour l’expérience Zombieland t’attend !</p>
         <form className="flex flex-col items-center gap-4 pb-2">
           <div className="flex flex-col">
