@@ -1,10 +1,13 @@
 "use client";
+import Image from "next/image";
+import { Skull } from "lucide-react";
 
 export default function privacyPolicyPage() {
 
   return (
     <div className="bg-radial from-[#961990] to-[#000000] p-12">
-      <h1 className="flex items-center justify-center text-shadow-none! tracking-normal! p-6">Politique de Confidentialité – Zombieland</h1>
+      <Image src="/images/logo.png" alt="Logo de Zombieland" width={150} height={75} className="w-16 h-auto md:w-48 hover:scale-125 transition-transform duration-200"/>
+      <h1 className="flex items-center justify-center text-shadow-none! tracking-normal! pt-px py-6 pb-6">Politique de Confidentialité – Zombieland</h1>
       <h2 className="text-shadow-none! tracking-normal! normal-case! p-6">Dernière mise à jour : Octobre 2025</h2>
       <p>Chez Zombieland, nous prenons très au sérieux la protection de vos données personnelles. Cette politique de confidentialité explique comment nous collectons, utilisons, partageons et protégeons les informations que vous nous confiez lorsque vous utilisez notre site web et nos services.</p>
 
@@ -55,21 +58,9 @@ export default function privacyPolicyPage() {
       <h2 className=" text-shadow-none! tracking-normal! pl-6 pt-6 pr-6 pb-2">7. Modifications de cette politique</h2>
       <p>Nous nous réservons le droit de mettre à jour cette politique. Toute modification sera publiée sur cette page avec la date de mise à jour.</p>
 
-      <h3 className="">Contact</h3>
+      <h3 className="font-semibold p-2">Contact</h3>
       <p>Pour toute question concernant cette politique ou le traitement de vos données, écrivez-nous à : contact@zombieland.fr</p>
-    
-
-
-
-
-      
-
-
-
-
-
-
-
+      <div className="flex justify-center pt-6"><Skull className=" stroke-[#4ea11e]" /></div>
     </div>
   );
 }
