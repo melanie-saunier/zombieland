@@ -40,13 +40,13 @@ export default function CardActivity({activity} : PropsCardActivity) {
       <Image 
         src={`/images/activities/${activity.image_ref}`}
         alt={`Image de l'activité ${activity.name}`}
-        width={400} 
-        height={300}
+        width={300} 
+        height={200}
         className="w-full rounded-xl"
       />
       {/* Catégorie (badge coloré) */}
       <span 
-        className={`absolute top-3 left-3 rounded-xl text-neutral-50 px-2 md:text-sm text-xs font-medium`}
+        className="absolute top-3 left-3 rounded-xl text-neutral-50 px-2 md:text-sm text-xs font-medium"
         style={{ backgroundColor: activity.category.color }}
       >
         {activity.category.name}

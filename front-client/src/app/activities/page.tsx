@@ -1,6 +1,6 @@
 "use client";
 import CardActivity from "@/components/CardActivity";
-import { Search, Skull } from "lucide-react";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 
@@ -53,13 +53,13 @@ export default function ActivitiesPage() {
     {id: "category-id2", name: "Instinct de survie", color: "#C41E3A"},
     {id: "category-id3", name: "Réalité Inhumaine", color: "#7A00FF"},
     {id: "category-id4", name: "Freak Shows", color: "#E3C014"}
-  ]
+  ];
   
-    // États pour la recherche et le filtre
+  // États pour la recherche et le filtre
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
-    // 🔍 Filtrage en temps réel selon les deux critères
+  // 🔍 Filtrage en temps réel selon les deux critères
   const filteredActivities = activities.filter((activity) => {
     const matchesSearch =
       searchTerm === "" ||
@@ -121,7 +121,7 @@ export default function ActivitiesPage() {
         </div>
       </div>
       {/* Cards */}
-      <div className="p-8 flex flex-wrap gap-4 justify-center">
+      <div className="p-8 flex flex-wrap gap-8 justify-center">
         {filteredActivities.map((activity) => (
           <CardActivity key={activity.id} activity={activity} />
         ))}
