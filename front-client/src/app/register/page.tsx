@@ -14,7 +14,8 @@ export default function RegisterPage() {
       {/* div pour un effet overlay (noir) pour que le text ressorte bien par dessus l'image de background */}
       <div className="absolute inset-0 bg-neutral-700/50"></div>
       <div className="relative z-10">
-        <h2 className="text-xl md:text-2xl text-center">INSCRIPTION</h2>
+        <h1 className="text-xl md:text-3xl text-center">INSCRIPTION</h1>
+        <p className="text-center text-base md:text-2xl p-2 text-shadow-lg/30">Rejoignez-nous dans l&apos;aventure Zombieland</p>
         <form className="flex flex-col items-center gap-4">
           <div className="flex flex-col">
             {/* honeypot pour protéger des attaques de robot: le robot va remplir cet input */}
@@ -71,7 +72,11 @@ export default function RegisterPage() {
               className="input_style" 
               required/>
           </div>
-          <Button style="button_booking" text="S'INSCRIRE"/>
+          <div>
+            <input type="checkbox" name="cgv" id="cgv" />
+            <label htmlFor="cgv" className="text-shadow-lg/30">J&apos;ai lu et j&apos;accepte les <a href="/terms-and-conditions" className="underline font-bold hover:text-primary-purple-200 transition">conditions générales de vente</a>.</label>
+          </div>
+          <button className="button_booking m-2 p-2 md:m-4 md:py-4 md:px-12  font-bold">S&apos;inscrire</button>
         </form>
       </div>
     </div>

@@ -15,7 +15,8 @@ export default function LoginPage() {
       {/* div pour un effet overlay (noir) pour que le text ressorte bien par dessus l'image de background */}
       <div className="absolute inset-0 bg-neutral-700/50"></div>
       <div className="relative z-10 ">
-        <h2 className="text-xl md:text-2xl text-center">CONNEXION</h2>
+        <h1 className="text-xl md:text-3xl text-center">CONNEXION</h1>
+        <p className="text-center text-base md:text-2xl p-2 text-shadow-lg/30">Ton pass pour l’expérience Zombieland t’attend !</p>
         <form className="flex flex-col items-center gap-4 pb-2">
           <div className="flex flex-col">
             {/* honeypot pour protéger des attaques de robot: le robot va remplir cet input */}
@@ -23,7 +24,7 @@ export default function LoginPage() {
             {/* tabIndex -1 pour ne pas accèder à cet index avec la touche tab et autocomplete:off pour pas que le navigateur ne complète automatiquement l'input */}
             <input type="text" name="honeypot" className="hidden" tabIndex={-1} autoComplete="off"/>
           </div>
-          <div className="flex flex-col w-64 md:w-80">
+          <div className="flex flex-col w-64 md:w-80" >
             <label htmlFor="email" className="font-bold">E-mail</label>
             <input
               ref={inpuRef} 
@@ -44,9 +45,9 @@ export default function LoginPage() {
               className="input_style" 
               required/>
           </div>
-          <Button style="button_booking" text="SE CONNECTER"/>
+          <button className="button_booking m-2 p-2 md:m-4 md:py-4 md:px-12  font-bold">Se connecter</button>
         </form>
-        <p className="text-center drop-shadow-lg">Pas encore de compte ? <Link href={"/register"} className="font-semibold underline hover:text-primary-purple-300 transition">Créer un compte ici</Link></p>
+        <p className="text-center drop-shadow-lg/30">Pas encore de compte ? <Link href={"/register"} className="font-semibold underline hover:text-primary-purple-200 transition">Créer un compte ici</Link></p>
       </div>
     </div>
   );
