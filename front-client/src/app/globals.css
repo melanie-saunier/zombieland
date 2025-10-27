@@ -103,7 +103,8 @@ h5 {
   width: inherit;
 }
 
-h1,h2 {
+
+h1 {
   color: var(--color-neutral-50);
   text-shadow:
     3px 3px 0 var(--color-secondary-300),
@@ -114,7 +115,6 @@ h1,h2 {
   font-weight: 700;
   letter-spacing: -1.92px;
   text-transform: uppercase;
-  
 }
 
 /* Effet de clignotement "néon" pour la page d'accueil */

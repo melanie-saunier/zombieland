@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
-import BookingButton from "./Button";
+import BookingButton from "./LinkButton";
 
 export default function NavBarDesktop() {
   // Varible pour récupérer le chemin de la page actuelle, grâce au hook "usePathname" de React
@@ -35,7 +35,7 @@ export default function NavBarDesktop() {
         <Image src="/images/logo.png" alt="Logo de Zombieland" width={200} height={100} className="hover:scale-125 transition-transform duration-200"/>
       </Link>
       <div className="border-b border-t border-solid border-primary-purple-300 flex justify-center w-full">
-        <BookingButton text="Réserver" style="button_booking" Icon={Bell}/>
+        <BookingButton path={"/booking"} text="Réserver" style="button_booking" Icon={Bell}/>
       </div>
       <ul className="text-neutral-50 flex flex-col gap-4 w-full my-4">
         {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}
