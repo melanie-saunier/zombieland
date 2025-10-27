@@ -3,7 +3,7 @@ import Button from "@/components/Button";
 import { useEffect, useRef } from "react";
 
 export default function RegisterPage() {
-  // pour faire un focus sur le premier input(input email)
+  // pour faire un focus sur le premier input(input email)lorsque l'on arrive sur la page
   const inpuRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     inpuRef.current?.focus();
