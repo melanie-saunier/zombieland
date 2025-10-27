@@ -76,7 +76,7 @@ export default function VisitorInformationPage() {
 
       {/* Section Accès parking*/}
       <section 
-        className="py-12 w-full relative"
+        className="py-12 w-full relative border-b-2 border-t-2 border-primary-purple-300"
         style={{
           backgroundImage: 'url(/images/info-background.png)',
           backgroundSize: 'cover',
