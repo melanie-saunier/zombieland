@@ -4,30 +4,26 @@ import { Category } from "../models/category";
 export const categoryController = {
   
   /**
-   * Retourne toutes les catégories avec leurs activités
+   * Returns all categories
    * @param req 
    * @param res 
    */
   async getAll(req: Request, res: Response) {
-    // On récupère toutes les catégories avec leurs activités, dans l'ordre alphabétique des nom des catégories
+    // On récupère toutes les catégories dans l'ordre alphabétique des nom des catégories
     const categories = await Category.findAll({
       order: [
         ["name", "ASC"]
       ],
-      include: {
-        association: "activities",
-        through: { attributes: [] }
-      }
     });
     
     // Si categories est vide, on retourne une erreur 404 avec un message d'erreur
-    if (!categories) return res.status(404).json("No categories stored in the database");
+    if (!categories || categories.length === 0) return res.status(404).json({ message:"No categories stored in the database"});
     
     res.status(200).json(categories);
   },
 
   /**
-   * Retourne une catégorie par son id, avec ses activités
+   * Returns a category by its id
    * @param req 
    * @param res 
    */
@@ -35,16 +31,12 @@ export const categoryController = {
     // On récupère l'id dans les param de req
     const {id} = req.params;
 
-    // On récupère la catégorie correspondante à cet id, avec ses activités
+    // On récupère la catégorie correspondante à cet id
     const category = await Category.findByPk(id, {
-      include: {
-        association: "activities",
-        through: { attributes: [] }
-      }
     });
 
     // Si category est vide, on retourne une erreur 404 avec un message d'erreur
-    if(!category) return res.status(404).json(`No category found with id: ${id}`);
+    if(!category) return res.status(404).json({ message:`No category found with id: ${id}`});
 
     res.status(200).json(category);
   },
