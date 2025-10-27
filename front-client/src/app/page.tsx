@@ -1,9 +1,16 @@
 "use client";
 
+import CardActivity from "@/components/CardActivity";
 import LinkButton from "@/components/LinkButton";
 import { Bell, Clock, MapPinned, Phone, Rocket } from "lucide-react";
 import Image from "next/image";
+import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
+
+// Import Swiper styles
+import "swiper/css";
+import "swiper/css/pagination";
+import "swiper/css/navigation";
 
 export default function Home() {
   //TODO: fetch des activities depuis le back, quand back sera prêt. En attendant, j'ai créé une variable statique qui contient un tableau d'activités, pour mis en forme du front.
@@ -95,15 +102,31 @@ export default function Home() {
       </section>
       <section>
         {/* section pour le slider d'activités du parc */}
-        <div className="w-full h-[200px] md:h-screen">
+        <div className="w-full h-[400px] p-4  flex flex-col items-center justify-center gap-4">
           <h2 className="text-xl md:text-2xl">NOS ATTRACTIONS LES PLUS FLIPPANTES</h2>
-          <div>
-            <Swiper>
-              <SwiperSlide>
-
-              </SwiperSlide>
-            </Swiper>
-          </div>
+          <Swiper
+            modules={[Navigation, Pagination]}
+            navigation
+            pagination={{ clickable: true }}
+            spaceBetween={20}
+            slidesPerView={1} //mobile une activitée
+            breakpoints={{
+              768: {
+                slidesPerView: 2, // desktop 2 activité
+              },
+            }}
+            className="w-full "
+          >
+            {activities.map((activity) => {
+              return (
+                <SwiperSlide key={activity.id} >
+                  <div className="flex justify-center w-full">
+                    <CardActivity  activity={activity}/>
+                  </div>
+                </SwiperSlide>
+              );
+            })}
+          </Swiper>
         </div>
       </section>
       <section>
