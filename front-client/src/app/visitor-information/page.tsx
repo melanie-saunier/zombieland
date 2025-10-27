@@ -160,7 +160,7 @@ export default function VisitorInformationPage() {
 
             {/* Map à droite - CENTRÉE VERTICALEMENT */}
             <div className="flex items-center">
-              <div className="relative w-full overflow-hidden rounded-lg border-2 border-primary-purple-300 aspect-[16/9] shadow-[0_0_15px_rgba(248,52,253,0.2)]">
+              <div className="relative w-full h-full overflow-hidden rounded-lg border-2 border-primary-purple-300 aspect-[16/9] shadow-[0_0_15px_rgba(248,52,253,0.2)]">
                 <iframe
                   title="Accès parking Zombieland"
                   className="w-full h-full"
