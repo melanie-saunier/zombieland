@@ -104,7 +104,7 @@ h5 {
 }
 
 
-h1 {
+h1, h2{
   color: var(--color-neutral-50);
   text-shadow:
     3px 3px 0 var(--color-secondary-300),
@@ -139,3 +139,24 @@ h1 {
           focus:border-primary-purple-500 focus:shadow-[0_0_25px_5px_rgba(168,85,247,0.8)]
           focus:outline-none transition-all duration-300;
 } 
+
+/* customisation de la pagination et navigation du slider */
+/* pour les fleches */
+/* important pour que le css prenne le dessus sur celui de swiper */
+.swiper-button-next {
+  color: var(--color-secondary-200) !important;
+    /* pour que les fleches soient à l'exterieur de la slide */
+  right: -10 !important;
+}
+.swiper-button-prev {
+  color: var(--color-secondary-200) !important;
+  /* pour que les fleches soient à l'exterieur de la slide */
+  left: -10 !important;
+}
+/* pour les points */
+.swiper-pagination-bullet {
+  background-color: var(--color-secondary-200) !important;
+}
+.swiper-pagination-bullet-active {
+  background-color: var(--color-secondary-500) !important;
+}
