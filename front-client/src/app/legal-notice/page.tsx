@@ -1,15 +1,15 @@
 "use client";
-import Button from "@/components/Button";
+// import Button from "@/components/Button";
 
 export default function legalNoticePage() {
 
   return (
-    <div className="">
+    <div className="bg-radial from-[#961990] to-[#000000] p-8">
       <h1 className="">MENTION LÉGALES</h1>
-      <p>Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la confiance en l'économie numérique, il est précisé aux utilisateurs du site Zombieland l'identité des différents intervenants dans le cadre de sa réalisation et de son suivi.</p>
+      <p className="">Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la confiance en l&apos;économie numérique, il est précisé aux utilisateurs du site Zombieland l&apos;identité des différents intervenants dans le cadre de sa réalisation et de son suivi.</p>
 
       <h2 className="">Edition du site</h2>
-      <p>Le présent site, accessible à l’URL www.zombieland.fr (le « Site »), est édité par :</p>
+      <p className="">Le présent site, accessible à l’URL www.zombieland.fr (le « Site »), est édité par :</p>
       <p>Emilie Dupont, résidant 10 Bd de Parc, 77700 Coupvray, de nationalité Française (France), né(e) le 05/05/1998,  inscrite au R.C.S. de VERSAILLES sous le numéro RCS VANNES B 514 919 845,</p>
       <p>Le numéro individuel TVA de l’éditeur est : FR 40 987654321.</p>
 
@@ -34,13 +34,6 @@ export default function legalNoticePage() {
         Email : asmith@gmail.com</p>
 
       <p>Génération des mentions légales par Legalstart.</p>
-
-
-
-      
-      
-
-
 
 
     </div>
