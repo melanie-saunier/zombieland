@@ -40,6 +40,13 @@ export const activityRouter = Router();
  */
 activityRouter.get("/", activityController.getAll);
 
+// ⚠️ L'ordre de déclaration des routes est crucial :
+// Express lit les routes dans l'ordre où elles sont définies.
+// Si une route dynamique (comme "/:id") est placée avant une route statique (comme "/most-scary"),
+// Express interprétera "most-scary" comme une valeur du paramètre ":id".
+// Pour éviter ce conflit et que "/most-scary" soit correctement reconnue,
+// on déclare donc les routes spécifiques AVANT les routes dynamiques.
+
 /**
  * GET /activities/most-scary
  * @tags Activity

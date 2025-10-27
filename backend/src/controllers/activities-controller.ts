@@ -32,8 +32,8 @@ export const activityController = {
    * @param res 
    */
   async getById(req: Request, res: Response) {
-    // On récupère l'id dans les param de req
-    const {id} = req.params;
+    // On récupère l'id dans les param de req et le parseInt
+    const id = parseInt(req.params.id, 10);
 
     // On récupère l'activité correspondante à cet id, avec sa catégorie et son niveau
     const activity = await Activity.findByPk(id, {
@@ -49,8 +49,8 @@ export const activityController = {
     res.status(200).json(activity);
   },
 
-    /**
-   * Returns the four most recent activities with their associated categories and levels
+  /**
+   * Returns the most scary activities (level.value = 3) with their associated categories and levels
    * @param req 
    * @param res 
    */
@@ -75,7 +75,7 @@ export const activityController = {
       limit: appliedLimit, // limite du nombre de résultats
     });
     
-    // Si activities est vide, on retourne une erreur 404 avec un message d'erreur
+    // Si scaryActivities est vide, on retourne une erreur 404 avec un message d'erreur
     if (!scaryActivities || scaryActivities.length === 0) return res.status(404).json({ message:"No activities stored in the database"});
     
     res.status(200).json(scaryActivities);

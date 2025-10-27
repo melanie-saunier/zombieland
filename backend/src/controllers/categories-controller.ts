@@ -28,12 +28,11 @@ export const categoryController = {
    * @param res 
    */
   async getById(req: Request, res: Response) {
-    // On récupère l'id dans les param de req
-    const {id} = req.params;
+    // On récupère l'id dans les param de req et le parseInt
+    const id = parseInt(req.params.id, 10);
 
     // On récupère la catégorie correspondante à cet id
-    const category = await Category.findByPk(id, {
-    });
+    const category = await Category.findByPk(id);
 
     // Si category est vide, on retourne une erreur 404 avec un message d'erreur
     if(!category) return res.status(404).json({ message:`No category found with id: ${id}`});
