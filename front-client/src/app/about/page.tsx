@@ -1,10 +1,10 @@
 // src/app/about/page.tsx
+import React from "react";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import Button from "@/components/Button";
+import Button from "../../components/Button";
 import { Bell, Rocket } from "lucide-react";
-import Footer from "@/components/Footer";
 
 export const metadata: Metadata = {
   title: "À propos | ZOMBIELAND",

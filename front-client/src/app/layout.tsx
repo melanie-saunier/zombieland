@@ -39,7 +39,7 @@ export default function RootLayout({
         <NavBarDesktop/>
         {/* social media bar en haut */}
         <SocialMediaBarDesktop/>
-        <main className="grow md:ml-[20%] md:w-[80%] mt-15 md:mt-0">
+        <main className="grow md:ml-[20%] md:w-[80%] mt-15 md:mt-0 bg-neutral-700">
           {children}
         </main>
         {/* Barre de navigation mobile en bas d'écran */}

@@ -12,14 +12,15 @@ const app = express();
 // Swagger est branché sur l'app 
 setupSwagger(app);
 
-// Appel au middleware de CORS, afin que la politique des CORS soit vérifiée avant de passe rà la suite
+// Appel au middleware de CORS, afin que la politique des CORS soit vérifiée avant de passer à la suite
 app.use(corsParser);
 
 // Ajout du bordy parser
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Brancher le router
+// On branche le routeur principal sur le préfixe /api : 
+// toutes les routes définies dans "router" seront accessibles via /api/...
 app.use("/api", router);
 
 // Middlewares de gestion d'erreurs
@@ -31,4 +32,4 @@ const port = process.env.PORT || 3001;
 const base_url = process.env.BASE_URL || "localhost";
 
 // Démarrage du serveur
-app.listen(port, () => console.log(`Listening on http://${base_url}:${port}`));
+app.listen(port, () => console.log(`Listening on http://${base_url}:${port}/api`));
