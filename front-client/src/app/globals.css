@@ -103,7 +103,7 @@ h5 {
   width: inherit;
 }
 
-h1 {
+h1,h2 {
   color: var(--color-neutral-50);
   text-shadow:
     3px 3px 0 var(--color-secondary-300),
@@ -114,6 +114,7 @@ h1 {
   font-weight: 700;
   letter-spacing: -1.92px;
   text-transform: uppercase;
+  
 }
 
 /* Effet de clignotement "néon" pour la page d'accueil */
@@ -129,3 +130,12 @@ h1 {
 .animate-flicker {
   animation: flicker 4s infinite ease-in-out;
 }
+
+/* classe pour le style commun des inputs avec effet shadow rose lorsque l'imput est sélectionné
+@apply permet d'utiliser la syntaxe du tailwind css dans le fichier global */
+
+.input_style {
+  @apply  text-sm md:text-base bg-neutral-600 border-b-2 border-solid border-primary-purple-300 rounded-sm p-2
+          focus:border-primary-purple-500 focus:shadow-[0_0_25px_5px_rgba(168,85,247,0.8)]
+          focus:outline-none transition-all duration-300;
+} 
