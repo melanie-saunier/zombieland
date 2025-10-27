@@ -2,7 +2,7 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "./sequelize";
 
 export class Category extends Model {
-  declare id: string;
+  declare id: number;
   declare name: string;
   declare color: string;
   declare readonly created_at: Date;
@@ -10,25 +10,25 @@ export class Category extends Model {
 }
 
 Category.init(
-    {
-      id: {
-        type: DataTypes.UUID,
-        defaultValue: DataTypes.UUIDV4,
-        primaryKey: true,
-      },
-      name: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      color: {
-        type: DataTypes.CHAR(7),
-        allowNull: false,
-        // TODO: valeur par défaut ? il faut qu'on choisisse les couleurs de nos catégories
-      }
+  {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
     },
-    {
-      sequelize,
-      modelName: "Category",
-      tableName: "category"
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
     },
-  );
+    color: {
+      type: DataTypes.CHAR(7),
+      allowNull: false,
+    }
+  },
+  {
+    sequelize,
+    modelName: "Category",
+    tableName: "category"
+  },
+);

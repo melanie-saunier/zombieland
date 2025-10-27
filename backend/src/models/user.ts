@@ -2,12 +2,12 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "./sequelize";
 
 export class User extends Model {
-  declare id: string;
+  declare id: number;
   declare email: string;
   declare lastname: string;
   declare firstname: string;
   declare password: string;
-  declare role_id: string;
+  declare role_id: number;
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
 }
@@ -15,8 +15,8 @@ export class User extends Model {
 User.init(
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
     },
     email: { 
@@ -40,7 +40,7 @@ User.init(
       allowNull: false,
     },
     role_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },

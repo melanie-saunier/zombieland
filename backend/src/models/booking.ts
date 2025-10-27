@@ -2,11 +2,11 @@ import { Model, DataTypes } from "sequelize";
 import { sequelize } from "./sequelize";
 
 export class Booking extends Model {
-  declare id: string;
+  declare id: number;
   declare visit_date: Date;
   declare nb_people: number;
   declare status: boolean;
-  declare user_id: string;
+  declare user_id: number;
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
 }
@@ -14,8 +14,8 @@ export class Booking extends Model {
 Booking.init(
   {
     id: {
-      type: DataTypes.UUID,
-      defaultValue: DataTypes.UUIDV4,
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
       primaryKey: true,
     },
     visit_date: {
@@ -31,7 +31,7 @@ Booking.init(
       allowNull: false,
     },
     user_id: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
       allowNull: false,
     }
   },
