@@ -41,17 +41,6 @@ export const activityRouter = Router();
 activityRouter.get("/", activityController.getAll);
 
 /**
- * GET /activities/:id
- * @tags Activity
- * @summary Returns an activity by its id, including its category and its level
- * @param {string} id.path.required - The ID of the activity
- * @return {Activity} 200 - Successful response with the activity object
- * @return {object} 404 - No activity found
- * @return {object} 500 - Internal server error
- */
-activityRouter.get("/:id", activityController.getById);
-
-/**
  * GET /activities/most-scary
  * @tags Activity
  * @summary Returns the most scary activities (level.value = 3) with their associated categories and levels
@@ -61,3 +50,14 @@ activityRouter.get("/:id", activityController.getById);
  * @return {object} 500 - Internal server error
  */
 activityRouter.get("/most-scary", activityController.getRandomedScaryActivities);
+
+/**
+ * GET /activities/:id
+ * @tags Activity
+ * @summary Returns an activity by its id, including its category and its level
+ * @param {string} id.path.required - The ID of the activity
+ * @return {Activity} 200 - Successful response with the activity object
+ * @return {object} 404 - No activity found
+ * @return {object} 500 - Internal server error
+ */
+activityRouter.get("/:id", activityController.getById);
