@@ -120,7 +120,7 @@ export default function Home() {
             {activities.map((activity) => {
               return (
                 <SwiperSlide key={activity.id} >
-                  <div className="flex justify-center w-full">
+                  <div className="flex justify-center w-full mb-8">
                     <CardActivity  activity={activity}/>
                   </div>
                 </SwiperSlide>

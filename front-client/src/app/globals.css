@@ -141,11 +141,22 @@ h1, h2{
 } 
 
 /* customisation de la pagination et navigation du slider */
-.swiper-button-next,
-.swiper-button-prev {
-  color: #f834fd;
+/* pour les fleches */
+/* important pour que le css prenne le dessus sur celui de swiper */
+.swiper-button-next {
+  color: var(--color-secondary-200) !important;
+    /* pour que les fleches soient à l'exterieur de la slide */
+  right: -10 !important;
 }
+.swiper-button-prev {
+  color: var(--color-secondary-200) !important;
+  /* pour que les fleches soient à l'exterieur de la slide */
+  left: -10 !important;
+}
+/* pour les points */
 .swiper-pagination-bullet {
   background-color: var(--color-secondary-200) !important;
 }
-
+.swiper-pagination-bullet-active {
+  background-color: var(--color-secondary-500) !important;
+}
