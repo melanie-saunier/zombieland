@@ -8,7 +8,7 @@ type ActivityDetailPageProps = {
 
 export default async function ActivityDetailPage({params}: ActivityDetailPageProps) {
   // on veut recuperer l'id de l'activité de l'URL pour récupérer les infos de cette activité via un fetch
-	// on reçoit direct en props du composant une promesse avec les valeurs des segments dynamiques
+  // on reçoit direct en props du composant une promesse avec les valeurs des segments dynamiques
   const { id } = await params;
 
   // TODO: fetch à faire quand back sera prête, en attendant, on a objet activity à la place (provisoire, pour mise en place du front)
@@ -77,7 +77,7 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
           <div>
             <h2 className="font-bold text-xl pb-1">Niveau de frisson</h2>
             <div className="flex items-center gap-2">
-                {renderSkulls(activity.level.value)}
+              {renderSkulls(activity.level.value)}
             </div>
           </div>
           <div className="flex justify-between items-center gap-2">
@@ -99,5 +99,5 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
         </div>
       </div>
     </div>
-  )
+  );
 }
