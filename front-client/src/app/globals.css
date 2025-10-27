@@ -6,6 +6,9 @@
   --color-neutral-50: #f7f8f9;
   --color-neutral-700: #121012;
 
+  /*Team Card Background*/
+  --color-bg-team-card: #201041;
+
   /* Primaire (violet / rose néon) */
   --color-primary-purple-200: #fa91e7;
   --color-primary-purple-300: #f834fd;
@@ -32,6 +35,8 @@
 
   --font-heading: var(--font-montserrat);
   --font-body: var(--font-barlow);
+
+  --color-bg-team-card: var(--color-bg-team-card);
 }
 
 /* Styles de base */
