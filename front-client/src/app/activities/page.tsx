@@ -1,3 +1,5 @@
+// src/app/activity/id/page.tsx 
+
 "use client";
 import IActivity, { ICategory } from "@/@types/activity";
 import { fetchAllActivities } from "@/api/activities";
@@ -65,7 +67,6 @@ export default function ActivitiesPage() {
     loadCategories();
   }, []);
  
-  
   // Etats pour la recherche (searchTerm) et le filtre par catégories (selectedCategory)
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -121,7 +122,7 @@ export default function ActivitiesPage() {
       <div className="z-10 flex flex-col justify-between items-center md:items-start gap-4">
         
         {/* Titre principal de la page */}
-        <h1 className="text-3xl md:text-4xl">Trouve ton horreur</h1>
+        <h1 className="text-3xl md:text-5xl">Trouve ton horreur</h1>
         
         {/* Conteneur regroupant la barre de recherche et le sélecteur de catégorie */}
         <div className="flex flex-col justify-between items-center md:flex-row gap-4 text-center">

@@ -1,10 +1,11 @@
-"use client";
+// src/app/page.tsx (home page)
 
+"use client";
 import CardActivity from "@/components/CardActivity";
 import LinkButton from "@/components/LinkButton";
 import { Bell, Clock, MapPinned, Phone, Rocket } from "lucide-react";
 import Image from "next/image";
-import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
@@ -60,30 +61,30 @@ export default function Home() {
   ];
   return (
     <>
-      <section className="relative h-screen w-full">
-        <div className="relative w-full h-[200px] md:h-screen">
+      <section className="md:relative md:h-screen w-full">
+        <div className="md:relative w-full h-[200px] md:h-screen">
           {/* Image de fond 1 */}
           <Image
             src="/images/bg1.png"
             alt="Zombie sans lumière"
-            fill
-            priority
-            className="object-cover object-top-right"
+            width={400}           // largeur mobile
+            height={200}          // hauteur mobile
+            className="absolute top-5 left-0 object-cover object-top-right w-full h-[200px] md:w-full md:h-screen"
           />
 
           {/* Image de fond 2 (avec lumière néon) */}
           <Image
             src="/images/bg0.png"
             alt="Zombie éclairé par le néon vert"
-            fill
-            priority
-            className="object-cover object-top-right animate-flicker"
+            width={400}           // largeur mobile
+            height={200}          // hauteur mobile
+            className="absolute top-5 left-0 object-cover object-top-right animate-flicker w-full h-[200px] md:w-full md:h-screen"
           />
         </div>
 
-        <div className="absolute md:bottom-24 z-10 flex flex-col items-center justify-end gap-2 p-4 md:justify-center md:items-start md:w-2/3 md:h-auto min-h-[300px] max-h-screen bg-neutral-700 md:bg-transparent">
+        <div className="md:absolute md:bottom-24 z-10 flex flex-col items-center justify-end gap-2 p-4 md:justify-center md:items-start md:w-2/3 md:h-auto min-h-[300px] max-h-screen bg-neutral-700 md:bg-transparent">
           <div className="text-neutral-50 text-center md:mx-4 md:text-left md:pb-8 flex flex-col justify-around gap-8">
-            <h1 className="text-2xl md:text-4xl">
+            <h1 className="text-3xl md:text-5xl">
             Bienvenue à Zombieland ! 
             </h1>
             <p className="font-bold md:text-2xl w-3/4 m-auto md:m-0">
@@ -105,7 +106,7 @@ export default function Home() {
       <section>
         {/* section pour le slider d'activités du parc */}
         <div className="w-full h-[400px] p-4  flex flex-col items-center justify-center gap-4">
-          <h2 className="text-xl md:text-2xl">NOS ATTRACTIONS LES PLUS FLIPPANTES</h2>
+          <h2 className="text-xl md:text-3xl uppercase">Nos attractions les plus flippantes</h2>
           <Swiper
             modules={[Navigation, Pagination]}
             navigation
@@ -117,7 +118,7 @@ export default function Home() {
                 slidesPerView: 2, // desktop 2 activité
               },
             }}
-            className="w-full "
+            className="w-full"
           >
             {activities.map((activity) => {
               return (
@@ -145,7 +146,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-linear-to-r from-black/40 to-transparent z-1"></div>
 
           <div className="absolute z-10 m-4 flex flex-col justify-center gap-4 w-full md:w-[60%] md:left-[10%] md:top-1/2 md:-translate-y-1/2">
-            <h2 className="text-xl md:text-2xl">PRÉPARE TA VENUE</h2>
+            <h2 className="text-xl md:text-3xl uppercase">Prépare ta venue</h2>
             <div className="">
               <div className="flex gap-2 font-bold text-base md:text-lg drop-shadow-lg/60">
                 <Clock />
@@ -178,7 +179,7 @@ export default function Home() {
               </div>
             </div>
             <div className="self-center md:self-auto md:w-xs">
-              <LinkButton path="/visitor-information" text="En savoir plus ..." style="button_activity" Icon={undefined}/>
+              <LinkButton path="/visitor-information" text="En savoir plus" style="button_activity" Icon={undefined}/>
             </div>
           </div>
         
@@ -188,5 +189,3 @@ export default function Home() {
     </>
   );
 }
-
-
