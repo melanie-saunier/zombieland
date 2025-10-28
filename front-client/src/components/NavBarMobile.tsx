@@ -1,3 +1,7 @@
+// Composant NavBarDesktop
+// Barre de navigation mobile fixe en bas de l'écran avec icônes et labels
+// Affiche les items de navigation en fonction de l'état de connexion de l'utilisateur
+
 "use client";
 
 import Link from "next/link";
@@ -24,65 +28,67 @@ export default function NavBarMobile() {
   ];
   
   return (
-    <>
-      <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-neutral-700/90 p-2 rounded-t-xl border-t-2 border-solid border-primary-purple-300 drop-shadow-[0_0_4px_var(--color-primary-purple-200)] ">
-        <ul className="flex justify-between px-2 text-neutral-50">
-          {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}
-          {navItems.map((item) => {
-            // Toujours afficher
-            if (item.always) return (
-              <li key={item.path}>
-                <Link
-                  href={item.path}
-                  className={ `${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"}`}
-                >
-                  <item.Icon
-                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
-                    className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                    size={24}
-                  />
-                  <p>{item.name}</p>
-                </Link>
-              </li>
-            );
+    // Navigation mobile fixe en bas
+    <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-neutral-700/90 p-2 rounded-t-xl border-t-2 border-solid border-primary-purple-300 drop-shadow-[0_0_4px_var(--color-primary-purple-200)] ">
+      <ul className="flex justify-between px-2 text-neutral-50">
+        {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}
+        {navItems.map((item) => {
+          // Toujours afficher
+          if (item.always) return (
+            <li key={item.path}>
+              {/* Lien cliquable vers la page de l'item */}
+              <Link
+                href={item.path}
+                className={ `${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"}`}
+              >
+                {/* Icône de l'item */}
+                <item.Icon
+                  color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                  className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
+                  size={24}
+                />
+                {/* Nom affiché de l'item sous l'icône */}
+                <p>{item.name}</p>
+              </Link>
+            </li>
+          );
 
-            // Afficher si connecté
-            if (isLogged && item.logged) return (
-              <li key={item.path}>
-                <Link
-                  href={item.path}
-                  className={ `${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"}`}
-                >
-                  <item.Icon
-                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
-                    className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                    size={24}
-                  />
-                  {item.name}
-                </Link>
-              </li>
-            );
+          // Afficher si connecté
+          if (isLogged && item.logged) return (
+            <li key={item.path}>
+              <Link
+                href={item.path}
+                className={ `${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"}`}
+              >
+                <item.Icon
+                  color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                  className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
+                  size={24}
+                />
+                {item.name}
+              </Link>
+            </li>
+          );
 
-            // Afficher si pas connecté
-            if (!isLogged && item.onlyLoggedOut) return (
-              <li key={item.path}>
-                <Link
-                  href={item.path}
-                  className={ `${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"}`}
-                >
-                  <item.Icon
-                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
-                    className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                    size={24}
-                  />
-                  {item.name}
-                </Link>
-              </li>
-            );
+          // Afficher si pas connecté
+          if (!isLogged && item.onlyLoggedOut) return (
+            <li key={item.path}>
+              <Link
+                href={item.path}
+                className={ `${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"}`}
+              >
+                <item.Icon
+                  color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                  className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
+                  size={24}
+                />
+                {item.name}
+              </Link>
+            </li>
+          );
 
-          })}
-        </ul>
-      </nav>
-    </>
+        })}
+      </ul>
+    </nav>
   );
 }
