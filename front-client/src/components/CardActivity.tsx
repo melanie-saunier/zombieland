@@ -12,15 +12,15 @@ import renderSkulls from "./RenderSkulls";
 
 type PropsCardActivity = {
   activity: {
-    id: string;
+    id: number;
     name: string;
     description: string;
     duration: number;
     min_height: number;
     pregnancy_warning: boolean;
     image_ref: string;
-    category: { id: string; name: string; color: string };
-    level: { id: string; name: string; value: number };
+    category: { id: number; name: string; color: string };
+    level: { id: number; name: string; value: number };
   };
 };
 
