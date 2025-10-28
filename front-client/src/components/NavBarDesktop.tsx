@@ -87,48 +87,62 @@ export default function NavBarDesktop() {
             </li>
           );
 
-          // Afficher si connecté
-          if (isLogged && item.logged) return (
-            <li key={item.path} className={`${item.isAction ? "border-b border-t border-solid border-primary-purple-300 py-4" : ""}`}>
-              <Link
-                href={item.path}
-                className={`flex items-center gap-2 px-8 py-2 
-                  ${pathname === item.path ? "current_page_text" : ""} 
-                  hover:scale-110 transition-transform duration-200`}
-              >
-                <item.Icon
-                  color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
-                  className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                  size={24}
-                />
-                {item.name}
-              </Link>
-            </li>
-          );
-
-          // Afficher si pas connecté
-          if (!isLogged && item.onlyLoggedOut) return (
-            <li key={item.path} className={`${item.isAction ? "border-b border-t border-solid border-primary-purple-300 py-4" : ""}`}>
-              <Link
-                href={item.path}
-                className={`flex items-center gap-2 px-8 py-2 
-                  ${pathname === item.path ? "current_page_text" : ""} 
-                  hover:scale-110 transition-transform duration-200`}
-              >
-                <item.Icon
-                  color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
-                  className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                  size={24}
-                />
-                {item.name}
-              </Link>
-            </li>
-          );
-
+      {/* Liste des éléments principaux (en haut) */}
+      <ul className="text-neutral-50 flex flex-col gap-4 w-full my-4">
+      {navItems
+        .filter(item => !item.isAction) // Exclut "Se connecter" et "Se déconnecter"
+        .map((item) => {
+          if (item.always || (isLogged && item.logged)) {
+            return (
+              <li key={item.path}>
+                <Link
+                  href={item.path}
+                  className={`flex items-center gap-2 px-8 py-2
+                    ${pathname === item.path ? "current_page_text" : ""}
+                    hover:scale-110 transition-transform duration-200`}
+                >
+                  <item.Icon
+                    color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                    className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
+                    size={24}
+                  />
+                  {item.name}
+                </Link>
+              </li>
+            );
+          }
         })}
       </ul>
-    </nav>
-  );
+
+      {/* Bouton "Se connecter" ou "Se déconnecter" (en bas) */}
+      <div className="w-full mt-auto">
+      {navItems
+        .filter(item => item.isAction)
+        .map((item) => {
+          if ((!isLogged && item.onlyLoggedOut) || (isLogged && item.logged)) {
+            return (
+              <div key={item.path} className="border-b border-t border-solid border-primary-purple-300 w-full">
+                <Link
+                  href={item.path}
+                  className={`flex items-center gap-2 px-8 py-4 w-full
+                    ${pathname === item.path ? "current_page_text" : ""}
+                    hover:scale-110 transition-transform duration-200`}
+                >
+                  <item.Icon
+                    color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                    className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
+                    size={24}
+                  />
+                  {item.name}
+                </Link>
+              </div>
+            );
+          }
+        })}
+      </div>
+  </nav>
+);
+
 }
 
 
