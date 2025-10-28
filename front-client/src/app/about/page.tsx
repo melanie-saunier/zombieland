@@ -53,8 +53,11 @@ export default function AboutPage() {
           <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-4 border-b-2 border-primary-purple-300 pb-3 inline-block">
             L’ équipe qui fait vivre l’horreur
           </h2>
-          <p className="text-neutral-50 md:text-lg mt-6 mb-10 max-w-3xl">
+          <p className="text-neutral-50 md:text-lg mt-6 mb-10">
             Derrière chaque frisson se cache une équipe de passionnés : créatifs, techniciens, comédiens et cascadeurs qui unissent leurs talents pour vous offrir une expérience unique où l’adrénaline rencontre l’art.
+          </p>
+          <p className="text-neutral-50 md:text-lg mt-6 mb-10">
+            Pénétrez dans les coulisses et découvrez celles et ceux qui donnent vie au parc : 
           </p>
 
           {/* Grille des 4 membres de l'équipe */}
@@ -73,6 +76,7 @@ export default function AboutPage() {
                   />
                 </div>
                 <h4 className="text-xl font-semibold mb-2 text-primary-purple-300">{member.name}</h4>
+                <p className="italic mb-2 text-primary-purple-200">{member.role}</p>
                 <p className="text-sm text-neutral-50/80 leading-relaxed">{member.description}</p>
               </div>
             ))}
@@ -99,16 +103,16 @@ export default function AboutPage() {
 
           <div className="space-y-4">
             <p>
-              <span className="text-primary-purple-300">Innovation :</span> Nous repoussons constamment les limites de l’horreur immersive avec des technologies de pointe et des scénarios originaux.
+              <span className="text-primary-purple-300 font-semibold">Innovation :</span> Nous repoussons constamment les limites de l’horreur immersive avec des technologies de pointe et des scénarios originaux.
             </p>
             <p>
-              <span className="text-primary-purple-300">Sécurité :</span> Malgré l’intensité de nos attractions, la sécurité de nos visiteurs reste notre priorité absolue. Chaque expérience est conçue et supervisée par des professionnels qualifiés.
+              <span className="text-primary-purple-300 font-semibold">Sécurité :</span> Malgré l’intensité de nos attractions, la sécurité de nos visiteurs reste notre priorité absolue. Chaque expérience est conçue et supervisée par des professionnels qualifiés.
             </p>
             <p>
-              <span className="text-primary-purple-300">Authenticité :</span> Nous créons des environnements et des scénarios réalistes qui plongent nos visiteurs dans un monde post-apocalyptique crédible et terrifiant.
+              <span className="text-primary-purple-300 font-semibold">Authenticité :</span> Nous créons des environnements et des scénarios réalistes qui plongent nos visiteurs dans un monde post-apocalyptique crédible et terrifiant.
             </p>
             <p>
-              <span className="text-primary-purple-300">Passion :</span> Notre équipe est composée de passionnés d’horreur, de cinéma et d’effets spéciaux qui mettent tout leur cœur dans chaque détail de l’expérience.visiteurs dans un monde post-apocalyptique crédible et terrifiant.
+              <span className="text-primary-purple-300 font-semibold">Passion :</span> Notre équipe est composée de passionnés d’horreur, de cinéma et d’effets spéciaux qui mettent tout leur cœur dans chaque détail de l’expérience.visiteurs dans un monde post-apocalyptique crédible et terrifiant.
             </p>
           </div>
 
