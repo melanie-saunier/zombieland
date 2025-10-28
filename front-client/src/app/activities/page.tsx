@@ -67,7 +67,6 @@ export default function ActivitiesPage() {
     loadCategories();
   }, []);
  
-  
   // Etats pour la recherche (searchTerm) et le filtre par catégories (selectedCategory)
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
