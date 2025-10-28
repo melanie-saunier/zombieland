@@ -21,9 +21,9 @@ export async function fetchOneActivityById(id: number): Promise<IActivity>{
     const res = await axios.get(`${API_URL}/activities/${id}`);
     return res.data;
   } catch (error) {
-    // si c'est une erreur axio avec un status 404 on redirige vers la page notFound
+    // si c'est une erreur axios avec un status 404 on redirige vers la page notFound
     if (axios.isAxiosError(error)) {
-      // console.log(error.status);
+      console.log(error.status);
       if(error.status === 404) {
         notFound();
       } 
