@@ -40,7 +40,7 @@ export default function Footer() {
           <ul className="text-center md:text-left space-y-2">
             <li className="hover:text-primary-purple-300 transition"><Link href="/legal-notice">Mentions légales</Link></li>
             <li className="hover:text-primary-purple-300 transition"><Link href="/privacy-policy">Politique de confidentialité</Link></li>
-            <li className="hover:text-primary-purple-300 transition"><Link href="/terms-and-conditions">CVG</Link></li>
+            <li className="hover:text-primary-purple-300 transition"><Link href="/terms-and-conditions">CGV</Link></li>
           </ul>
         </div>
 
