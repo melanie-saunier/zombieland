@@ -106,6 +106,27 @@ export const bookingController = {
     res.status(204).json();
   },
 
-  
+  // Récuperer toutes les bookings d'un utilisateur
+  async getAllBookingsForUser(req: Request, res: Response) {
+    // récuperer ET valider l'id de l'utilisateur'
+    const { id } = idSchema.parse(req.params);
+
+    // interroger la bdd pour récuperer l'utilisateur qui porte cet id
+    const user = await Booking.findAll({
+      where: { user_id: id }, // filtrer par l'id de la liste
+      
+      order: [
+        ["visit_date", "ASC"],
+        ["created_at", "DESC"],
+      ],
+    });
+
+    // est ce que cet utilisateur existe ?
+    if(!user) return res.status(404).json({ message:`l'utilisateur n'existe pas`});
+
+    // retourner la liste
+    res.json(user);
+  }
+
 
 }

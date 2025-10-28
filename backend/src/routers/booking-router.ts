@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { bookingController } from "../controllers/bookings-controller";
+import { User } from "../models/user";
 
 
 export const bookingRouter = Router();
@@ -67,3 +68,16 @@ bookingRouter.put("/:id", bookingController.updateOneById);
  * @return {object} 500 - Internal server error
  */
 bookingRouter.delete("/:id", bookingController.deleteOneById);
+
+/**
+ * GET /booking/:id/user
+ * @tags Booking
+ * @summary Returns bookings by user_id
+ * @param {string} id.path.required - The ID of the user
+ * @return {User} 200 - Successful response with the User object
+ * @return {object} 404 - No booking found
+ * @return {object} 500 - Internal server error
+ */
+bookingRouter.get("/:id/user", bookingController.getAllBookingsForUser);
+
+
