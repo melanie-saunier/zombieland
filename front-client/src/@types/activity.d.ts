@@ -1,5 +1,5 @@
 export default interface IActivity {
-  id: string;
+  id: number;
   name: string;
   description: string;
   duration: number; // en minutes
@@ -11,13 +11,13 @@ export default interface IActivity {
 }
 
 interface ICategory {
-  id: string;
+  id: number;
   name: string;
   color: string;
 }
 
 interface ILevel {
-  id: string;
+  id: number;
   name: string;
   value: number;
 }

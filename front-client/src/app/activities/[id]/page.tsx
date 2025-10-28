@@ -1,3 +1,4 @@
+import { fetchOneActivityById } from "@/api/activites";
 import renderSkulls from "@/components/RenderSkulls";
 import { TriangleAlert } from "lucide-react";
 import Image from "next/image";
@@ -5,7 +6,7 @@ import Link from "next/link";
 
 type ActivityDetailPageProps = {
   // TODO: si on modifie le type de id activity (UUID à integer) alors il faudra modifier string en integer
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: number }>;
 };
 
 export default async function ActivityDetailPage({params}: ActivityDetailPageProps) {
@@ -13,18 +14,8 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
   // on reçoit direct en props du composant une promesse avec les valeurs des segments dynamiques
   const { id } = await params;
 
-  // TODO: fetch à faire quand back sera prêt. En attendant, on a un objet "activity" à la place (provisoire, pour mise en place du front)
-  const activity =
-    { id: "activity-id1",
-      name: "Target Panic",
-      description: "Un stand futuriste où vous devez viser des têtes de zombies mécaniques avec des pistolets lumineux. Capteurs, sons délirants et effets LED à chaque tir réussi.",
-      duration: 5,
-      min_height: 110,
-      pregnancy_warning: true,
-      image_ref: "zombie_glam_lab.png",
-      category: {id: "category-id2", name: "Instinct de survie", color: "#C41E3A"},
-      level: {id: "level-id1", name: "Facile", value: 2} 
-    };
+  const activity = await fetchOneActivityById(id);
+
 
   return (
     <div className="bg-neutral-700 py-4 px-8">
@@ -32,6 +23,7 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
         href="/activities"
         className="hover:text-primary-purple-300 transition"
       >
+        
         ⭠ Retour à la liste des activités
       </Link>
       <div className="flex flex-col md:flex-row-reverse justify-around gap-8 md:gap-16 pt-4">
@@ -76,6 +68,9 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
             <div>
               {/* {Taille minimum pour participer à l'activité} */}
               <h2 className="font-bold text-xl pb-1">Taille Minimum</h2>
+              {
+                activity.min_height
+              }
               <p>{activity.min_height} cm</p>
             </div>
           </div>
