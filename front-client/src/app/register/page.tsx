@@ -16,8 +16,8 @@ export default function RegisterPage() {
       {/* div pour un effet overlay (noir) pour que le text ressorte bien par dessus l'image de background */}
       <div className="absolute inset-0 bg-neutral-700/50"></div>
       <div className="relative z-10">
-        <h1 className="text-xl md:text-3xl text-center">Inscription</h1>
-        <p className="text-center text-base md:text-2xl p-2 text-shadow-lg/30">Rejoignez-nous dans l’aventure Zombieland</p>
+        <h1 className="text-2xl md:text-4xl text-center">Inscription</h1>
+        <p className="text-center text-base md:text-xl p-2 text-shadow-lg/30">Rejoignez-nous dans l’aventure Zombieland</p>
         <form className="flex flex-col items-center gap-4">
           <div className="flex flex-col">
             {/* honeypot pour protéger des attaques de robot: le robot va remplir cet input */}
@@ -74,9 +74,8 @@ export default function RegisterPage() {
               className="input_style" 
               required/>
           </div>
-          <div>
-            <input type="checkbox" name="cgv" id="cgv" />
-            <label htmlFor="cgv" className="text-shadow-lg/30">J’ai lu et j’accepte les <Link href="/terms-and-conditions" className="underline font-bold hover:text-primary-purple-200 transition">conditions générales de vente</Link>.</label>
+          <div className="w-64 md:w-120">
+            <p className="text-sm text-justify">Les informations recueillies lors de ton inscription sont utilisées uniquement pour la création et la gestion de ton compte Zombieland. Tes données personnelles ne seront jamais partagées à des tiers sans ton consentement. Pour en savoir plus sur la gestion de tes données et tes droits, consulte notre <Link href="/privacy-policy" className="underline font-bold hover:text-primary-purple-200 transition">politique de confidentialité</Link>.</p>
           </div>
           <button className="button_booking m-2 p-2 md:m-4 md:py-4 md:px-12  font-bold">S&apos;inscrire</button>
         </form>
