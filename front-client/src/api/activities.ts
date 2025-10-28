@@ -1,5 +1,6 @@
 import IActivity from "@/@types/activity";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import { notFound } from "next/navigation";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -14,13 +15,20 @@ export async function fetchAllActivities() {
   }
 };
 
+// j'ai typé la fonction Promis IActivity pour avoir l'autocomplétion lors de l'utilisation du résultat
 export async function fetchOneActivityById(id: number): Promise<IActivity>{
   try {
     const res = await axios.get(`${API_URL}/activities/${id}`);
     return res.data;
-  } catch (err) {
-    console.error("Erreur lors de la récupération de l'activités:", err);
-    throw err;
+  } catch (error) {
+    // si c'est une erreur axio avec un status 404 on redirige vers la page notFound
+    if (axios.isAxiosError(error)) {
+      // console.log(error.status);
+      if(error.status === 404) {
+        notFound();
+      } 
+    }
+    throw new Error("Problème pour récupérer l'activités demandées");
   }
 }
 

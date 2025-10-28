@@ -1,6 +1,6 @@
 "use client";
 import IActivity, { ICategory } from "@/@types/activity";
-import { fetchAllActivities } from "@/api/activites";
+import { fetchAllActivities } from "@/api/activities";
 import fetchAllCategories from "@/api/categories";
 import CardActivity from "@/components/CardActivity";
 import Loader from "@/components/Loader";

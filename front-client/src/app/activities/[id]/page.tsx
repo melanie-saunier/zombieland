@@ -1,11 +1,11 @@
-import { fetchOneActivityById } from "@/api/activites";
+import { fetchOneActivityById } from "@/api/activities";
 import renderSkulls from "@/components/RenderSkulls";
 import { TriangleAlert } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 type ActivityDetailPageProps = {
-  // TODO: si on modifie le type de id activity (UUID à integer) alors il faudra modifier string en integer
   params: Promise<{ id: number }>;
 };
 
@@ -13,8 +13,16 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
   // on veut recuperer l'id de l'activité de l'URL pour récupérer les infos de cette activité via un fetch
   // on reçoit direct en props du composant une promesse avec les valeurs des segments dynamiques
   const { id } = await params;
-
+  //ICI, utilisation du fect directement dans le code, pas besoin de stocker dans un state car on affiche "juste" du html
+  // C'est un composant serveur 
+  // (lorsque l'on utilise des states et que l"on modifie le DOM, on ne peut pas faire directement le fetch
+  // on doit obligatoirement passer par un useEffect, dans ce cas là c'est un composant Client)
   const activity = await fetchOneActivityById(id);
+
+  // si activity n'existe pas on redirige vers la page 404 avec la fct notFound de next
+  // if(!activity) {
+  //   notFound();
+  // }
 
 
   return (
@@ -69,9 +77,10 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
               {/* {Taille minimum pour participer à l'activité} */}
               <h2 className="font-bold text-xl pb-1">Taille Minimum</h2>
               {
-                activity.min_height
+                activity.min_height === 0 ? 
+                  <p>Pas de taille minimum requise.</p> :
+                  <p>{activity.min_height} cm</p>
               }
-              <p>{activity.min_height} cm</p>
             </div>
           </div>
           {
