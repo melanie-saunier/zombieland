@@ -24,7 +24,7 @@ export async function fetchOneActivityById(id: number): Promise<IActivity>{
     // si c'est une erreur axios avec un status 404 on redirige vers la page notFound
     if (axios.isAxiosError(error)) {
       console.log(error.status);
-      if(error.status === 404) {
+      if(error.response?.status === 404) {
         notFound();
       } 
     }
@@ -32,3 +32,13 @@ export async function fetchOneActivityById(id: number): Promise<IActivity>{
   }
 }
 
+// fonction pour récuperer les activités les plus effrayante
+export default async function fetchMostScaryActivities() {
+  try {
+    const res = await axios.get(`${API_URL}/activities/most-scary`);
+    return res.data;
+  } catch (err) {
+    console.error("Erreur lors de la récupération des activitées:", err);
+    throw err;
+  }
+}
