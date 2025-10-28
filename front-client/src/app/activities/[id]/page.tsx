@@ -53,7 +53,7 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
         <div className="md:w-1/2 flex flex-col gap-2 md:gap-8 md:px-8">
           <div>
             {/* {Nom de l'activité} */}
-            <h1 className="text-3xl md:text-5xl pb-4">{activity.name}</h1>
+            <h1 className="title text-3xl md:text-5xl pb-4">{activity.name}</h1>
             {/* {Badge de la catégorie} */}
             <span 
               className="rounded-xl text-neutral-50 px-2 md:text-sm text-xs font-medium w-fit"

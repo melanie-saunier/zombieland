@@ -43,7 +43,7 @@ export default function AboutPage() {
       <div className="max-w-6xl mx-auto">
         {/* Section Hero */}
         <header className="mb-16 text-center md:text-left">
-          <h1 className="text-3xl md:text-5xl mb-6">
+          <h1 className="title text-3xl md:text-5xl mb-6">
             À propos de Zombieland
           </h1>
         </header>
