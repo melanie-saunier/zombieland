@@ -27,15 +27,15 @@ type PropsCardActivity = {
 export default function CardActivity({activity} : PropsCardActivity) {
 
   return (
-    <article className="relative flex flex-col border-solid border-2 border-primary-purple-300 rounded-xl drop-shadow-[0_0_4px_var(--color-primary-purple-200)]">
+    <article className="relative w-full max-w-sm aspect-600/500 flex flex-col border-solid border-2 border-primary-purple-300 rounded-xl drop-shadow-[0_0_4px_var(--color-primary-purple-200)]">
       {/* Image de l'activité */}
       <Link href={`/activities/${activity.id}`}>
         <Image 
           src={`/images/activities/${activity.image_ref}`}
           alt={`Image de l'activité ${activity.name}`}
-          width={300} 
-          height={200}
-          className="w-full rounded-xl"
+          fill
+          className="object-cover rounded-xl"
+          priority
         />
         {/* Catégorie (badge coloré) */}
         <span 
@@ -47,10 +47,10 @@ export default function CardActivity({activity} : PropsCardActivity) {
       </Link>
 
       {/* Contenu texte */}
-      <div className="absolute bottom-0 w-full bg-neutral-700/80 flex justify-between items-center px-2 md:py-4 py-2 rounded-xl">
-        <div className="flex gap-4 md:gap-8">
-          <h3 className="md:text-xl font-medium">{activity.name}</h3>
-          <div className="flex justify-between items-center gap-2">
+      <div className="absolute bottom-0 w-full bg-neutral-700/80 flex justify-between items-center px-2 md:py-4 py-2 gap-4 rounded-xl">
+        <div className="flex gap-2 md:gap-8">
+          <h3 className="md:text-l font-medium">{activity.name}</h3>
+          <div className="flex justify-between items-center gap-1">
             {renderSkulls(activity.level.value)}
           </div>
         </div>
