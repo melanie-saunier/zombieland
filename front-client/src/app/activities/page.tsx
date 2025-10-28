@@ -65,14 +65,6 @@ export default function ActivitiesPage() {
     loadCategories();
   }, []);
  
-
-  //TODO: fetch des categories depuis le back, quand il sera prêt. En attendant, j'ai créé une variable statique qui contient le tableau de catégories, pour mis en forme du front.
-  // const categories = [
-  //   {id: "category-id1", name: "Frissons mécaniques", color: "#1BE7FF"},
-  //   {id: "category-id2", name: "Instinct de survie", color: "#C41E3A"},
-  //   {id: "category-id3", name: "Réalité Inhumaine", color: "#7A00FF"},
-  //   {id: "category-id4", name: "Freak Shows", color: "#E3C014"}
-  // ];
   
   // Etats pour la recherche (searchTerm) et le filtre par catégories (selectedCategory)
   const [searchTerm, setSearchTerm] = useState("");
@@ -101,10 +93,11 @@ export default function ActivitiesPage() {
   );
 
   // si il y a une erreur on afffiche l'erreur 
-  if(errorActivities) {
+  if(errorActivities || errorCategories) {
     return (
       <div className="h-100 flex flex-col items-center justify-center p-4">
         <p className="text-center font-bold text-xl">{errorActivities}</p>
+        <p className="text-center font-bold text-xl">{errorCategories}</p>
         {/* ajouter une image */}
       </div>
     );
@@ -153,25 +146,29 @@ export default function ActivitiesPage() {
           {/* Ce second formulaire permet de filtrer les activités selon leur catégorie.
             La valeur sélectionnée est stockée dans le state `selectedCategory`,
             qui met également à jour le filtrage des activités. */}
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="input_style  w-full"
-          >
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full bg-neutral-600 text-neutral-400"
+          { loadingCategories ?
+            <Loader /> :
+
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="input_style  w-full"
             >
-              {/* Option par défaut (aucun filtre appliqué) */}
-              <option value="">Filtre par catégorie</option>
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-full bg-neutral-600 text-neutral-400"
+              >
+                {/* Option par défaut (aucun filtre appliqué) */}
+                <option value="">Filtre par catégorie</option>
 
-              {/* Les différentes catégories disponibles sont générées dynamiquement à partir du tableau `categories` */}
+                {/* Les différentes catégories disponibles sont générées dynamiquement à partir du tableau `categories` */}
 
-              {categories.map( (category) => (
-                <option key={category.id} value={category.name}>{category.name}</option>
-              ))}
-            </select>
-          </form>
+                {categories.map( (category) => (
+                  <option key={category.id} value={category.name}>{category.name}</option>
+                ))}
+              </select>
+            </form>
+          }
         </div>
       </div>
       
@@ -179,7 +176,9 @@ export default function ActivitiesPage() {
       {/* On parcourt le tableau `filteredActivities` (déjà filtré selon la recherche et la catégorie),
         et on affiche une carte pour chaque activité à l’aide du composant `CardActivity`. */}
       {loadingActivities ? 
-        <Loader /> :  
+        (<div className="h-100 flex flex-col justify-center items-center m-4">
+          <Loader /> 
+        </div> ):
         (<div className="p-8 flex flex-wrap gap-8 justify-center">
           {filteredActivities.map((activity) => (
             <CardActivity key={activity.id} activity={activity} />
