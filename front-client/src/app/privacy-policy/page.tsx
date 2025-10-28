@@ -7,7 +7,7 @@ export default function privacyPolicyPage() {
   return (
     <div className="bg-radial from-[#961990] to-[#000000] p-12">
       <Image src="/images/logo.png" alt="Logo de Zombieland" width={150} height={75} className="w-16 h-auto md:w-48 hover:scale-125 transition-transform duration-200"/>
-      <h1 className="flex items-center justify-center text-shadow-none! tracking-normal! pt-px py-6 pb-6">Politique de Confidentialité – Zombieland</h1>
+      <h1 className="text-center text-shadow-none! tracking-normal! pt-px py-6 pb-6">Politique de Confidentialité – Zombieland</h1>
       <h2 className="text-shadow-none! tracking-normal! normal-case! p-6">Dernière mise à jour : Octobre 2025</h2>
       <p>Chez Zombieland, nous prenons très au sérieux la protection de vos données personnelles. Cette politique de confidentialité explique comment nous collectons, utilisons, partageons et protégeons les informations que vous nous confiez lorsque vous utilisez notre site web et nos services.</p>
 

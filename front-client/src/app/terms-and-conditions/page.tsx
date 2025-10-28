@@ -7,7 +7,7 @@ export default function cgvPage() {
   return(
     <div className="bg-radial from-[#961990] to-[#000000] p-12">
       <Image src="/images/logo.png" alt="Logo de Zombieland" width={150} height={75} className="w-16 h-auto md:w-48 hover:scale-125 transition-transform duration-200"/>
-      <h1 className="flex items-center justify-center text-shadow-none! tracking-normal! pt-px py-6 pb-6">Conditions Générales de Vente – Zombieland</h1>
+      <h1 className="text-center text-shadow-none! tracking-normal! pt-px py-6 pb-6">Conditions Générales de Vente – Zombieland</h1>
       <h2 className="text-shadow-none! tracking-normal! normal-case! p-6">Dernière mise à jour : Octobre 2025</h2>
       <h2 className="text-shadow-none! tracking-normal! pl-6 pr-6 pb-2">1. Objet</h2>
       <p>Les présentes Conditions Générales de Vente (CGV) s’appliquent à toute réservation de billet d’entrée pour le parc Zombieland, effectuée via le site web [nom du site]. La réservation ne constitue pas une vente, mais une pré-réservation de place, soumise à confirmation et paiement sur place le jour de la visite.</p>

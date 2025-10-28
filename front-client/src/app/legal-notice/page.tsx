@@ -7,7 +7,7 @@ export default function legalNoticePage() {
   return (
     <div className="flex flex-col bg-radial from-[#961990] to-[#000000] p-12">
       <Image src="/images/logo.png" alt="Logo de Zombieland" width={150} height={75} className="w-16 h-auto md:w-48 hover:scale-125 transition-transform duration-200"/>
-      <h1 className="flex items-center text-shadow-none! tracking-normal! justify-center pt-px pl-8 pr-8 pb-8">MENTION LÉGALES</h1>
+      <h1 className="text-center text-shadow-none! tracking-normal! justify-center pt-px pl-8 pr-8 pb-8">MENTION LÉGALES</h1>
       <p className="">Conformément aux dispositions de la loi n° 2004-575 du 21 juin 2004 pour la confiance en l&apos;économie numérique, il est précisé aux utilisateurs du site Zombieland l&apos;identité des différents intervenants dans le cadre de sa réalisation et de son suivi.</p>
 
       <h2 className="text-shadow-none! tracking-normal! pl-6 pt-6 pr-6 pb-2">Edition du site</h2>
