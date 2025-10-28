@@ -1,3 +1,6 @@
+// Composant Footer
+// Footer responsive pour toutes les pages
+
 import Image from "next/image";
 import Link from "next/link";
 
@@ -69,7 +72,7 @@ export default function Footer() {
       <div className="flex items-center justify-center">
         <p className="p-4 text-xs">ZombieLand @ 2025. Tous droits réservés.</p>
       </div>
-      
+
     </footer>
   );
 

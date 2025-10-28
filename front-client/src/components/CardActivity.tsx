@@ -1,3 +1,11 @@
+// Composant CardActivity
+// Affiche une carte d'activité avec :
+// - une image de l'activité en haut (cliquable pour accéder au détail) 
+// - un badge de catégorie coloré superposé sur l'image
+// - le nom de l'activité
+// - le niveau de difficulté représenté par un certain nombre de crânes
+// - un lien "Explore" pour découvrir les détails de l'activité
+
 import Image from "next/image";
 import Link from "next/link";
 import renderSkulls from "./RenderSkulls";

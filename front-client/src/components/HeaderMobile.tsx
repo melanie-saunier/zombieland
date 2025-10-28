@@ -1,3 +1,9 @@
+// Composant HeaderMobile
+// Header mobile avec logo cliquable, bouton hamburger et menu vertical.
+// Items du menu affichés selon l'état de connexion (always, logged, onlyLoggedOut).
+// L'item actif est mis en valeur, chaque item peut avoir une icône et un texte.
+// Le menu se ferme automatiquement au clic pour l'UX mobile.
+
 "use client";
 
 import Link from "next/link";
