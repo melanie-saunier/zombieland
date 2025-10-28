@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Bell, Clock, Euro, MapPin, Phone, Mail, Bus, Car } from "lucide-react";
-import Button from "@/components/Button";
+import Button from "@/components/LinkButton";
 
 export const metadata = {
   title: "Informations utiles | ZOMBIELAND",
