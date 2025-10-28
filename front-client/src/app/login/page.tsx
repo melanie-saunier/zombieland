@@ -17,7 +17,7 @@ export default function LoginPage() {
       {/* div pour un effet overlay (noir) pour que le text ressorte bien par dessus l'image de background */}
       <div className="absolute inset-0 bg-neutral-700/50"></div>
       <div className="relative z-10">
-        <h1 className="text-2xl md:text-4xl text-center">Connexion</h1>
+        <h1 className="text-3xl md:text-5xl text-center">Connexion</h1>
         <p className="text-center text-base md:text-xl p-2 text-shadow-lg/30">Ton pass pour l’expérience Zombieland t’attend !</p>
         <form className="flex flex-col items-center gap-4 pb-2">
           <div className="flex flex-col">

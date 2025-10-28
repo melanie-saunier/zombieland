@@ -82,7 +82,7 @@ export default function Home() {
 
         <div className="absolute md:bottom-24 z-10 flex flex-col items-center justify-end gap-2 p-4 md:justify-center md:items-start md:w-2/3 md:h-auto min-h-[300px] max-h-screen bg-neutral-700 md:bg-transparent">
           <div className="text-neutral-50 text-center md:mx-4 md:text-left md:pb-8 flex flex-col justify-around gap-8">
-            <h1 className="text-2xl md:text-4xl">
+            <h1 className="text-3xl md:text-5xl">
             Bienvenue à Zombieland ! 
             </h1>
             <p className="font-bold md:text-2xl w-3/4 m-auto md:m-0">

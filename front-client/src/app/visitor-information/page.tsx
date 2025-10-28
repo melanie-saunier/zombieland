@@ -18,7 +18,7 @@ export default function VisitorInformationPage() {
             <h1 className="text-3xl md:text-5xl mb-4">
               Informations utiles
             </h1>
-            <p className="text-neutral-50/80 md:text-lg max-w-3xl">
+            <p className="text-neutral-50/80 md:text-lg">
               Préparez votre visite à Zombieland : horaires d’ouverture, tarifs, accès parking, transports en commun et contacts utiles.
             </p>
           </header>
@@ -32,20 +32,14 @@ export default function VisitorInformationPage() {
                 Horaires d’ouverture
               </h2>
               <div className="border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300 max-w-2xl" style={{backgroundColor: "#201041"}}>
-                <ul className="space-y-3 text-neutral-50/80">
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1 text-xl">•</span>
-                    <span className="text-lg">
-                      <strong className="text-primary-purple-300">Haute saison</strong> (Juin à Septembre) : 
-                      <span className="text-secondary-300 font-semibold"> 7j/7 de 10h à 23h</span>
-                    </span>
+                <ul className="px-2 space-y-3 text-neutral-50/80 list-disc marker:text-secondary-300">
+                  <li>
+                    <span className="text-lg text-primary-purple-300">Haute saison</span> (Juin à Septembre) : 
+                    <span className="text-lg text-secondary-300 font-semibold"> 7j/7 de 10h à 23h</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1 text-xl">•</span>
-                    <span className="text-lg">
-                      <strong className="text-primary-purple-300">Basse saison</strong> (Octobre à Mai) : 
-                      <span className="text-secondary-300 font-semibold"> 7j/7 de 10h à 20h</span>
-                    </span>
+                  <li>
+                    <span className="text-lg text-primary-purple-300">Basse saison</span> (Octobre à Mai) : 
+                    <span className="text-lg text-secondary-300 font-semibold"> 7j/7 de 10h à 20h</span>
                   </li>
                 </ul>
               </div>
@@ -114,23 +108,11 @@ export default function VisitorInformationPage() {
                   <Car size={20} />
                   Parking
                 </h3>
-                <ul className="space-y-2 text-neutral-50/80">
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Parking visiteurs à proximité immédiate de l’entrée</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Places réservées PMR</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Bornes de recharge électrique</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Ouvert durant les horaires du parc (gratuit)</span>
-                  </li>
+                <ul className="px-2 space-y-2 text-neutral-50/80 list-disc marker:text-secondary-300">
+                  <li>Parking visiteurs à proximité immédiate de l’entrée</li>
+                  <li>Places réservées PMR</li>
+                  <li>Bornes de recharge électrique</li>
+                  <li>Ouvert durant les horaires du parc (gratuit)</li>
                 </ul>
               </div>
 
@@ -140,19 +122,10 @@ export default function VisitorInformationPage() {
                   <Bus size={20} />
                   Transports en commun
                 </h3>
-                <ul className="space-y-2 text-neutral-50/80">
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Bus lignes 12 et 24 — arrêt “Zombieland”</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Tram T2 — station “Néonville”</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Gare “Néonville” à ~15 min en navette</span>
-                  </li>
+                <ul className="px-2 space-y-2 text-neutral-50/80 list-disc marker:text-secondary-300">
+                  <li>Bus lignes 12 et 24 — arrêt “Zombieland”</li>
+                  <li>Tram T2 — station “Néonville”</li>
+                  <li>Gare “Néonville” à ~15 min en navette</li>
                 </ul>
               </div>
             </div>
@@ -173,56 +146,50 @@ export default function VisitorInformationPage() {
         </div>
       </section>
 
-      <section className="px-4 py-10 md:px-8 md:py-16 bg-neutral-700">
-        <div className="max-w-6xl mx-auto">
-          {/* Section Contact - CENTRÉE */}
-          <div className="mb-8 flex justify-center">
-            <div className="w-full max-w-4xl">
-              <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-purple-300 pb-3 inline-block">
-                <Phone className="inline-block mr-2 mb-1" size={28} />
-                Contact
-              </h2>
-              <div className="grid gap-4 md:grid-cols-2">
-                {/* Téléphone */}
-                <div className="bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: "#201041"}}>
-                  <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
-                    <Phone size={20} />
-                    Téléphone
-                  </h3>
-                  <p className="text-neutral-50/80 mb-2">
-                    <a 
-                      href="tel:+33666666666" 
-                      className="text-xl font-semibold text-secondary-300 hover:text-secondary-200 transition-colors"
-                    >
-                      06 66 66 66 66
-                    </a>
-                  </p>
-                  <p className="text-sm text-neutral-50/60">
-                    Réception téléphonique :<br />
-                    Lun–Dim, 9h–18h
-                  </p>
-                </div>
+      {/* Section Contact - CENTRÉE */}
+      <section className="bg-neutral-700 px-4 py-10 md:px-8 md:py-16 w-full mx-auto mb-8 flex flex-col justify-center items-center">
+        <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-purple-300 pb-3 inline-block">
+          <Phone className="inline-block mr-2 mb-1" size={28} />
+            Contact
+        </h2>
+        <div className="flex flex-col md:flex-row justify-center gap-4 md:w-1/2">
+          {/* Téléphone */}
+          <div className="md:w-1/2 bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: "#201041"}}>
+            <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
+              <Phone size={20} />
+                Téléphone
+            </h3>
+            <p className="text-neutral-50/80 mb-2">
+              <a 
+                href="tel:+33666666666" 
+                className="text-xl font-semibold text-secondary-300 hover:text-secondary-200 transition-colors"
+              >
+                06 66 66 66 66
+              </a>
+            </p>
+            <p className="text-sm text-neutral-50/60">
+              Réception téléphonique :<br />
+              Lun–Dim, 9h–18h
+            </p>
+          </div>
 
-                {/* Email */}
-                <div className="bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: "#201041"}}>
-                  <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
-                    <Mail size={20} />
-                    Email
-                  </h3>
-                  <p className="text-neutral-50/80">
-                    <a 
-                      href="mailto:contact@zombieLand.fr" 
-                      className="text-xl font-semibold text-secondary-300 hover:text-secondary-200 transition-colors break-all"
-                    >
-                      contact@zombieLand.fr
-                    </a>
-                  </p>
-                  <p className="text-sm text-neutral-50/60 mt-2">
-                    Réponse sous 24h en semaine
-                  </p>
-                </div>
-              </div>
-            </div>
+          {/* Email */}
+          <div className="md:w-1/2 bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: "#201041"}}>
+            <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
+              <Mail size={20} />
+                Email
+            </h3>
+            <p className="text-neutral-50/80">
+              <a 
+                href="mailto:contact@zombieLand.fr" 
+                className="text-xl font-semibold text-secondary-300 hover:text-secondary-200 transition-colors break-all"
+              >
+                contact@zombieLand.fr
+              </a>
+            </p>
+            <p className="text-sm text-neutral-50/60 mt-2">
+              Réponse sous 24h en semaine
+            </p>
           </div>
         </div>
       </section>
