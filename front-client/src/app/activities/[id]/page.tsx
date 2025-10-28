@@ -13,11 +13,12 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
   // on veut recuperer l'id de l'activité de l'URL pour récupérer les infos de cette activité via un fetch
   // on reçoit direct en props du composant une promesse avec les valeurs des segments dynamiques
   const { id } = await params;
+  const idNumber = Number(id);
   //ICI, utilisation du fect directement dans le code, pas besoin de stocker dans un state car on affiche "juste" du html
   // C'est un composant serveur 
   // (lorsque l'on utilise des states et que l"on modifie le DOM, on ne peut pas faire directement le fetch
   // on doit obligatoirement passer par un useEffect, dans ce cas là c'est un composant Client)
-  const activity = await fetchOneActivityById(id);
+  const activity = await fetchOneActivityById(idNumber);
 
   // si activity n'existe pas on redirige vers la page 404 avec la fct notFound de next
   // if(!activity) {
