@@ -1,62 +1,72 @@
+// src/app/activity/id/page.tsx 
+
 "use client";
+import IActivity, { ICategory } from "@/@types/activity";
+import { fetchAllActivities } from "@/api/activites";
+import fetchAllCategories from "@/api/categories";
 import CardActivity from "@/components/CardActivity";
+import Loader from "@/components/Loader";
 import { Search } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ActivitiesPage() {
-  //TODO: fetch des activities depuis le back, quand back sera prêt. En attendant, j'ai créé une variable statique qui contient un tableau d'activités, pour mis en forme du front.
-  const activities = [
-    { id: "activity-id1",
-      name: "Target Panic",
-      description: "Un stand futuriste où vous devez viser des têtes de zombies mécaniques avec des pistolets lumineux. Capteurs, sons délirants et effets LED à chaque tir réussi.",
-      duration: 5,
-      min_height: 110,
-      pregnancy_warning: false,
-      image_ref: "target_panic.png",
-      category: {id: "category-id2", name: "Instinct de survie", color: "#C41E3A"},
-      level: {id: "level-id1", name: "Facile", value: 1} 
-    }, 
-    { id: "activity-id2",
-      name: "The Grinder",
-      description: "Les visiteurs embarquent dans une machine à broyer les morts-vivants : nacelles rotatives, étincelles de métal, néons roses et verts, cris mécaniques et rires zombifiés en fond sonore. Sensations garanties !",
-      duration: 15,
-      min_height: 130,
-      pregnancy_warning: true,
-      image_ref: "the_grinder.png",
-      category: {id: "category-id1", name: "Frissons mécaniques", color: "#1BE7FF"},
-      level: {id: "level-id3", name: "Difficile", value: 3} 
-    }, 
-    { id: "activity-id3",
-      name: "The Core",
-      description: "Un tunnel lumineux et sonore à explorer : capteurs de mouvement, illusions lumineuses, effets sonores 3D, hologrammes de zombies et une fin humoristique inattendue.",
-      duration: 15,
-      min_height: 110,
-      pregnancy_warning: false,
-      image_ref: "the_core.png",
-      category: {id: "category-id3", name: "Réalité Inhumaine", color: "#7A00FF"},
-      level: {id: "level-id2", name: "Intermédiaire", value: 2} 
-    }, 
-    { id: "activity-id4",
-      name: "Rebirth Live Show",
-      description: "Danseurs zombies, lasers verts, beats techno et projections futuristes : un show déjanté entre concert électro et théâtre d’outbreak.",
-      duration: 30,
-      min_height: 110,
-      pregnancy_warning: false,
-      image_ref: "rebirth_live_show.png",
-      category: {id: "category-id4", name: "Freak Shows", color: "#E3C014"},
-      level: {id: "level-id1", name: "Facile", value: 1} 
-    },
-  ];
-
-  //TODO: fetch des categories depuis le back, quand il sera prêt. En attendant, j'ai créé une variable statique qui contient le tableau de catégories, pour mis en forme du front.
-  const categories = [
-    {id: "category-id1", name: "Frissons mécaniques", color: "#1BE7FF"},
-    {id: "category-id2", name: "Instinct de survie", color: "#C41E3A"},
-    {id: "category-id3", name: "Réalité Inhumaine", color: "#7A00FF"},
-    {id: "category-id4", name: "Freak Shows", color: "#E3C014"}
-  ];
   
+  // State pour le fetch des activités avec state d'erreur et de loading
+  const [activities, setActivities] = useState<IActivity[]>([]);
+  const [errorActivities, setErrorActivities] = useState<string | null>(null);
+  const [loadingActivities, setLoadingActivities] = useState(true);
+
+  // State pour le fetch des catégories avec state d'erreur et de loading
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [errorCategories, setErrorCategories] = useState<string | null>(null);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
+  // use effect pour récupérer les données avec un fetch
+  useEffect(() => {
+    // on récup les données des activités
+    const loadActivities = async () => {
+      // on remet le state d'erreur à zéro
+      // on met le loading à true
+      setLoadingActivities(true);
+      setErrorActivities(null);
+      try {
+        // appelle de la fonction qui fetch les activités avec axios
+        const dataActivities = await fetchAllActivities();
+        setActivities(dataActivities);
+
+      } catch(err) {
+        console.error(err);
+        setErrorActivities("Erreur lors de la récupération des activitées"); 
+      } finally {
+        // quand c'est chargé on met loading à false
+        setLoadingActivities(false);
+      }
+    };
+
+    // on récup les données des activités
+    const loadCategories = async () => {
+      // on remet le state d'erreur à zéro
+      // on met le loading à true
+      setLoadingCategories(true);
+      setErrorCategories(null);
+      try {
+        // appelle de la fonction qui fetch les catégories avec axios
+        const dataCategories = await fetchAllCategories();
+        setCategories(dataCategories);
+      } catch(err) {
+        console.error(err);
+        setErrorCategories("Erreur lors de la récupération des catégories");
+      } finally {
+        // quand données chargées on met le loader à false
+        setLoadingCategories(false);
+      }
+    };
+    // on appelle les fonctions de récupération des données:
+    loadActivities();
+    loadCategories();
+  }, []);
+ 
   // Etats pour la recherche (searchTerm) et le filtre par catégories (selectedCategory)
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
@@ -83,6 +93,16 @@ export default function ActivitiesPage() {
     )
   );
 
+  // si il y a une erreur on afffiche l'erreur 
+  if(errorActivities || errorCategories) {
+    return (
+      <div className="h-100 flex flex-col items-center justify-center p-4">
+        <p className="text-center font-bold text-xl">{errorActivities}</p>
+        <p className="text-center font-bold text-xl">{errorCategories}</p>
+        {/* ajouter une image */}
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 relative flex flex-col min-h-screen">
@@ -102,7 +122,7 @@ export default function ActivitiesPage() {
       <div className="z-10 flex flex-col justify-between items-center md:items-start gap-4">
         
         {/* Titre principal de la page */}
-        <h1 className="text-3xl md:text-4xl">Trouve ton horreur</h1>
+        <h1 className="text-3xl md:text-5xl">Trouve ton horreur</h1>
         
         {/* Conteneur regroupant la barre de recherche et le sélecteur de catégorie */}
         <div className="flex flex-col justify-between items-center md:flex-row gap-4 text-center">
@@ -127,35 +147,47 @@ export default function ActivitiesPage() {
           {/* Ce second formulaire permet de filtrer les activités selon leur catégorie.
             La valeur sélectionnée est stockée dans le state `selectedCategory`,
             qui met également à jour le filtrage des activités. */}
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="input_style  w-full"
-          >
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full bg-neutral-600 text-neutral-400"
-            >
-              {/* Option par défaut (aucun filtre appliqué) */}
-              <option value="">Filtre par catégorie</option>
+          {/* loader mis en place, si loading categories: true on a un loader sinon on affiche les catégories */}
+          { loadingCategories ?
+            <Loader /> :
 
-              {/* Les différentes catégories disponibles sont générées dynamiquement à partir du tableau `categories` */}
-              {categories.map( (category) => (
-                <option key={category.id} value={category.name}>{category.name}</option>
-              ))}
-            </select>
-          </form>
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="input_style  w-full"
+            >
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="w-full bg-neutral-600 text-neutral-400"
+              >
+                {/* Option par défaut (aucun filtre appliqué) */}
+                <option value="">Filtre par catégorie</option>
+
+                {/* Les différentes catégories disponibles sont générées dynamiquement à partir du tableau `categories` */}
+
+                {categories.map( (category) => (
+                  <option key={category.id} value={category.name}>{category.name}</option>
+                ))}
+              </select>
+            </form>
+          }
         </div>
       </div>
       
       {/* Cards */}
       {/* On parcourt le tableau `filteredActivities` (déjà filtré selon la recherche et la catégorie),
         et on affiche une carte pour chaque activité à l’aide du composant `CardActivity`. */}
-      <div className="p-8 flex flex-wrap gap-8 justify-center">
-        {filteredActivities.map((activity) => (
-          <CardActivity key={activity.id} activity={activity} />
-        ))}
-      </div>
+      {/* loadingActivities a true on affiche le loader sinon les activités */}
+      {loadingActivities ? 
+        (<div className="h-100 flex flex-col justify-center items-center m-4">
+          <Loader /> 
+        </div> ):
+        (<div className="p-8 flex flex-wrap gap-8 justify-center">
+          {filteredActivities.map((activity) => (
+            <CardActivity key={activity.id} activity={activity} />
+          ))}
+        </div>)
+      }
     </div>
   );
 }

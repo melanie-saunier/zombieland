@@ -19,8 +19,8 @@ const barlow = Barlow({
 });
 
 export const metadata: Metadata = {
-  title: "ZOMBIELAND",
-  description: "Bienvenue sur le site de ZombieLand, parc d'attractions immersif",
+  title: "Accueil | ZOMBIELAND",
+  description: "Bienvenue à ZOMBIELAND, le parc d’attractions le plus terrifiant ! Découvre des activités à sensations, affronte tes peurs et réserve ton billet d’entrée dès maintenant.",
 };
 
 export default function RootLayout({
