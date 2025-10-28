@@ -146,6 +146,7 @@ export default function ActivitiesPage() {
           {/* Ce second formulaire permet de filtrer les activités selon leur catégorie.
             La valeur sélectionnée est stockée dans le state `selectedCategory`,
             qui met également à jour le filtrage des activités. */}
+          {/* loader mis en place, si loading categories: true on a un loader sinon on affiche les catégories */}
           { loadingCategories ?
             <Loader /> :
 
@@ -175,6 +176,7 @@ export default function ActivitiesPage() {
       {/* Cards */}
       {/* On parcourt le tableau `filteredActivities` (déjà filtré selon la recherche et la catégorie),
         et on affiche une carte pour chaque activité à l’aide du composant `CardActivity`. */}
+      {/* loadingActivities a true on affiche le loader sinon les activités */}
       {loadingActivities ? 
         (<div className="h-100 flex flex-col justify-center items-center m-4">
           <Loader /> 
