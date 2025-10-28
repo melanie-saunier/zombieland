@@ -5,7 +5,7 @@ export const categoryRouter = Router();
 
 /**
  * @typedef {object} Category
- * @property {string} id - category's unique id (UUID)
+ * @property {number} id - category's unique id (UUID)
  * @property {string} name - category's name
  * @property {string} color - category's color in HEX
  * @property {string} created_at - category's creation TS
