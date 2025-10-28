@@ -1,38 +1,78 @@
 "use client";
-import IActivity from "@/@types/activity";
+import IActivity, { ICategory } from "@/@types/activity";
 import { fetchAllActivities } from "@/api/activites";
+import fetchAllCategories from "@/api/categories";
 import CardActivity from "@/components/CardActivity";
+import Loader from "@/components/Loader";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 export default function ActivitiesPage() {
-  //TODO: fetch des activities depuis le back, quand back sera prêt. En attendant, j'ai créé une variable statique qui contient un tableau d'activités, pour mis en forme du front.
-  const [activities, setActivities] = useState<IActivity[]>([]);
-  const [error, setError] = useState<string | null>(null);
   
+  // State pour le fetch des activités avec state d'erreur et de loading
+  const [activities, setActivities] = useState<IActivity[]>([]);
+  const [errorActivities, setErrorActivities] = useState<string | null>(null);
+  const [loadingActivities, setLoadingActivities] = useState(true);
+
+  // State pour le fetch des catégories avec state d'erreur et de loading
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [errorCategories, setErrorCategories] = useState<string | null>(null);
+  const [loadingCategories, setLoadingCategories] = useState(true);
+
+  // use effect pour récupérer les données avec un fetch
   useEffect(() => {
+    // on récup les données des activités
     const loadActivities = async () => {
+      // on remet le state d'erreur à zéro
+      // on met le loading à true
+      setLoadingActivities(true);
+      setErrorActivities(null);
       try {
+        // appelle de la fonction qui fetch les activités avec axios
         const dataActivities = await fetchAllActivities();
         setActivities(dataActivities);
 
-      } catch(error) {
-        console.log("erreur de fetch des recettes");
-        setError("Erreur lors de la récupération des activitées"); 
+      } catch(err) {
+        console.error(err);
+        setErrorActivities("Erreur lors de la récupération des activitées"); 
+      } finally {
+        // quand c'est chargé on met loading à false
+        setLoadingActivities(false);
       }
     };
+
+    // on récup les données des activités
+    const loadCategories = async () => {
+      // on remet le state d'erreur à zéro
+      // on met le loading à true
+      setLoadingCategories(true);
+      setErrorCategories(null);
+      try {
+        // appelle de la fonction qui fetch les catégories avec axios
+        const dataCategories = await fetchAllCategories();
+        setCategories(dataCategories);
+      } catch(err) {
+        console.error(err);
+        setErrorCategories("Erreur lors de la récupération des catégories");
+      } finally {
+        // quand données chargées on met le loader à false
+        setLoadingCategories(false);
+      }
+    };
+    // on appelle les fonctions de récupération des données:
     loadActivities();
+    loadCategories();
   }, []);
  
 
   //TODO: fetch des categories depuis le back, quand il sera prêt. En attendant, j'ai créé une variable statique qui contient le tableau de catégories, pour mis en forme du front.
-  const categories = [
-    {id: "category-id1", name: "Frissons mécaniques", color: "#1BE7FF"},
-    {id: "category-id2", name: "Instinct de survie", color: "#C41E3A"},
-    {id: "category-id3", name: "Réalité Inhumaine", color: "#7A00FF"},
-    {id: "category-id4", name: "Freak Shows", color: "#E3C014"}
-  ];
+  // const categories = [
+  //   {id: "category-id1", name: "Frissons mécaniques", color: "#1BE7FF"},
+  //   {id: "category-id2", name: "Instinct de survie", color: "#C41E3A"},
+  //   {id: "category-id3", name: "Réalité Inhumaine", color: "#7A00FF"},
+  //   {id: "category-id4", name: "Freak Shows", color: "#E3C014"}
+  // ];
   
   // Etats pour la recherche (searchTerm) et le filtre par catégories (selectedCategory)
   const [searchTerm, setSearchTerm] = useState("");
@@ -60,6 +100,15 @@ export default function ActivitiesPage() {
     )
   );
 
+  // si il y a une erreur on afffiche l'erreur 
+  if(errorActivities) {
+    return (
+      <div className="h-100 flex flex-col items-center justify-center p-4">
+        <p className="text-center font-bold text-xl">{errorActivities}</p>
+        {/* ajouter une image */}
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 relative flex flex-col min-h-screen">
@@ -117,6 +166,7 @@ export default function ActivitiesPage() {
               <option value="">Filtre par catégorie</option>
 
               {/* Les différentes catégories disponibles sont générées dynamiquement à partir du tableau `categories` */}
+
               {categories.map( (category) => (
                 <option key={category.id} value={category.name}>{category.name}</option>
               ))}
@@ -128,11 +178,14 @@ export default function ActivitiesPage() {
       {/* Cards */}
       {/* On parcourt le tableau `filteredActivities` (déjà filtré selon la recherche et la catégorie),
         et on affiche une carte pour chaque activité à l’aide du composant `CardActivity`. */}
-      <div className="p-8 flex flex-wrap gap-8 justify-center">
-        {filteredActivities.map((activity) => (
-          <CardActivity key={activity.id} activity={activity} />
-        ))}
-      </div>
+      {loadingActivities ? 
+        <Loader /> :  
+        (<div className="p-8 flex flex-wrap gap-8 justify-center">
+          {filteredActivities.map((activity) => (
+            <CardActivity key={activity.id} activity={activity} />
+          ))}
+        </div>)
+      }
     </div>
   );
 }

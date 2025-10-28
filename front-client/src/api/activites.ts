@@ -7,9 +7,9 @@ export async function fetchAllActivities() {
   try {
     const res = await axios.get(`${API_URL}/activities`);
     return res.data;
-  } catch (error) {
-    console.error("Erreur lors de la récupération des activitées");
-    // TODO: gérer l'affichage de l'erreur
-    return;
+  } catch (err) {
+    console.error("Erreur lors de la récupération des activitées:", err);
+    throw err;
   }
 };
+

@@ -6,17 +6,17 @@ export default interface IActivity {
   min_height: number; // en cm
   pregnancy_warning: boolean;
   image_ref: string;
-  category: Category;
-  level: Level;
+  category: ICategory;
+  level: ILevel;
 }
 
-interface Category {
+interface ICategory {
   id: string;
   name: string;
   color: string;
 }
 
-interface Level {
+interface ILevel {
   id: string;
   name: string;
   value: number;
