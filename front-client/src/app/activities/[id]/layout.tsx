@@ -1,38 +1,29 @@
-// src/app/activities/id/layout.tsx 
-// création d'un layout pour utiliser les Metadata
-
+// src/app/activities/[id]/layout.tsx
 import type { Metadata } from "next";
+import { fetchOneActivityById } from "@/api/activities";
 
-// Fonction pour générer les métadonnées dynamiques (server-side)
 export async function generateMetadata(
-  { params }: { params: { id: string } }
+  { params }: { params: { id: number } }
 ): Promise<Metadata> {
-  //TODO: mettre à jour le fetch
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/activities/${params.id}`, {
-    // Important pour éviter le cache
-    cache: "no-store",
-  });
+  const { id } = await params;
+  const idNumber = Number(id);
+  const activity = await fetchOneActivityById(idNumber);
 
-  // Si le fetch échoue, on met des valeurs par défaut
-  if (!res.ok) {
+  // Si l'activité n'existe pas, on met des valeurs par défaut
+  if (!activity) {
     return {
       title: "Activité inconnue | ZOMBIELAND",
       description: "Détails de l’activité non disponibles.",
     };
   }
 
-  const activity = await res.json();
-
+  // Sinon, on génère les métadonnées dynamiques
   return {
     title: `${activity.name} | ZOMBIELAND`,
     description: `En savoir plus sur ${activity.name}, une activité du parc Zombieland.`,
   };
 }
 
-export default function ActivityLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ActivityLayout({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }

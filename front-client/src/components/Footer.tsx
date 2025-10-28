@@ -27,7 +27,7 @@ export default function Footer() {
               <a href="tel:+33666666666" className="hover:text-primary-purple-300 transition">06 66 66 66 66</a>
             </li>
             <li>
-              <a href="mailto:contact@zombieland.fr" className="hover:text-primary-purple-300 transition">contact@zombieLand.fr</a>
+              <a href="mailto:contact@zombieland.fr" className="hover:text-primary-purple-300 transition">contact@zombieland.fr</a>
             </li>
             <li>Zombieland Park,<br/>66 rue du Cerveau enragé <br/>42190 Néonville, France</li>
             <li>Horaires: 7j/7 de 10h à 23h</li>
@@ -39,7 +39,7 @@ export default function Footer() {
           <h5>Informations légales</h5>
           <ul className="text-center md:text-left space-y-2">
             <li className="hover:text-primary-purple-300 transition"><Link href="/legal-notice">Mentions légales</Link></li>
-            <li className="hover:text-primary-purple-300 transition"><Link href="/privacy-policy">Politique de confidentialités</Link></li>
+            <li className="hover:text-primary-purple-300 transition"><Link href="/privacy-policy">Politique de confidentialité</Link></li>
             <li className="hover:text-primary-purple-300 transition"><Link href="/terms-and-conditions">CVG</Link></li>
           </ul>
         </div>
