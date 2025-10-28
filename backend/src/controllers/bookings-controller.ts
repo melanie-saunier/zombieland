@@ -41,7 +41,6 @@ export const bookingController = {
 
     res.status(200).json(booking);
   },
-
   /**
    * Creates a new booking
    * @param req 
@@ -49,10 +48,64 @@ export const bookingController = {
    */
    // Créer une nouvelle Booking
   async createOne(req: Request, res: Response) {
-    const data = bookingSchema.parse(req.body);
-    const booking = await Booking.create(data);
 
+    // On récupère les informations du body
+    const data = bookingSchema.parse(req.body);
+
+     // On crée un nouveau booking
+    const booking = await Booking.create(data);
+    
     res.status(201).json(booking);
   },
+
+  /**
+   * Updates a booking
+   * @param req 
+   * @param res 
+   */
+
+   // Mettre à jour un booking par son id
+  async updateOneById(req: Request, res: Response) {
+    
+    // on récupère les informations à mettre à jour du body
+    const data = updateBookingSchema.parse(req.body);
+
+    // on récupère le id du booking à mettre à jour 
+    const { id } = idSchema.parse(req.params);
+
+    // on récupère le booking par son id
+    const booking = await Booking.findByPk(id);
+
+      // Si le booking n'existe pas, on retourne une erreur 404 avec un message d'erreur
+    if(!booking) return res.status(404).json({ message:`No booking found with id: ${id}`});
+    
+    // le booking est mise à jour
+    await booking.update(data);
+
+    res.status(200).json(booking);
+  },
+
+  /**
+   * deletes a booking
+   * @param req 
+   * @param res 
+   */
+
+  // Supprimer un booking par son id
+  async deleteOneById(req: Request, res: Response) {
+    const { id } = idSchema.parse(req.params);
+
+    // on récupère le booking par son id
+    const booking = await Booking.findByPk(id);
+
+    // Si le booking n'existe pas, on retourne une erreur 404 avec un message d'erreur
+    if(!booking) return res.status(404).json({ message:`No booking found with id: ${id}`});
+
+    await booking.destroy();
+
+    res.status(204).json();
+  },
+
+  
 
 }
