@@ -7,17 +7,11 @@ import { Bell, Clock, MapPinned, Phone, Rocket } from "lucide-react";
 import Image from "next/image";
 import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
-import type { Metadata } from "next";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-
-export const metadata: Metadata = {
-  title: "Accueil | ZOMBIELAND",
-  description: "Bienvenue à ZOMBIELAND, le parc d’attractions le plus terrifiant ! Découvre des activités à sensations, affronte tes peurs et réserve ton billet d’entrée dès maintenant.",
-};
 
 export default function Home() {
   //TODO: fetch des activities depuis le back, quand back sera prêt. En attendant, j'ai créé une variable statique qui contient un tableau d'activités, pour mis en forme du front.
@@ -110,7 +104,7 @@ export default function Home() {
       <section>
         {/* section pour le slider d'activités du parc */}
         <div className="w-full h-[400px] p-4  flex flex-col items-center justify-center gap-4">
-          <h2 className="text-xl md:text-2xl">NOS ATTRACTIONS LES PLUS FLIPPANTES</h2>
+          <h2 className="text-xl md:text-3xl">NOS ATTRACTIONS LES PLUS FLIPPANTES</h2>
           <Swiper
             modules={[Navigation, Pagination]}
             navigation
@@ -150,7 +144,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-linear-to-r from-black/40 to-transparent z-1"></div>
 
           <div className="absolute z-10 m-4 flex flex-col justify-center gap-4 w-full md:w-[60%] md:left-[10%] md:top-1/2 md:-translate-y-1/2">
-            <h2 className="text-xl md:text-2xl">PRÉPARE TA VENUE</h2>
+            <h2 className="text-xl md:text-3xl">PRÉPARE TA VENUE</h2>
             <div className="">
               <div className="flex gap-2 font-bold text-base md:text-lg drop-shadow-lg/60">
                 <Clock />

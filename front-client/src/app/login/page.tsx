@@ -3,12 +3,6 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Connexion | ZOMBIELAND",
-  description: "Connecte-toi à ton compte ZOMBIELAND pour réserver tes billets et découvrir les nouveautés du parc.",
-};
 
 export default function LoginPage() {
   // pour faire un focus sur le premier input(input email) lorsque l'on arrive sur la page

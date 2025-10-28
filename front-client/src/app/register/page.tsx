@@ -1,14 +1,8 @@
-// src/app/activities/page.tsx 
+// src/app/register/page.tsx 
 
 "use client";
 import { useEffect, useRef } from "react";
-import type { Metadata } from "next";
 import Link from "next/link";
-
-export const metadata: Metadata = {
-  title: "S'inscrire | ZOMBIELAND",
-  description: "Crée ton compte ZOMBIELAND et rejoins la communauté des survivants ! Réserve tes billets, prépare ta visite et découvre nos activités !",
-};
 
 export default function RegisterPage() {
   // pour faire un focus sur le premier input(input email)lorsque l'on arrive sur la page

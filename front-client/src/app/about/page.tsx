@@ -90,25 +90,25 @@ export default function AboutPage() {
         </div>
         <div className="max-w-4xl mx-auto space-y-6 text-neutral-50/80 leading-relaxed">
           <p className="text-lg">
-                Zombieland est né d’une passion pour l’horreur et le divertissement extrême. Notre mission est de créer
-                un espace où les amateurs de sensations fortes peuvent vivre des expériences uniques dans un
-                environnement sécurisé mais terrifiant.
+            Zombieland est né d’une passion pour l’horreur et le divertissement extrême. Notre mission est de créer
+            un espace où les amateurs de sensations fortes peuvent vivre des expériences uniques dans un
+            environnement sécurisé mais terrifiant.
           </p>
 
           <p className="text-lg font-semibold text-neutral-50 mt-8">Nos Valeurs Fondamentales :</p>
 
           <div className="space-y-4">
             <p>
-              <strong className="text-primary-purple-300">Innovation :</strong> Nous repoussons constamment les limites de l’horreur immersive avec des technologies de pointe et des scénarios originaux.
+              <span className="text-primary-purple-300">Innovation :</span> Nous repoussons constamment les limites de l’horreur immersive avec des technologies de pointe et des scénarios originaux.
             </p>
             <p>
-              <strong className="text-primary-purple-300">Sécurité :</strong> Malgré l’intensité de nos attractions, la sécurité de nos visiteurs reste notre priorité absolue. Chaque expérience est conçue et supervisée par des professionnels qualifiés.
+              <span className="text-primary-purple-300">Sécurité :</span> Malgré l’intensité de nos attractions, la sécurité de nos visiteurs reste notre priorité absolue. Chaque expérience est conçue et supervisée par des professionnels qualifiés.
             </p>
             <p>
-              <strong className="text-primary-purple-300">Authenticité :</strong> Nous créons des environnements et des scénarios réalistes qui plongent nos visiteurs dans un monde post-apocalyptique crédible et terrifiant.
+              <span className="text-primary-purple-300">Authenticité :</span> Nous créons des environnements et des scénarios réalistes qui plongent nos visiteurs dans un monde post-apocalyptique crédible et terrifiant.
             </p>
             <p>
-              <strong className="text-primary-purple-300">Passion :</strong> Notre équipe est composée de passionnés d’horreur, de cinéma et d’effets spéciaux qui mettent tout leur cœur dans chaque détail de l’expérience.visiteurs dans un monde post-apocalyptique crédible et terrifiant.
+              <span className="text-primary-purple-300">Passion :</span> Notre équipe est composée de passionnés d’horreur, de cinéma et d’effets spéciaux qui mettent tout leur cœur dans chaque détail de l’expérience.visiteurs dans un monde post-apocalyptique crédible et terrifiant.
             </p>
           </div>
 
