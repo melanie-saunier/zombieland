@@ -14,20 +14,20 @@ export default function privacyPolicyPage() {
       <h2 className="text-shadow-none! tracking-normal! pl-6 pt-6 pr-6 pb-2">1. Quelles données collectons-nous ?</h2>
       <h3 className="">1. Nous pouvons collecter les informations suivantes :</h3>
       <ul className="list-inside list-disc">
-        <li><span className="font-semibold">Données d’identification</span> : nom, prénom, adresse e-mail, numéro de téléphone, adresse postale (lors de la création d’un compte ou d’une réservation).</li>
-        <li><span className="font-semibold">Données de paiement</span> : informations de carte bancaire (traitées de manière sécurisée par nos partenaires de paiement).</li>
-        <li><span className="font-semibold">Données de navigation</span> : adresse IP, type de navigateur, pages visitées, durée de la visite, etc. (via des cookies et outils d’analyse).</li>
-        <li><span className="font-semibold">Données de réservation</span> : date et heure de visite, type de billet, préférences d’activités.</li>
+        <li><strong className="font-semibold">Données d’identification</strong> : nom, prénom, adresse e-mail, numéro de téléphone, adresse postale (lors de la création d’un compte ou d’une réservation).</li>
+        <li><strong className="font-semibold">Données de paiement</strong> : informations de carte bancaire (traitées de manière sécurisée par nos partenaires de paiement).</li>
+        <li><strong className="font-semibold">Données de navigation</strong> : adresse IP, type de navigateur, pages visitées, durée de la visite, etc. (via des cookies et outils d’analyse).</li>
+        <li><strong className="font-semibold">Données de réservation</strong> : date et heure de visite, type de billet, préférences d’activités.</li>
       </ul>
 
       <h2 className="text-shadow-none! tracking-normal! pl-6 pt-6 pr-6 pb-2">2. Pourquoi collectons-nous ces données ?</h2>
       <h3 className="">Vos données sont utilisées pour :</h3>
       <ul className="list-inside list-disc">
-        <li><span className="font-semibold">Gérer vos réservations</span> et vous fournir un accès fluide au parc.</li>
-        <li><span className="font-semibold">Personnaliser votre expérience</span> (offres spéciales, recommandations d’attractions).</li>
-        <li><span className="font-semibold">Améliorer nos services</span> (analyse des comportements de visite, feedbacks).</li>
-        <li><span className="font-semibold">Assurer la sécurité</span> du site et des transactions.</li>
-        <li><span className="font-semibold">Respecter nos obligations légales</span> (facturation, archives).</li>
+        <li><strong className="font-semibold">Gérer vos réservations</strong> et vous fournir un accès fluide au parc.</li>
+        <li><strong className="font-semibold">Personnaliser votre expérience</strong> (offres spéciales, recommandations d’attractions).</li>
+        <li><strong className="font-semibold">Améliorer nos services</strong> (analyse des comportements de visite, feedbacks).</li>
+        <li><strong className="font-semibold">Assurer la sécurité</strong> du site et des transactions.</li>
+        <li><strong className="font-semibold">Respecter nos obligations légales</strong> (facturation, archives).</li>
       </ul>
 
       <h2 className="text-shadow-none! tracking-normal! pl-6 pt-6 pr-6 pb-2">3. Comment protégeons-nous vos données ?</h2>
@@ -36,19 +36,19 @@ export default function privacyPolicyPage() {
       <h2 className="text-shadow-none! tracking-normal! pl-6 pt-6 pr-6 pb-2">4. Partage des données</h2>
       <h3 className="">Nous ne vendons ni ne louons vos données personnelles à des tiers. Vos informations peuvent être partagées avec :</h3>
       <ul className="list-inside list-disc">
-        <li><span className="font-semibold">Nos prestataires de services</span> (hébergement, paiement, analyse) sous contrat de confidentialité.</li>
-        <li><span className="font-semibold">Les autorités compétentes</span>, si la loi l’exige.</li>
+        <li><strong className="font-semibold">Nos prestataires de services</strong> (hébergement, paiement, analyse) sous contrat de confidentialité.</li>
+        <li><strong className="font-semibold">Les autorités compétentes</strong>, si la loi l’exige.</li>
       </ul>
 
 
       <h2 className="text-shadow-none! tracking-normal! pl-6 pt-6 pr-6 pb-2">5. Vos droits</h2>
       <h3 className="">Conformément au RGPD, vous disposez des droits suivants :</h3>
       <ul className="list-inside list-disc">
-        <li><span className="font-semibold">Accéder</span> à vos données personnelles.</li>
-        <li><span className="font-semibold">Les rectifier</span> ou <span className="font-semibold">les supprimer</span>.</li>
-        <li><span className="font-semibold">Vous opposer</span> à leur traitement.</li>
-        <li><span className="font-semibold">Demander leur portabilité.</span></li >
-        <li><span className="font-semibold">Retirer votre consentement</span> à tout moment.</li>
+        <li><strong className="font-semibold">Accéder</strong> à vos données personnelles.</li>
+        <li><strong className="font-semibold">Les rectifier</strong> ou <strong className="font-semibold">les supprimer</strong>.</li>
+        <li><strong className="font-semibold">Vous opposer</strong> à leur traitement.</li>
+        <li><strong className="font-semibold">Demander leur portabilité.</strong></li >
+        <li><strong className="font-semibold">Retirer votre consentement</strong> à tout moment.</li>
       </ul>
       <p>Pour exercer ces droits, contactez-nous à : contact@zombieland.fr.</p>
 
