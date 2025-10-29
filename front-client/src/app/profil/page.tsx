@@ -1,50 +1,56 @@
-"use client";
+"use client"; 
+/* Directive Next.js indiquant que ce composant est exécuté côté client (navigateur), 
+   et non côté serveur. Nécessaire pour utiliser les hooks React comme useState ou useEffect. */
 
-import { useState, useEffect } from "react";
-import Image from "next/image";
-import { Eye, EyeOff, X } from "lucide-react";
+import { useState, useEffect } from "react"; // Import des hooks React
+import Image from "next/image"; // Composant optimisé de Next.js pour afficher des images
+import { Eye, EyeOff, X } from "lucide-react"; // Icônes SVG importées depuis la librairie lucide-react
 
-interface User {
-  id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-}
+// Import des types TypeScript pour la sécurité des données (structure attendue)
+import type { User, PasswordState } from "@/@types/profile.d.ts";
 
-interface PasswordState {
-  isOpen: boolean;
-  current: string;
-  new: string;
-  confirm: string;
-  show: { current: boolean; new: boolean; confirm: boolean };
-  errors: string[];
-}
-
+// Définition du composant principal "ProfilPage" exporté par défaut
 export default function ProfilPage() {
+
+  /* ----------------------------- GESTION DES ÉTATS ----------------------------- */
+
   const [userData, setUserData] = useState<User | null>(null);
+  // Contient les informations de l'utilisateur (nom, prénom, email). Null par défaut.
+
   const [isEditing, setIsEditing] = useState(false);
+  // Définit si l'utilisateur est en mode "modification du profil". False = lecture seule.
+
   const [isLoading, setIsLoading] = useState(true);
+  // Indique si la page est en cours de chargement. True au départ, passe à false quand les données sont prêtes.
+
   const [error, setError] = useState<string | null>(null);
+  // Contient un éventuel message d'erreur à afficher à l'utilisateur.
+
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  
+  // Contient un message de succès temporaire (ex: "Profil mis à jour !").
+
+  // État complexe pour gérer tout ce qui concerne le mot de passe
   const [passwordState, setPasswordState] = useState<PasswordState>({
-    isOpen: false,
-    current: "",
-    new: "",
-    confirm: "",
-    show: { current: false, new: false, confirm: false },
-    errors: [],
+    isOpen: false, // Affiche ou non le modal de changement de mot de passe
+    current: "", // Mot de passe actuel
+    new: "", // Nouveau mot de passe
+    confirm: "", // Confirmation du nouveau mot de passe
+    show: { current: false, new: false, confirm: false }, // Gère l'affichage/masquage des mots de passe
+    errors: [], // Liste d'erreurs liées au formulaire mot de passe
   });
 
+  /* ----------------------------- CHARGEMENT DES DONNÉES UTILISATEUR ----------------------------- */
+
   useEffect(() => {
+    // useEffect = Hook qui s’exécute au premier rendu du composant.
+    // Ici, on s’en sert pour aller chercher les données de l’utilisateur dès que la page se charge.
+
     const fetchUser = async () => {
       try {
-        setIsLoading(true);
-        setError(null);
-        
-    
-        // const data = await getUserData();
-        
+        setIsLoading(true); // On indique que la page est en cours de chargement
+        setError(null); // On réinitialise les erreurs
+
+        // ⚠️ À remplacer par un appel API réel plus tard (ex: getUserData() via axios)
         const data = {
           id: "1",
           firstName: "Max",
@@ -52,23 +58,32 @@ export default function ProfilPage() {
           email: "max.dupont@zombieland.fr",
         };
 
-        setUserData(data);
+        setUserData(data); // On met à jour l’état avec les données reçues
       } catch (err) {
+        // En cas d’erreur, on affiche un message d’erreur utilisateur
         setError(err instanceof Error ? err.message : "Erreur de chargement");
       } finally {
+        // Qu’il y ait erreur ou non, on arrête l’état "chargement"
         setIsLoading(false);
       }
     };
     
-    fetchUser();
-  }, []);
+    fetchUser(); // Appel effectif de la fonction de récupération
+  }, []); // [] = le hook ne s’exécute qu’une seule fois (au montage du composant)
+
+
+  /* ----------------------------- SAUVEGARDE DU PROFIL ----------------------------- */
 
   const handleSave = async () => {
+    // Fonction appelée quand l'utilisateur clique sur "Sauvegarder"
+
+    // Vérifie que tous les champs obligatoires sont remplis
     if (!userData?.firstName || !userData?.lastName || !userData?.email) {
       setError("Tous les champs sont requis");
       return;
     }
 
+    // Vérifie que l'email est au bon format via une expression régulière
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(userData.email)) {
       setError("Email invalide");
@@ -76,54 +91,65 @@ export default function ProfilPage() {
     }
 
     try {
-      setError(null);
-     
-      // await updateUserData(userData);
+      setError(null); // Réinitialise les erreurs
+
+      // ⚠️ Appel API à venir (updateUserData(userData))
       
       setSuccessMessage("Profil mis à jour !");
-      setIsEditing(false);
-      
+      setIsEditing(false); // Sort du mode édition
+
+      // Message temporaire pendant 3 secondes
       setTimeout(() => setSuccessMessage(null), 3000);
+
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur de sauvegarde");
     }
   };
 
+
+  /* ----------------------------- FORMULAIRE DE CHANGEMENT DE MOT DE PASSE ----------------------------- */
+
   const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // Empêche le rechargement automatique du formulaire
 
     const errors: string[] = [];
+
+    // Vérifications simples côté client
     if (!passwordState.current) errors.push("Mot de passe actuel requis");
     if (passwordState.new.length < 8) errors.push("Minimum 8 caractères");
     if (passwordState.new !== passwordState.confirm) errors.push("Mots de passe différents");
-    
+
+    // Si des erreurs sont trouvées, on les enregistre et on arrête le processus
     if (errors.length) {
       setPasswordState((p) => ({ ...p, errors }));
       return;
     }
 
     try {
-
-      // await updatePassword({ current: passwordState.current, new: passwordState.new });
+      // ⚠️ Appel API futur : updatePassword({ current, new })
       
+      // Si tout se passe bien :
       setSuccessMessage("Mot de passe changé !");
       setPasswordState({
-        isOpen: false,
+        isOpen: false, // Ferme le modal
         current: "",
         new: "",
         confirm: "",
         show: { current: false, new: false, confirm: false },
-        errors: [],
+        errors: [], // Vide les erreurs
       });
+
     } catch (err) {
-      setPasswordState((p) => ({ 
-        ...p, 
-        errors: [err instanceof Error ? err.message : "Erreur"] 
+      // Si une erreur survient (ex: mot de passe actuel incorrect)
+      setPasswordState((p) => ({
+        ...p,
+        errors: [err instanceof Error ? err.message : "Erreur"],
       }));
     }
   };
 
-  if (isLoading) {
+  // A MAJ avec le composant loader de Mélanie /!\
+   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
@@ -144,7 +170,7 @@ export default function ProfilPage() {
     );
   }
 
-  if (!userData) return null;
+  if (!userData) return null; // Si aucune donnée d'utilisateur n'est trouvée, on ne rend rien //
 
   return (
     <section className="min-h-screen p-4 md:p-8">
@@ -169,7 +195,7 @@ export default function ProfilPage() {
           <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-primary-purple-300 shadow-[0_0_20px_rgba(180,130,255,0.5)]">
             <Image
               src="/images/default-avatar.png"
-              alt={`Avatar de ${userData.firstName} ${userData.lastName}`}
+              alt={`Avatar de ${userData.firstName} ${userData.lastName}`} // MAJ en fonction du back//
               fill
               sizes="192px"
               className="object-cover"
@@ -187,6 +213,7 @@ export default function ProfilPage() {
             Informations personnelles
           </h3>
 
+//* AJOUTER LA BALISE forms pour les inputs avec les bonnes props /!\//
           <div className="space-y-4">
             {(["firstName", "lastName", "email"] as const).map((key) => (
               <div key={key} className="flex flex-col gap-1">
@@ -292,7 +319,7 @@ export default function ProfilPage() {
                       onClick={() =>
                         setPasswordState((p) => ({
                           ...p,
-                          show: { ...p.show, [field]: !p.show[field] },
+                          show: { ...p.show, [field]: !p.show[field] }, /* Affiche ou masque le mot de passe */
                         }))
                       }
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-purple-300 hover:text-primary-purple-200"
