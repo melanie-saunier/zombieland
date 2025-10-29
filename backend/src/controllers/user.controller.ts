@@ -122,6 +122,8 @@ export const userController = {
     // Si aucun utilisateur n’est trouvé, on renvoie une erreur 404
     if(!userFound) return res.status(404).json({ message:`No user found with id: ${id}`});
 
+    // TODO: ajouter la vérification du mail 
+
     // On applique les modifications validées sur l’utilisateur trouvé
     const userUpdated = await userFound.update(data);
 

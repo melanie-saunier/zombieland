@@ -2,9 +2,9 @@ import z from "zod";
 
 // Schéma d'un utilisateur
 export const userSchema = z.object({
-  email: z.email(),
-  lastname: z.string().trim().min(1),
-  firstname: z.string().trim().min(1),
+  email: z.email("Le format de l'email n'est pas valide"),
+  lastname: z.string().trim().min(1, "Le nom de famille est obligatoire"),
+  firstname: z.string().trim().min(1,  "Le prénom est obligatoire"),
   password: z
     .string()
     .min(8, "Le mot de passe doit contenir au moins 8 caractères")
