@@ -15,7 +15,7 @@ export default function VisitorInformationPage() {
         <div className="max-w-6xl mx-auto">
           {/* Header avec effet néon cohérent */}
           <header className="mb-12 text-center md:text-left">
-            <h1 className="text-3xl md:text-5xl mb-4">
+            <h1 className="title text-3xl md:text-5xl mb-4">
               Informations utiles
             </h1>
             <p className="text-neutral-50/80 md:text-lg">
