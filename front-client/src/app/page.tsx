@@ -57,7 +57,7 @@ export default function Home() {
             alt="Zombie sans lumière"
             width={400}           // largeur mobile
             height={200}          // hauteur mobile
-            className="absolutetop-7 md:top-0 left-0 object-cover object-top-right w-full h-[200px] md:w-full md:h-screen"
+            className="absolute top-10 md:top-0 left-0 object-cover object-top-right w-full h-[200px] md:w-full md:h-screen"
           />
 
           {/* Image de fond 2 (avec lumière néon) */}
@@ -66,7 +66,7 @@ export default function Home() {
             alt="Zombie éclairé par le néon vert"
             width={400}           // largeur mobile
             height={200}          // hauteur mobile
-            className="absolute top-7 md:top-0 left-0 object-cover object-top-right animate-flicker w-full h-[200px] md:w-full md:h-screen"
+            className="absolute top-10 md:top-0 left-0 object-cover object-top-right animate-flicker w-full h-[200px] md:w-full md:h-screen"
           />
         </div>
 
@@ -93,7 +93,7 @@ export default function Home() {
       </section>
       <section>
         {/* section pour le slider d'activités du parc */}
-        <div className="w-full h-[400px] p-4  flex flex-col items-center justify-center gap-4">
+        <div className="w-full h-[450px] p-4  flex flex-col items-center justify-center gap-4">
           <h2 className="title text-xl md:text-3xl uppercase">Nos attractions les plus flippantes</h2>
           {errorActivities && 
            <p className="text-center font-bold text-xl">{errorActivities}</p>
