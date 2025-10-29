@@ -1,25 +1,12 @@
-"use client"; // Indique que ce composant est côté client (React Server Components Next.js 13+)
+"use client";
 
-import { useState, useEffect } from "react"; // Hooks React pour gérer l'état et les effets de bord
-import { Calendar as CalendarIcon, Plus, Minus, Users, CheckCircle } from "lucide-react"; // Icônes
-import Calendar from "react-calendar"; // Composant calendrier React
-import "react-calendar/dist/Calendar.css"; // Styles par défaut du calendrier
+import { useState, useEffect } from "react";
+import { Calendar as CalendarIcon, Plus, Minus, Users, CheckCircle } from "lucide-react";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
-/** 
- * Typescript : définition des types pour faciliter le développement et éviter les erreurs
- */
-interface BookingData {
-  date: string; // Date choisie pour la réservation, format "YYYY-MM-DD"
-  numberOfTickets: number; // Nombre de billets réservés
-  totalPrice: number; // Prix total de la réservation
-}
-
-interface TicketPricing {
-  price: number; // Prix d'un billet
-  maxTicketsPerBooking: number; // Nombre maximum de billets par réservation
-}
-
-type ValueDate = Date | [Date | null, Date | null] | null; // Type accepté par le calendrier (date unique ou plage)
+// Import des types
+import type { BookingData, TicketPricing, ValueDate } from "@/@types/booking.d.ts";
 
 /**
  * 📅 formatLocalDate
@@ -220,7 +207,7 @@ export default function BookingPage() {
     }
   };
 
-  /** ❌ Erreur de chargement des prix */
+  /** Erreur de chargement des prix */
   if (!pricing) {
     return (
       <section className="min-h-screen p-4 md:p-8 flex items-center justify-center">
@@ -264,7 +251,8 @@ export default function BookingPage() {
             </h2>
 
             <div className="grid md:grid-cols-2 gap-6">
-              {/* 📅 Calendrier */}
+              
+              {/* Calendrier */}
               <div className="flex flex-col gap-2">
                 <label 
                   htmlFor="booking-calendar"
@@ -292,7 +280,7 @@ export default function BookingPage() {
                 )}
               </div>
 
-              {/* 🎫 Nombre de billets + Total */}
+              {/* Nombre de billets + Total */}
               <div className="flex flex-col gap-6">
                 <div className="flex flex-col gap-3">
                   <label 
@@ -305,8 +293,8 @@ export default function BookingPage() {
                   <div className="flex items-center justify-center gap-4">
                     <button
                       type="button"
-                      onClick={() => updateTickets(bookingData.numberOfTickets - 1)}
-                      disabled={bookingData.numberOfTickets <= 1}
+                      onClick={() => updateTickets(bookingData.numberOfTickets - 1)} /* Appelle la fonction updateTickets pour diminuer le nombre de billets */
+                      disabled={bookingData.numberOfTickets <= 1} /* Désactive le bouton si le nombre de billets est inférieur ou égal à 1 */
                       aria-label="Diminuer le nombre de billets"
                       className="w-12 h-12 flex items-center justify-center bg-primary-purple-500 text-neutral-50 rounded-full hover:bg-primary-purple-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
                     >
@@ -317,17 +305,17 @@ export default function BookingPage() {
                       id="ticket-count"
                       type="number"
                       value={bookingData.numberOfTickets}
-                      onChange={e => updateTickets(parseInt(e.target.value) || 1)}
+                      onChange={e => updateTickets(parseInt(e.target.value) || 1)} /* Appelle la fonction updateTickets pour mettre à jour le nombre de billets */
                       min="1"
-                      max={pricing.maxTicketsPerBooking}
+                      max={pricing.maxTicketsPerBooking} /* Définit le nombre maximum de billets */
                       aria-label="Nombre de billets"
                       className="w-24 text-center p-3 bg-neutral-700/50 rounded border border-primary-purple-500 text-neutral-50 text-xl font-bold focus:outline-none focus:border-primary-purple-300 focus:ring-2 focus:ring-primary-purple-300"
                     />
 
                     <button
                       type="button"
-                      onClick={() => updateTickets(bookingData.numberOfTickets + 1)}
-                      disabled={bookingData.numberOfTickets >= pricing.maxTicketsPerBooking}
+                      onClick={() => updateTickets(bookingData.numberOfTickets + 1)} /* Appelle la fonction updateTickets pour augmenter le nombre de billets */
+                      disabled={bookingData.numberOfTickets >= pricing.maxTicketsPerBooking} /* Désactive le bouton si le nombre de billets est supérieur ou égal au nombre maximum de billets */
                       aria-label="Augmenter le nombre de billets"
                       className="w-12 h-12 flex items-center justify-center bg-primary-purple-500 text-neutral-50 rounded-full hover:bg-primary-purple-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
                     >
