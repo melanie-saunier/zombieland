@@ -12,53 +12,41 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import IActivity from "@/@types/activity";
+import fetchMostScaryActivities from "@/api/activities";
+import Loader from "@/components/Loader";
 
 export default function Home() {
-  //TODO: fetch des activities depuis le back, quand back sera prêt. En attendant, j'ai créé une variable statique qui contient un tableau d'activités, pour mis en forme du front.
-
-  const activities = [
-    { id: "activity-id1",
-      name: "Target Panic",
-      description: "Un stand futuriste où vous devez viser des têtes de zombies mécaniques avec des pistolets lumineux. Capteurs, sons délirants et effets LED à chaque tir réussi.",
-      duration: 5,
-      min_height: 110,
-      pregnancy_warning: false,
-      image_ref: "target_panic.png",
-      category: {id: "category-id2", name: "Instinct de survie", color: "#C41E3A"},
-      level: {id: "level-id1", name: "Facile", value: 1} 
-    }, 
-    { id: "activity-id2",
-      name: "The Grinder",
-      description: "Les visiteurs embarquent dans une machine à broyer les morts-vivants : nacelles rotatives, étincelles de métal, néons roses et verts, cris mécaniques et rires zombifiés en fond sonore. Sensations garanties !",
-      duration: 15,
-      min_height: 130,
-      pregnancy_warning: true,
-      image_ref: "the_grinder.png",
-      category: {id: "category-id1", name: "Frissons mécaniques", color: "#1BE7FF"},
-      level: {id: "level-id3", name: "Difficile", value: 3} 
-    }, 
-    { id: "activity-id3",
-      name: "The Core",
-      description: "Un tunnel lumineux et sonore à explorer : capteurs de mouvement, illusions lumineuses, effets sonores 3D, hologrammes de zombies et une fin humoristique inattendue.",
-      duration: 15,
-      min_height: 110,
-      pregnancy_warning: false,
-      image_ref: "the_core.png",
-      category: {id: "category-id3", name: "Réalité Inhumaine", color: "#7A00FF"},
-      level: {id: "level-id2", name: "Intermédiaire", value: 2} 
-    }, 
-    { id: "activity-id4",
-      name: "Rebirth Live Show",
-      description: "Danseurs zombies, lasers verts, beats techno et projections futuristes : un show déjanté entre concert électro et théâtre d’outbreak.",
-      duration: 30,
-      min_height: 110,
-      pregnancy_warning: false,
-      image_ref: "rebirth_live_show.png",
-      category: {id: "category-id4", name: "Freak Shows", color: "#E3C014"},
-      level: {id: "level-id1", name: "Facile", value: 1} 
-    },
-  ];
+  
+  // State pour le fetch des activités avec state d'erreur et de loading
+  const [activities, setActivities] = useState<IActivity[]>([]);
+  const [errorActivities, setErrorActivities] = useState<string | null>(null);
+  const [isLoadingActivities, setIsLoadingActivities] = useState(true);
+  // use effect pour récupérer les données avec un fetch
+  useEffect(() => {
+    // on récup les données des activités
+    const loadActivities = async () => {
+      // on remet le state d'erreur à zéro
+      // on met le loading à true
+      setIsLoadingActivities(true);
+      setErrorActivities(null);
+      try {
+        // appelle de la fonction qui fetch les activités avec axios
+        const dataActivities = await fetchMostScaryActivities();
+        setActivities(dataActivities);
+  
+      } catch(err) {
+        console.error(err);
+        setErrorActivities("Erreur lors de la récupération des activitées"); 
+      } finally {
+        // quand c'est chargé on met loading à false
+        setIsLoadingActivities(false);
+      }
+    };
+    // on appelle la fonction de récupération des données:
+    loadActivities();
+  }, []);
   return (
     <>
       <section className="md:relative md:h-screen w-full">
@@ -107,30 +95,36 @@ export default function Home() {
         {/* section pour le slider d'activités du parc */}
         <div className="w-full h-[400px] p-4  flex flex-col items-center justify-center gap-4">
           <h2 className="title text-xl md:text-3xl uppercase">Nos attractions les plus flippantes</h2>
-          <Swiper
-            modules={[Navigation, Pagination]}
-            navigation
-            pagination={{ clickable: true }}
-            spaceBetween={20}
-            slidesPerView={1} //mobile une activitée
-            breakpoints={{
-              768: {
-                slidesPerView: 2, // desktop 2 activité
-              },
-            }}
-            className="w-full"
-          >
-            {activities.map((activity) => {
-              return (
-                <SwiperSlide key={activity.id} >
-                  <div className="flex justify-center w-full mb-8">
-                    <CardActivity  activity={activity}/>
-                  </div>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        </div>
+          {errorActivities && 
+           <p className="text-center font-bold text-xl">{errorActivities}</p>
+          }
+          {isLoadingActivities ? 
+            <Loader /> :
+            <Swiper
+              modules={[Navigation, Pagination]}
+              navigation
+              pagination={{ clickable: true }}
+              spaceBetween={20}
+              slidesPerView={1} //mobile une activitée
+              breakpoints={{
+                768: {
+                  slidesPerView: 2, // desktop 2 activité
+                },
+              }}
+              className="w-full"
+            >
+              {activities.map((activity) => {
+                return (
+                  <SwiperSlide key={activity.id} >
+                    <div className="flex justify-center w-full mb-8">
+                      <CardActivity  activity={activity}/>
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
+          }
+         </div>
       </section>
       <section>
         {/* section informations utiles du parc */}

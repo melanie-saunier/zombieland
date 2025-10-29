@@ -5,6 +5,7 @@ import renderSkulls from "@/components/RenderSkulls";
 import { TriangleAlert } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
 
 type ActivityDetailPageProps = {
@@ -16,6 +17,7 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
   // on reçoit direct en props du composant une promesse avec les valeurs des segments dynamiques
   const { id } = await params;
   const idNumber = Number(id);
+  if (isNaN(idNumber)) notFound();
   //ICI, utilisation du fect directement dans le code, pas besoin de stocker dans un state car on affiche "juste" du html
   // C'est un composant serveur 
   // (lorsque l'on utilise des states et que l"on modifie le DOM, on ne peut pas faire directement le fetch
