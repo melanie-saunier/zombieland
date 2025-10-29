@@ -29,7 +29,7 @@ export const categoryController = {
    * @param res 
    */
   async getById(req: Request, res: Response) {
-    // On récupère l'id dans les param de req et le parseInt
+    // On récupère l'id dans les param de req et le parse avec notre schéma id
     const { id } = idSchema.parse(req.params);
 
     // On récupère la catégorie correspondante à cet id

@@ -4,7 +4,7 @@ import cors from "cors";
 const corsOptions = {
   // TODO: changer l'origine quand le front client sera prêt
   origin: true,
-  methods: ["GET", "POST", "PATCH", "DELETE"],
+  methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
   optionSuccessStatus: 200,
 };
 
