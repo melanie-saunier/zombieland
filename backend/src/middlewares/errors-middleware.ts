@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from "express";
+import { ZodError } from "zod";
 
 // Création d'une interface qui étend la classe Erreur pour ajouter un statut à l'erreur
 interface AppError extends Error {
@@ -15,6 +16,12 @@ function notFound(_req: Request, res: Response) {
 function errorHandler(err: AppError, _req: Request, res: Response, _next: NextFunction) {
   console.log(err);
   const statusCode = err.statusCode || 500;
+
+  if (err instanceof ZodError) {
+    res.status(400).json({ error: err.issues });
+    return;
+  }
+
   res.status(statusCode).json({ status: statusCode.toString(), error: err.message });
 }
 

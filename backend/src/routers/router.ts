@@ -18,4 +18,4 @@ router.use("/activities", activityRouter);
 router.use("/categories", categoryRouter);
 
 // Router des users
-router.use("/user", userRouter);
+router.use("/users", userRouter);
