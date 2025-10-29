@@ -4,9 +4,6 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { Eye, EyeOff, X } from "lucide-react";
 
-/* -------------------------------
-   Types de données
-----------------------------------*/
 interface User {
   id: string;
   firstName: string;
@@ -14,7 +11,6 @@ interface User {
   email: string;
 }
 
-/* État du modal de changement de mot de passe */
 interface PasswordState {
   isOpen: boolean;
   current: string;
@@ -24,34 +20,31 @@ interface PasswordState {
   errors: string[];
 }
 
-/* Page Profil Utilisateur*/
-
 export default function ProfilPage() {
-  // État principal de l'utilisateur (issu de la BDD)
   const [userData, setUserData] = useState<User | null>(null);
-
-  // État du mode édition
   const [isEditing, setIsEditing] = useState(false);
-
-  // État pour le changement de mot de passe
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  
   const [passwordState, setPasswordState] = useState<PasswordState>({
     isOpen: false,
     current: "",
     new: "",
     confirm: "",
     show: { current: false, new: false, confirm: false },
-    errors: [] as string[],
+    errors: [],
   });
 
-  /* 1. Chargement des données depuis la BDD (Simulation d’un appel à l' API backend utilisant Sequelize) */
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        // Exemple : appel à une route API Next.js connectée à Sequelize
-        // const res = await fetch("/api/user");
-        // const data = await res.json();
-
-        // Données temporaires simulées
+        setIsLoading(true);
+        setError(null);
+        
+    
+        // const data = await getUserData();
+        
         const data = {
           id: "1",
           firstName: "Max",
@@ -60,79 +53,60 @@ export default function ProfilPage() {
         };
 
         setUserData(data);
-      } catch (error) {
-        console.error("Erreur de chargement du profil:", error);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Erreur de chargement");
+      } finally {
+        setIsLoading(false);
       }
     };
+    
     fetchUser();
   }, []);
 
-  // Affichage de chargement pendant la requête
-  if (!userData) return <p className="text-center mt-20">Chargement du profil...</p>;
-
-  /* 2. Sauvegarde du profil dans la BDD */
-
   const handleSave = async () => {
-    if (!userData.firstName || !userData.lastName || !userData.email) {
-      alert("Tous les champs sont requis");
+    if (!userData?.firstName || !userData?.lastName || !userData?.email) {
+      setError("Tous les champs sont requis");
       return;
     }
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(userData.email)) {
-      alert("Veuillez entrer une adresse email valide");
+      setError("Email invalide");
       return;
     }
 
     try {
-      // Exemple d’appel API vers Sequelize :
-      // await fetch("/api/user/update", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify(userData),
-      // });
-
-      alert("Profil mis à jour avec succès !");
+      setError(null);
+     
+      // await updateUserData(userData);
+      
+      setSuccessMessage("Profil mis à jour !");
       setIsEditing(false);
-    } catch (error) {
-      console.error("Erreur de sauvegarde :", error);
-      alert("Une erreur est survenue lors de la sauvegarde");
+      
+      setTimeout(() => setSuccessMessage(null), 3000);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur de sauvegarde");
     }
   };
 
-  /* 3. Gestion du changement de mot de passe */
   const handlePasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const errors: string[] = [];
-
-    if (!passwordState.current)
-      errors.push("Le mot de passe actuel est requis");
-    
-    if (passwordState.new.length < 8)
-      errors.push("Le nouveau mot de passe doit contenir au moins 8 caractères");
-    
-    if (passwordState.new !== passwordState.confirm)
-      errors.push("Les mots de passe ne correspondent pas");
+    if (!passwordState.current) errors.push("Mot de passe actuel requis");
+    if (passwordState.new.length < 8) errors.push("Minimum 8 caractères");
+    if (passwordState.new !== passwordState.confirm) errors.push("Mots de passe différents");
     
     if (errors.length) {
       setPasswordState((p) => ({ ...p, errors }));
       return;
     }
-    
 
     try {
-      // Exemple de route backend Sequelize :
-      // await fetch("/api/user/password", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({
-      //     currentPassword: passwordState.current,
-      //     newPassword: passwordState.new,
-      //   }),
-      // });
 
-      alert("Mot de passe changé avec succès !");
+      // await updatePassword({ current: passwordState.current, new: passwordState.new });
+      
+      setSuccessMessage("Mot de passe changé !");
       setPasswordState({
         isOpen: false,
         current: "",
@@ -141,27 +115,65 @@ export default function ProfilPage() {
         show: { current: false, new: false, confirm: false },
         errors: [],
       });
-    } catch (error) {
-      console.error("Erreur de changement de mot de passe :", error);
-      alert("Une erreur est survenue");
+    } catch (err) {
+      setPasswordState((p) => ({ 
+        ...p, 
+        errors: [err instanceof Error ? err.message : "Erreur"] 
+      }));
     }
   };
 
-  /* 4. Page Profil rendu */
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-purple-300 border-t-transparent mx-auto mb-4" />
+          <p className="text-neutral-300">Chargement du profil...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error && !userData) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="bg-red-900/30 border border-red-500 rounded-lg p-6 max-w-md">
+          <p className="text-red-300">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!userData) return null;
+
   return (
     <section className="min-h-screen p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className="text-4xl md:text-5xl font-bold text-center mb-8">Mon Profil</h1>
 
-        {/* Bloc Avatar */}
+        {/* Messages de feedback */}
+        {successMessage && (
+          <div className="p-4 bg-green-900/30 border border-green-500 rounded-lg text-green-300 text-center">
+            {successMessage}
+          </div>
+        )}
+        
+        {error && (
+          <div className="p-4 bg-red-900/30 border border-red-500 rounded-lg text-red-300 text-center">
+            {error}
+          </div>
+        )}
+
+        {/* Avatar */}
         <div className="flex flex-col items-center gap-4 p-6 bg-neutral-700 rounded-lg border border-primary-purple-300 shadow-[0_0_12px_rgba(180,130,255,0.3)]">
           <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-primary-purple-300 shadow-[0_0_20px_rgba(180,130,255,0.5)]">
-            {/* Image par défaut non stockée en base */}
             <Image
               src="/images/default-avatar.png"
-              alt="Avatar"
+              alt={`Avatar de ${userData.firstName} ${userData.lastName}`}
               fill
+              sizes="192px"
               className="object-cover"
+              priority
             />
           </div>
           <h2 className="text-2xl font-bold text-neutral-50">
@@ -169,42 +181,36 @@ export default function ProfilPage() {
           </h2>
         </div>
 
-        {/* Bloc Informations personnelles */}
+        {/* Informations personnelles */}
         <div className="p-6 bg-neutral-700 rounded-lg border border-primary-purple-300 shadow-[0_0_12px_rgba(180,130,255,0.3)]">
           <h3 className="text-xl font-bold text-neutral-50 mb-6 pb-2 border-b border-primary-purple-300">
             Informations personnelles
           </h3>
 
-          {/* Champs dynamiques */}
           <div className="space-y-4">
-            {["firstName", "lastName", "email"].map((key) => (
+            {(["firstName", "lastName", "email"] as const).map((key) => (
               <div key={key} className="flex flex-col gap-1">
-                <label className="text-sm text-primary-purple-200 font-semibold">
-                  {key === "firstName"
-                    ? "Prénom"
-                    : key === "lastName"
-                    ? "Nom"
-                    : "Email"}
+                <label htmlFor={key} className="text-sm text-primary-purple-200 font-semibold">
+                  {key === "firstName" ? "Prénom" : key === "lastName" ? "Nom" : "Email"}
                 </label>
                 {isEditing ? (
                   <input
+                    id={key}
                     type={key === "email" ? "email" : "text"}
-                    value={userData[key as keyof User] as string}
-                    onChange={(e) =>
-                      setUserData({ ...userData, [key]: e.target.value })
-                    }
+                    value={userData[key]}
+                    onChange={(e) => setUserData({ ...userData, [key]: e.target.value })}
                     className="p-3 bg-neutral-700/50 rounded border border-primary-purple-500 text-neutral-50 focus:outline-none focus:border-primary-purple-300 focus:ring-1 focus:ring-primary-purple-300 transition-all"
+                    required
                   />
                 ) : (
                   <div className="p-3 bg-neutral-700/50 rounded border border-primary-purple-500 text-neutral-50">
-                    {userData[key as keyof User]}
+                    {userData[key]}
                   </div>
                 )}
               </div>
             ))}
           </div>
 
-          {/* Boutons d'action */}
           <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3">
             {isEditing ? (
               <>
@@ -230,9 +236,7 @@ export default function ProfilPage() {
               </button>
             )}
             <button
-              onClick={() =>
-                setPasswordState((p) => ({ ...p, isOpen: true, errors: [] }))
-              }
+              onClick={() => setPasswordState((p) => ({ ...p, isOpen: true, errors: [] }))}
               className="px-6 py-2 button_booking text-neutral-50 font-bold rounded hover:scale-105 transition"
             >
               Changer mon mot de passe
@@ -241,83 +245,67 @@ export default function ProfilPage() {
         </div>
       </div>
 
-      {/* Modal de changement de mot de passe */}
+      {/* Modal mot de passe (identique avec aria-labels ajoutés) */}
       {passwordState.isOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+        <div 
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="password-modal-title"
+        >
           <div className="relative w-full max-w-md bg-neutral-700 rounded-lg border-2 border-primary-purple-300 shadow-[0_0_30px_rgba(180,130,255,0.5)]">
-            {/* Header du modal */}
             <div className="sticky top-0 bg-neutral-700 border-b border-primary-purple-300 p-6 flex justify-between items-center">
-              <h3 className="text-xl font-bold text-neutral-50">
+              <h3 id="password-modal-title" className="text-xl font-bold text-neutral-50">
                 Modification du mot de passe
               </h3>
               <button
                 onClick={() => setPasswordState((p) => ({ ...p, isOpen: false }))}
                 className="text-primary-purple-300 hover:text-primary-purple-200"
+                aria-label="Fermer"
               >
                 <X size={24} />
               </button>
             </div>
 
-            {/* Formulaire de mot de passe */}
             <form onSubmit={handlePasswordSubmit} className="p-6 space-y-4">
-              {["current", "new", "confirm"].map((field) => (
+              {(["current", "new", "confirm"] as const).map((field) => (
                 <div key={field} className="flex flex-col gap-1">
-                  <label className="text-sm text-primary-purple-200 font-semibold">
-                    {field === "current"
-                      ? "Mot de passe actuel"
-                      : field === "new"
-                      ? "Nouveau mot de passe"
-                      : "Confirmer le mot de passe"}
+                  <label htmlFor={`password-${field}`} className="text-sm text-primary-purple-200 font-semibold">
+                    {field === "current" ? "Mot de passe actuel" : field === "new" ? "Nouveau mot de passe" : "Confirmer le mot de passe"}
                   </label>
                   <div className="relative">
                     <input
-                      type={
-                        passwordState.show[field as keyof PasswordState["show"]]
-                          ? "text"
-                          : "password"
-                      }
-                      value={passwordState[field as keyof PasswordState] as string}
-                      onChange={(e) =>
-                        setPasswordState({
-                          ...passwordState,
-                          [field]: e.target.value,
-                        })
-                      }
+                      id={`password-${field}`}
+                      type={passwordState.show[field] ? "text" : "password"}
+                      value={passwordState[field]}
+                      onChange={(e) => setPasswordState({ ...passwordState, [field]: e.target.value })}
                       placeholder={
-                        field === "current"
-                          ? "Entrez votre mot de passe actuel"
-                          : field === "new"
-                          ? "Entrez votre nouveau mot de passe"
-                          : "Confirmez votre nouveau mot de passe"
+                        field === "current" ? "Entrez votre mot de passe actuel" :
+                        field === "new" ? "Entrez votre nouveau mot de passe" :
+                        "Confirmez votre nouveau mot de passe"
                       }
                       className="w-full p-3 pr-12 bg-neutral-700/50 rounded border border-primary-purple-500 text-neutral-50 focus:outline-none focus:border-primary-purple-300 focus:ring-1 focus:ring-primary-purple-300"
+                      required
                     />
                     <button
                       type="button"
                       onClick={() =>
                         setPasswordState((p) => ({
                           ...p,
-                          show: {
-                            ...p.show,
-                            [field]: !p.show[field as keyof PasswordState["show"]],
-                          },
+                          show: { ...p.show, [field]: !p.show[field] },
                         }))
                       }
                       className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-purple-300 hover:text-primary-purple-200"
+                      aria-label={passwordState.show[field] ? "Masquer" : "Afficher"}
                     >
-                      {passwordState.show[field as keyof PasswordState["show"]] ? (
-                        <EyeOff size={20} />
-                      ) : (
-                        <Eye size={20} />
-                      )}
+                      {passwordState.show[field] ? <EyeOff size={20} /> : <Eye size={20} />}
                     </button>
                   </div>
                 </div>
               ))}
 
-              {/* Affichage des erreurs */}
               {passwordState.errors.length > 0 && (
-                <div className="p-3 bg-red-900/30 border border-red-500 rounded">
+                <div className="p-3 bg-red-900/30 border border-red-500 rounded" role="alert">
                   <ul className="list-disc list-inside text-red-300 text-sm space-y-1">
                     {passwordState.errors.map((err, i) => (
                       <li key={i}>{err}</li>
@@ -326,7 +314,6 @@ export default function ProfilPage() {
                 </div>
               )}
 
-              {/* Boutons du modal */}
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
