@@ -87,6 +87,15 @@ export default function MyBookingsPage() {
     }
   };
 
+  /** Mise à jour du nombre de billets */
+  const updateTickets = (count: number) => {
+    const numberOfTickets = Math.min(Math.max(count, 1), 15);
+    setBookingData({
+      ...bookingData,
+      numberOfTickets,
+      totalPrice: numberOfTickets * ticketPrice,
+    });
+  };
 
   return (
     <section className="min-h-screen p-4 md:p-8">
