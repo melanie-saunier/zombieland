@@ -18,7 +18,7 @@ import type { BookingData, TicketPricing, ValueDate } from "@/@types/booking.d.t
 const formatLocalDate = (dateString: string, options?: Intl.DateTimeFormatOptions) => {
   const [year, month, day] = dateString.split('-').map(Number); // On sépare l'année, le mois et le jour
   const date = new Date(year, month - 1, day); // Mois commence à 0 en JS
-  return date.toLocaleDateString("fr-FR", options || {
+  return date.toLocaleDateString("fr-FR", options || { /* On formate la date en français */
     day: "numeric",
     month: "numeric",
     year: "numeric",
