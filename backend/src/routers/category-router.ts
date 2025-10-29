@@ -23,10 +23,10 @@ export const categoryRouter = Router();
 categoryRouter.get("/", categoryController.getAll);
 
 /**
- * GET /category/:id
+ * GET /categories/{id}
  * @tags Category
  * @summary Returns a category by its id
- * @param {number} id.path.required - The ID of the category
+ * @param {integer} id.path.required - The ID of the category
  * @return {Category} 200 - Successful response with the category object
  * @return {object} 404 - No category found
  * @return {object} 500 - Internal server error
