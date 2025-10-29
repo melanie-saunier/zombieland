@@ -97,11 +97,34 @@ export default function MyBookingsPage() {
     });
   };
 
+    /** Validation et soumission du formulaire */
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const newErrors: string[] = [];
+    
+        if (!bookingData.date) newErrors.push("Veuillez sélectionner une nouvelle date de visite.");
+        else if (new Date(bookingData.date) < today)
+          newErrors.push("La date de visite ne peut pas être dans le passé, vous êtes sur le site de ZombieLand, et non pas Retour vers le futur.");
+        if (bookingData.numberOfTickets < 1)
+          newErrors.push("Vous devez réserver au moins 1 billet.");
+    
+        if (newErrors.length) {
+          setErrors(newErrors);
+          return;
+        }
+    
+        console.log("Réservation :", bookingData);
+        alert(`Réservation confirmée !\n\nDate: ${bookingData.date}\nBillets: ${bookingData.numberOfTickets}\nTotal: ${bookingData.totalPrice}€`);
+    
+        setBookingData({ date: "", numberOfTickets: 1, totalPrice: ticketPrice });
+        setSelectedDate(new Date());
+      };
+
   return (
     <section className="min-h-screen p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className="text-4xl md:text-5xl font-bold text-center mb-8">
-          Réserver vos billets
+          Mes réservations
         </h1>
       </div>
     </section>
