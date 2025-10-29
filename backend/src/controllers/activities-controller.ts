@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
 import { sequelize, Activity } from "../models/association";
+import { idSchema } from "../schema";
 
 export const activityController = {
   
@@ -33,9 +34,8 @@ export const activityController = {
    */
   async getById(req: Request, res: Response) {
     // On récupère l'id dans les param de req et le parseInt
-    const id = parseInt(req.params.id, 10);
-    console.log("type de id : " + typeof(id));
-
+    const { id } = idSchema.parse(req.params);
+    
     // On récupère l'activité correspondante à cet id, avec sa catégorie et son niveau
     const activity = await Activity.findByPk(id, {
       include: [
