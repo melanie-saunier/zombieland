@@ -28,7 +28,7 @@ export async function fetchOneActivityById(id: number): Promise<IActivity>{
         notFound();
       } 
     }
-    throw new Error("Problème pour récupérer l'activités demandées");
+    throw new Error("Problème pour récupérer l'activité demandée");
   }
 }
 

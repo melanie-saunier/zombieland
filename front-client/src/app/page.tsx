@@ -18,7 +18,7 @@ import fetchMostScaryActivities from "@/api/activities";
 import Loader from "@/components/Loader";
 
 export default function Home() {
-  //TODO: fetch des activities depuis le back, quand back sera prêt. En attendant, j'ai créé une variable statique qui contient un tableau d'activités, pour mis en forme du front.
+  
   // State pour le fetch des activités avec state d'erreur et de loading
   const [activities, setActivities] = useState<IActivity[]>([]);
   const [errorActivities, setErrorActivities] = useState<string | null>(null);
@@ -72,7 +72,7 @@ export default function Home() {
 
         <div className="md:absolute md:bottom-24 z-10 flex flex-col items-center justify-end gap-2 p-4 md:justify-center md:items-start md:w-2/3 md:h-auto min-h-[300px] max-h-screen bg-neutral-700 md:bg-transparent">
           <div className="text-neutral-50 text-center md:mx-4 md:text-left md:pb-8 flex flex-col justify-around gap-8">
-            <h1 className="text-3xl md:text-5xl">
+            <h1 className="title text-3xl md:text-5xl">
             Bienvenue à Zombieland ! 
             </h1>
             <p className="font-bold md:text-2xl w-3/4 m-auto md:m-0">
@@ -94,7 +94,7 @@ export default function Home() {
       <section>
         {/* section pour le slider d'activités du parc */}
         <div className="w-full h-[400px] p-4  flex flex-col items-center justify-center gap-4">
-          <h2 className="text-xl md:text-3xl uppercase">Nos attractions les plus flippantes</h2>
+          <h2 className="title text-xl md:text-3xl uppercase">Nos attractions les plus flippantes</h2>
           {errorActivities && 
            <p className="text-center font-bold text-xl">{errorActivities}</p>
           }
@@ -124,7 +124,7 @@ export default function Home() {
               })}
             </Swiper>
           }
-        </div>
+         </div>
       </section>
       <section>
         {/* section informations utiles du parc */}
@@ -140,7 +140,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-linear-to-r from-black/40 to-transparent z-1"></div>
 
           <div className="absolute z-10 m-4 flex flex-col justify-center gap-4 w-full md:w-[60%] md:left-[10%] md:top-1/2 md:-translate-y-1/2">
-            <h2 className="text-xl md:text-3xl uppercase">Prépare ta venue</h2>
+            <h2 className="title text-xl md:text-3xl uppercase">Prépare ta venue</h2>
             <div className="">
               <div className="flex gap-2 font-bold text-base md:text-lg drop-shadow-lg/60">
                 <Clock />
