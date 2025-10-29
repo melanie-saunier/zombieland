@@ -66,4 +66,4 @@ export const updateUserPasswordSchema = z.object({
   path: ["confirmedPassword"], // indique où afficher l'erreur
 });
 
-export type updateUserPasswordSchema = z.infer<typeof updateUserPasswordSchema>;
+export type updateUserPasswordInput = z.infer<typeof updateUserPasswordSchema>;

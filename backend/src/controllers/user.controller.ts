@@ -1,9 +1,9 @@
 import { User } from "../models/user"
 import { Response, Request } from "express";
 import { idSchema } from "../schema";
-import { updateUserPasswordSchema, updateUserSchema, userSchema } from "../schema/user";
+import { updateUserPasswordSchema, updateUserSchema, userSchema } from "../schema";
 import argon2 from "argon2";
-import { is } from "zod/v4/locales";
+import { Op } from "sequelize";
 
 export const userController = {
   /**
@@ -25,7 +25,14 @@ export const userController = {
 
     // Si users est vide, on retourne une erreur 404 avec un message d'erreur
     if(!users || users.length === 0) return res.status(404).json({ message:"No users stored in the database"});
-    res.status(200).json(users);
+
+    // On supprime le password avant d'envoyer la réponse
+    const safeUsers = users.map(u => {
+      const { password, ...userWithoutPassword } = u.toJSON();
+      return userWithoutPassword;
+    });
+
+    res.status(200).json(safeUsers);
   },
   
   /**
@@ -48,7 +55,10 @@ export const userController = {
     // Si user est vide, on retourne une erreur 404 avec un message d'erreur
     if(!user) return res.status(404).json({ message:`No user found with id: ${id}`});
 
-    res.status(200).json(user);
+    // Supprimer le password avant de renvoyer la réponse
+    const { password, ...safeUser } = user.toJSON();
+
+    res.status(200).json(safeUser);
   },
 
   /**
@@ -90,11 +100,14 @@ export const userController = {
       password: hashedPassword,
     });
     
-    // On renvoie l'utilisateur créé (sans exposer le mot de passe)
-    res.status(201).json({
-      ...userCreated,
-      password: undefined
-    })
+    // Conversion en objet simple
+    const user = userCreated.toJSON();
+
+    // Suppression du mot de passe avant d’envoyer la réponse
+    delete user.password;
+
+    // Réponse JSON propre
+    res.status(201).json(user);
   },
   
   /**
@@ -122,20 +135,33 @@ export const userController = {
     // Si aucun utilisateur n’est trouvé, on renvoie une erreur 404
     if(!userFound) return res.status(404).json({ message:`No user found with id: ${id}`});
 
-    // TODO: ajouter la vérification du mail 
+    // Vérification de l’unicité de l’email
+    // On vérifie si un utilisateur existe déjà avec cet email (autre que notre user qui veut modifier ses infos)
+    const userWithSameEmail = await User.findOne({
+      where: {
+        email: data.email, 
+        id: { [Op.ne]: userFound.id } // Op.ne = "not equal", donc on ignore l'utilisateur courant}
+       } 
+    });
+    
+    // Si un compte existe déjà, on renvoie une erreur 400
+    if(userWithSameEmail) return res.status(400).json({ error: "An account with this email address already exists." });
 
     // On applique les modifications validées sur l’utilisateur trouvé
     const userUpdated = await userFound.update(data);
 
-    // On renvoie l’utilisateur mis à jour
-    res.json({
-      ...userUpdated,
-      password: undefined
-    });
+    // Conversion en objet simple
+    const user = userUpdated.toJSON();
+
+    // Suppression du mot de passe avant d’envoyer la réponse
+    delete user.password;
+
+    // Réponse JSON propre
+    res.status(200).json(user);
   },
 
   /**
-   * Delete a user
+   * Deletes a user from the database
    * @param req 
    * @param res 
    */
@@ -192,10 +218,14 @@ export const userController = {
     // on modifie le password en bdd
     const userUpdated = await userFound.update({ password: hashedNewPassword });
 
-    res.json({
-      ...userUpdated,
-      password: undefined
-    });
+    // Conversion en objet simple
+    const user = userUpdated.toJSON();
+
+    // Suppression du mot de passe avant d’envoyer la réponse
+    delete user.password;
+
+    // Réponse JSON propre
+    res.status(200).json(user);
   },
  };
 
