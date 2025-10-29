@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 import { Booking } from "../models/booking";
 import { bookingSchema, updateBookingSchema, idSchema } from "../schemas/index.js";
+import { User } from "../models/user";
 
 
 export const bookingController = {
@@ -108,11 +109,17 @@ export const bookingController = {
 
   // Récuperer toutes les bookings d'un utilisateur
   async getAllBookingsForUser(req: Request, res: Response) {
+
     // récuperer ET valider l'id de l'utilisateur'
     const { id } = idSchema.parse(req.params);
 
+    // vérifier que l'utilisateur existe
+    const userExists = await User.findByPk(id);
+    
+    if(!userExists) return res.status(404).json({ message: "L'utilisateur n'existe pas"})
+
     // interroger la bdd pour récuperer l'utilisateur qui porte cet id
-    const user = await Booking.findAll({
+    const bookings = await Booking.findAll({
       where: { user_id: id }, // filtrer par l'id de la liste
       
       order: [
@@ -121,12 +128,10 @@ export const bookingController = {
       ],
     });
 
-    // est ce que cet utilisateur existe ?
-    if(!user) return res.status(404).json({ message:`l'utilisateur n'existe pas`});
+    // existe t'il des bookings pour cette utilisateur ?
+    if(!bookings) return res.status(404).json({ message:`Il n'y a pas de bookings`});
 
     // retourner la liste
-    res.json(user);
+    return res.status(200).json(bookings);
   }
-
-
 }
