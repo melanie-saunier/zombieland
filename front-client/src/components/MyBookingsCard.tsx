@@ -44,7 +44,7 @@ const canCancel = (visitDate: string) => {
 };
 
 /** Composant de carte de réservation */
-export default function MyBookingCard({ reservation, onModify, onCancel }: MyBookingCardProps) {
+export default function MyBookingsCard({ reservation, onModify, onCancel }: MyBookingCardProps) {
   return (
     <div className="bg-[#201041] border border-primary-purple-300 rounded-lg p-6 shadow-[0_0_12px_0_rgba(180,130,255,0.3)] hover:shadow-[0_0_20px_0_rgba(180,130,255,0.5)] transition-all">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -59,7 +59,7 @@ export default function MyBookingCard({ reservation, onModify, onCancel }: MyBoo
             {statusLabel[reservation.status]}
           </span>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
             <InfoItem
               icon={<Calendar />}
               label="Date de réservation"
