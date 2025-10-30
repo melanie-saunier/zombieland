@@ -1,5 +1,7 @@
 import { Model, DataTypes } from "sequelize";
 import { sequelize } from "./sequelize";
+import { Role } from "./association";
+
 
 export class User extends Model {
   declare id: number;
@@ -10,6 +12,9 @@ export class User extends Model {
   declare role_id: number;
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
+
+   // ⚡ Déclaration de l'association
+   declare role?: Role; // le ? signifie que ça peut être undefined
 }
 
 User.init(

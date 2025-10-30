@@ -5,7 +5,7 @@ export const activityRouter = Router();
 
 /**
  * @typedef {object} Level
- * @property {string} id - level's unique id (UUID)
+ * @property {number} id - level's unique id
  * @property {string} name - level's name
  * @property {number} value - level's numeric value (1, 2 or 3)
  * @property {string} created_at - level's creation TS
@@ -14,15 +14,15 @@ export const activityRouter = Router();
 
 /**
  * @typedef {object} Activity
- * @property {string} id - activity's unique id (UUID)
+ * @property {number} id - activity's unique id
  * @property {string} name - activity's name
  * @property {string} description - activity's description
  * @property {number} duration - activity's duration (in min)
  * @property {number} min_height - minimum required height for the activity (in m)
  * @property {boolean} pregnancy_warning - true if there is a pregnancy warning
  * @property {string} image_ref - activity's image reference
- * @property {string} level_id - foreign key referencing the level
- * @property {string} category_id - foreign key referencing the category
+ * @property {number} level_id - foreign key referencing the level
+ * @property {number} category_id - foreign key referencing the category
  * @property {string} created_at - activity's creation TS
  * @property {string} updated_at - activity's last update TS
  * @property {Category} category - activity's category
@@ -59,10 +59,10 @@ activityRouter.get("/", activityController.getAll);
 activityRouter.get("/most-scary", activityController.getRandomedScaryActivities);
 
 /**
- * GET /activities/:id
+ * GET /activities/{id}
  * @tags Activity
  * @summary Returns an activity by its id, including its category and its level
- * @param {string} id.path.required - The ID of the activity
+ * @param {integer} id.path.required - The ID of the activity
  * @return {Activity} 200 - Successful response with the activity object
  * @return {object} 404 - No activity found
  * @return {object} 500 - Internal server error

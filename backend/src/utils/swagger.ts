@@ -33,7 +33,7 @@ export function setupSwagger(app: Application) {
     filesPattern: "./**/*.ts",
 
     // Chemin où sera accessible l’interface Swagger
-    swaggerUIPath: "/docs",
+    swaggerUIPath: "/api/docs",
 
     // Permet d’exposer la version brute du JSON OpenAPI
     exposeApiDocs: true,

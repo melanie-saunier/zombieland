@@ -1,6 +1,7 @@
-import Link from "next/link";
+// src/app/visitor-information/page.tsx 
+
 import { Bell, Clock, Euro, MapPin, Phone, Mail, Bus, Car } from "lucide-react";
-import Button from "@/components/LinkButton";
+import LinkButton from "@/components/LinkButton";
 
 export const metadata = {
   title: "Informations utiles | ZOMBIELAND",
@@ -14,11 +15,11 @@ export default function VisitorInformationPage() {
         <div className="max-w-6xl mx-auto">
           {/* Header avec effet néon cohérent */}
           <header className="mb-12 text-center md:text-left">
-            <h1 className="text-3xl md:text-5xl mb-4">
+            <h1 className="title text-3xl md:text-5xl mb-4">
               Informations utiles
             </h1>
-            <p className="text-neutral-50/80 md:text-lg max-w-3xl">
-              Préparez votre visite à Zombieland : horaires d'ouverture, tarifs, accès parking, transports en commun et contacts utiles.
+            <p className="text-neutral-50/80 md:text-lg">
+              Préparez votre visite à Zombieland : horaires d’ouverture, tarifs, accès parking, transports en commun et contacts utiles.
             </p>
           </header>
 
@@ -28,23 +29,17 @@ export default function VisitorInformationPage() {
             <div className="w-full lg:w-auto">
               <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-purple-300 pb-3 inline-block">
                 <Clock className="inline-block mr-2 mb-1" size={28} />
-                Horaires d'ouverture
+                Horaires d’ouverture
               </h2>
-              <div className="border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300 max-w-2xl" style={{backgroundColor: '#201041'}}>
-                <ul className="space-y-3 text-neutral-50/80">
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1 text-xl">•</span>
-                    <span className="text-lg">
-                      <strong className="text-primary-purple-300">Haute saison</strong> (Juin à Septembre) : 
-                      <span className="text-secondary-300 font-semibold"> 7j/7 de 10h à 23h</span>
-                    </span>
+              <div className="border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300 max-w-2xl" style={{backgroundColor: "#201041"}}>
+                <ul className="px-2 space-y-3 text-neutral-50/80 list-disc marker:text-secondary-300">
+                  <li>
+                    <span className="text-lg text-primary-purple-300">Haute saison</span> (Juin à Septembre) : 
+                    <span className="text-lg text-secondary-300 font-semibold"> 7j/7 de 10h à 23h</span>
                   </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1 text-xl">•</span>
-                    <span className="text-lg">
-                      <strong className="text-primary-purple-300">Basse saison</strong> (Octobre à Mai) : 
-                      <span className="text-secondary-300 font-semibold"> 7j/7 de 10h à 20h</span>
-                    </span>
+                  <li>
+                    <span className="text-lg text-primary-purple-300">Basse saison</span> (Octobre à Mai) : 
+                    <span className="text-lg text-secondary-300 font-semibold"> 7j/7 de 10h à 20h</span>
                   </li>
                 </ul>
               </div>
@@ -56,18 +51,16 @@ export default function VisitorInformationPage() {
                 <Euro className="inline-block mr-2 mb-1" size={28} />
                 Tarif
               </h2>
-              <div className="border-2 border-primary-purple-300 rounded-lg p-8 shadow-[0_0_20px_rgba(248,52,253,0.3)] hover:shadow-[0_0_30px_rgba(248,52,253,0.5)] transition-all duration-300 max-w-lg" style={{backgroundColor: '#201041'}}>
+              <div className="border-2 border-primary-purple-300 rounded-lg p-8 shadow-[0_0_20px_rgba(248,52,253,0.3)] hover:shadow-[0_0_30px_rgba(248,52,253,0.5)] transition-all duration-300 max-w-lg" style={{backgroundColor: "#201041"}}>
                 <div className="flex items-baseline justify-center gap-3 mb-3">
                   <p className="text-3xl md:text-4xl font-bold text-primary-purple-300">45 €</p>
                   <p className="text-lg text-neutral-50/80">/ personne</p>
                 </div>
                 <p className="text-neutral-50/70 mb-6 leading-relaxed text-center">
-                  Billet unique donnant accès à l'ensemble du parc pour la journée. 
+                  Billet unique donnant accès à l’ensemble du parc pour la journée. 
                   Toutes les attractions incluses, sensations garanties !
                 </p>
-                <Link href="/booking" className="flex justify-center">
-                  <Button text="Réserver maintenant" style="button_booking" Icon={Bell} />
-                </Link>
+                <LinkButton path="/booking" text="Réserver maintenant" style="button_booking" Icon={Bell} />
               </div>
             </div>
           </div>
@@ -78,10 +71,10 @@ export default function VisitorInformationPage() {
       <section 
         className="py-12 w-full relative border-b-2 border-t-2 border-primary-purple-300"
         style={{
-          backgroundImage: 'url(/images/info-background.png)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat'
+          backgroundImage: "url(/images/info-background.png)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat"
         }}
       >
         {/* Overlay pour la lisibilité sur toute la largeur */}
@@ -97,7 +90,7 @@ export default function VisitorInformationPage() {
             {/* Infos à gauche */}
             <div className="space-y-5">
               {/* Adresse */}
-              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: '#201041'}}>
+              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: "#201041"}}>
                 <h3 className="text-lg font-bold text-primary-purple-300 mb-2 flex items-center gap-2">
                   <MapPin size={20} />
                   Adresse
@@ -110,57 +103,36 @@ export default function VisitorInformationPage() {
               </div>
 
               {/* Parking */}
-              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: '#201041'}}>
+              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: "#201041"}}>
                 <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
                   <Car size={20} />
                   Parking
                 </h3>
-                <ul className="space-y-2 text-neutral-50/80">
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Parking visiteurs à proximité immédiate de l'entrée</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Places réservées PMR</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Bornes de recharge électrique</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Ouvert durant les horaires du parc (gratuit)</span>
-                  </li>
+                <ul className="px-2 space-y-2 text-neutral-50/80 list-disc marker:text-secondary-300">
+                  <li>Parking visiteurs à proximité immédiate de l’entrée</li>
+                  <li>Places réservées PMR</li>
+                  <li>Bornes de recharge électrique</li>
+                  <li>Ouvert durant les horaires du parc (gratuit)</li>
                 </ul>
               </div>
 
               {/* Transports */}
-              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: '#201041'}}>
+              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: "#201041"}}>
                 <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
                   <Bus size={20} />
                   Transports en commun
                 </h3>
-                <ul className="space-y-2 text-neutral-50/80">
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Bus lignes 12 et 24 — arrêt "Zombieland"</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Tram T2 — station "Néonville Parc"</span>
-                  </li>
-                  <li className="flex items-start gap-2">
-                    <span className="text-secondary-300 mt-1">•</span>
-                    <span>Gare "Néonville" à ~15 min en navette</span>
-                  </li>
+                <ul className="px-2 space-y-2 text-neutral-50/80 list-disc marker:text-secondary-300">
+                  <li>Bus lignes 12 et 24 — arrêt “Zombieland”</li>
+                  <li>Tram T2 — station “Néonville”</li>
+                  <li>Gare “Néonville” à ~15 min en navette</li>
                 </ul>
               </div>
             </div>
 
             {/* Map à droite - CENTRÉE VERTICALEMENT */}
             <div className="flex items-center">
-              <div className="relative w-full h-full overflow-hidden rounded-lg border-2 border-primary-purple-300 aspect-[16/9] shadow-[0_0_15px_rgba(248,52,253,0.2)]">
+              <div className="relative w-full h-full overflow-hidden rounded-lg border-2 border-primary-purple-300 aspect-video shadow-[0_0_15px_rgba(248,52,253,0.2)]">
                 <iframe
                   title="Accès parking Zombieland"
                   className="w-full h-full"
@@ -174,56 +146,50 @@ export default function VisitorInformationPage() {
         </div>
       </section>
 
-      <section className="px-4 py-10 md:px-8 md:py-16 bg-neutral-700">
-        <div className="max-w-6xl mx-auto">
-          {/* Section Contact - CENTRÉE */}
-          <div className="mb-8 flex justify-center">
-            <div className="w-full max-w-4xl">
-              <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-purple-300 pb-3 inline-block">
-                <Phone className="inline-block mr-2 mb-1" size={28} />
-                Contact
-              </h2>
-              <div className="grid gap-4 md:grid-cols-2">
-                {/* Téléphone */}
-                <div className="bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: '#201041'}}>
-                  <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
-                    <Phone size={20} />
-                    Téléphone
-                  </h3>
-                  <p className="text-neutral-50/80 mb-2">
-                    <a 
-                      href="tel:+33666666666" 
-                      className="text-xl font-semibold text-secondary-300 hover:text-secondary-200 transition-colors"
-                    >
-                      06 66 66 66 66
-                    </a>
-                  </p>
-                  <p className="text-sm text-neutral-50/60">
-                    Réception téléphonique :<br />
-                    Lun–Dim, 9h–18h
-                  </p>
-                </div>
+      {/* Section Contact - CENTRÉE */}
+      <section className="bg-neutral-700 px-4 py-10 md:px-8 md:py-16 w-full mx-auto mb-8 flex flex-col justify-center items-center">
+        <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-purple-300 pb-3 inline-block">
+          <Phone className="inline-block mr-2 mb-1" size={28} />
+            Contact
+        </h2>
+        <div className="flex flex-col md:flex-row justify-center gap-4 md:w-1/2">
+          {/* Téléphone */}
+          <div className="md:w-1/2 bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: "#201041"}}>
+            <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
+              <Phone size={20} />
+                Téléphone
+            </h3>
+            <p className="text-neutral-50/80 mb-2">
+              <a 
+                href="tel:+33666666666" 
+                className="text-xl font-semibold text-secondary-300 hover:text-secondary-200 transition-colors"
+              >
+                06 66 66 66 66
+              </a>
+            </p>
+            <p className="text-sm text-neutral-50/60">
+              Réception téléphonique :<br />
+              Lun–Dim, 9h–18h
+            </p>
+          </div>
 
-                {/* Email */}
-                <div className="bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: '#201041'}}>
-                  <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
-                    <Mail size={20} />
-                    Email
-                  </h3>
-                  <p className="text-neutral-50/80">
-                    <a 
-                      href="mailto:contact@zombieLand.fr" 
-                      className="text-xl font-semibold text-secondary-300 hover:text-secondary-200 transition-colors break-all"
-                    >
-                      contact@zombieLand.fr
-                    </a>
-                  </p>
-                  <p className="text-sm text-neutral-50/60 mt-2">
-                    Réponse sous 24h en semaine
-                  </p>
-                </div>
-              </div>
-            </div>
+          {/* Email */}
+          <div className="md:w-1/2 bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: "#201041"}}>
+            <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
+              <Mail size={20} />
+                Email
+            </h3>
+            <p className="text-neutral-50/80">
+              <a 
+                href="mailto:contact@zombieLand.fr" 
+                className="text-xl font-semibold text-secondary-300 hover:text-secondary-200 transition-colors break-all"
+              >
+                contact@zombieLand.fr
+              </a>
+            </p>
+            <p className="text-sm text-neutral-50/60 mt-2">
+              Réponse sous 24h en semaine
+            </p>
           </div>
         </div>
       </section>
