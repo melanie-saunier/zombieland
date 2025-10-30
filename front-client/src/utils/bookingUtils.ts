@@ -1,4 +1,4 @@
-// src/utils/date.ts
+// src/utils/bookingUtils.ts
 
 // Définition de maximum de tickets possibles par réservation
 export const MAX_TICKETS_PER_BOOKING = 15;

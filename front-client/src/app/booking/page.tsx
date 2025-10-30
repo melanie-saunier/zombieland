@@ -255,7 +255,7 @@ export default function BookingPage() {
   }
 
   return (
-    <section className="min-h-screen p-4 md:p-8">
+    <section className="bg-radial from-[#961990] to-[#000000] min-h-screen p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className="title text-4xl md:text-5xl text-center mb-8">
           Réserver vos billets

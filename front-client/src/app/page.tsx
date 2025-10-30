@@ -23,6 +23,7 @@ export default function Home() {
   const [activities, setActivities] = useState<IActivity[]>([]);
   const [errorActivities, setErrorActivities] = useState<string | null>(null);
   const [isLoadingActivities, setIsLoadingActivities] = useState(true);
+  
   // use effect pour récupérer les données avec un fetch
   useEffect(() => {
     // on récup les données des activités
@@ -47,6 +48,7 @@ export default function Home() {
     // on appelle la fonction de récupération des données:
     loadActivities();
   }, []);
+
   return (
     <>
       <section className="md:relative md:h-screen w-full">

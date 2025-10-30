@@ -13,16 +13,18 @@ import { Bell, CalendarCheck, House, Info, LogIn, LogOut, Rocket, SignpostBig, U
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import LinkButton from "./LinkButton";
 import useUserContext from "../context/useUserContext";
+import { useHandleLogout } from "../utils/authUtils";
 
 
 export default function NavBarDesktop() {
   // Varible pour récupérer le chemin de la page actuelle, grâce au hook "usePathname" de React
   const pathname= usePathname();
   // Utilisation du contexte pour savoir si un utilisateur est connecté
-  const { logged } = useUserContext();
+  const { logged, logout } = useUserContext();
+  // Utilisation du hook custom handleLogout avec comme paramètres la fonction logout du user context
+  const handleLogout = useHandleLogout(logout);
   
   // Variables qui rassemblent les items de la navigation sous forme de liste
   // Propriété "always" : doit toujours apparaitre dans le mnu
@@ -102,24 +104,41 @@ export default function NavBarDesktop() {
             if ((!logged && item.onlyLoggedOut) || (logged && item.logged)) {
               return (
                 <div key={item.path} className="border-b border-t border-solid border-primary-purple-300 w-full">
-                  <Link
-                    href={item.path}
-                    className={`flex items-center gap-2 px-8 py-4 w-full
-                    ${pathname === item.path ? "current_page_text" : ""}
-                    hover:scale-110 transition-transform duration-200`}
-                  >
-                    <item.Icon
-                      color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
-                      className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
-                      size={24}
-                    />
-                    {item.name}
-                  </Link>
+                  {item.name === "Se déconnecter" ? (
+                    // Pour logout → utiliser un bouton et appeler handleLogout
+                    <button
+                      onClick={handleLogout}
+                      className={`flex items-center gap-2 px-8 py-4 w-full
+                      hover:scale-110 transition-transform duration-200 text-left`}
+                    >
+                      <item.Icon
+                        color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                        className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
+                        size={24}
+                      />
+                      {item.name}
+                    </button>
+                  ) : (
+                    // Sinon → lien classique pour "Se connecter"
+                    <Link
+                      href={item.path}
+                      className={`flex items-center gap-2 px-8 py-4 w-full
+                      ${pathname === item.path ? "current_page_text" : ""}
+                      hover:scale-110 transition-transform duration-200`}
+                    >
+                      <item.Icon
+                        color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                        className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
+                        size={24}
+                      />
+                      {item.name}
+                    </Link>
+                  )}
                 </div>
-              );
-            }
-          })}
-      </div>
+            );
+          }
+        })}
+    </div>
     </nav>
   );
 
