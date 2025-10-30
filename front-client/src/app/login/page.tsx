@@ -136,10 +136,7 @@ export default function LoginPage() {
 
         {/* Lien vers la page d'inscription */}
         <p className="text-center drop-shadow-lg/30">
-          Pas encore de compte ? 
-          <Link href={"/register"} className="font-semibold underline hover:text-primary-purple-200 transition">
-            Créer un compte ici
-          </Link></p>
+          Pas encore de compte ? <Link href={"/register"} className="font-semibold underline hover:text-primary-purple-200 transition">Créer un compte ici</Link></p>
       </div>
     </div>
   );
