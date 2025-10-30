@@ -1,56 +1,57 @@
-"use client"; 
-/* Directive Next.js indiquant que ce composant est exécuté côté client (navigateur), 
-   et non côté serveur. Nécessaire pour utiliser les hooks React comme useState ou useEffect. */
+// src/app/profile/page.tsx 
 
-import { useState, useEffect } from "react"; // Import des hooks React
-import Image from "next/image"; // Composant optimisé de Next.js pour afficher des images
-import { Eye, EyeOff, X } from "lucide-react"; // Icônes SVG importées depuis la librairie lucide-react
+"use client"; 
+import { useState, useEffect } from "react";
+import Image from "next/image"; 
+import { Eye, EyeOff, X } from "lucide-react"; 
 
 // Import des types TypeScript pour la sécurité des données (structure attendue)
 import type { User, PasswordState } from "@/@types/profile.d.ts";
 
-// Définition du composant principal "ProfilPage" exporté par défaut
-export default function ProfilPage() {
-
-  /* ----------------------------- GESTION DES ÉTATS ----------------------------- */
-
+/**
+ * Composant principal : ProfilePage
+ * Gère toute la logique et l'affichage du profil :
+ *  - 
+ *  - 
+ *  - 
+ *  - 
+ */
+export default function ProfilePage() {
+  // State qui contient les informations de l'utilisateur (nom, prénom, email). Null par défaut.
   const [userData, setUserData] = useState<User | null>(null);
-  // Contient les informations de l'utilisateur (nom, prénom, email). Null par défaut.
-
+  // State qui définit si l'utilisateur est en mode "modification du profil". False = lecture seule.
   const [isEditing, setIsEditing] = useState(false);
-  // Définit si l'utilisateur est en mode "modification du profil". False = lecture seule.
-
+  // State qui indique si la page est en cours de chargement. True au départ, passe à false quand les données sont prêtes.
   const [isLoading, setIsLoading] = useState(true);
-  // Indique si la page est en cours de chargement. True au départ, passe à false quand les données sont prêtes.
-
+  // State qui contient un éventuel message d'erreur à afficher à l'utilisateur.
   const [error, setError] = useState<string | null>(null);
-  // Contient un éventuel message d'erreur à afficher à l'utilisateur.
-
+  // State qui contient un message de succès temporaire (ex: "Profil mis à jour !").
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  // Contient un message de succès temporaire (ex: "Profil mis à jour !").
 
-  // État complexe pour gérer tout ce qui concerne le mot de passe
+  // State complexe pour gérer tout ce qui concerne le mot de passe
   const [passwordState, setPasswordState] = useState<PasswordState>({
     isOpen: false, // Affiche ou non le modal de changement de mot de passe
-    current: "", // Mot de passe actuel
-    new: "", // Nouveau mot de passe
-    confirm: "", // Confirmation du nouveau mot de passe
-    show: { current: false, new: false, confirm: false }, // Gère l'affichage/masquage des mots de passe
+    oldPassword: "", // Mot de passe actuel
+    newPassword: "", // Nouveau mot de passe
+    confirmPassword: "", // Confirmation du nouveau mot de passe
+    show: { oldPassword: false, newPassword: false, confirmPassword: false }, // Gère l'affichage/masquage des mots de passe
     errors: [], // Liste d'erreurs liées au formulaire mot de passe
   });
 
-  /* ----------------------------- CHARGEMENT DES DONNÉES UTILISATEUR ----------------------------- */
-
+  /**
+   * useEffect : hook React appelé après le premier rendu (montage) du composant
+   * Ici, il sert à récupérer les informations de l'utilisateur
+   * Une fois les données reçues :
+   *  - 
+   *  - 
+   */
   useEffect(() => {
-    // useEffect = Hook qui s’exécute au premier rendu du composant.
-    // Ici, on s’en sert pour aller chercher les données de l’utilisateur dès que la page se charge.
-
     const fetchUser = async () => {
       try {
         setIsLoading(true); // On indique que la page est en cours de chargement
         setError(null); // On réinitialise les erreurs
 
-        // ⚠️ À remplacer par un appel API réel plus tard (ex: getUserData() via axios)
+        //TODO: faire le fetch directement à l'API. En attendant, on créé une variable provisoire 
         const data = {
           id: "1",
           firstName: "Max",
