@@ -1,0 +1,12 @@
+### LOGIN
+POST http://localhost:3000/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "chipie.lechat@gmail.com",
+  "password": "P@ssword1234"
+}
+
+### ME
+GET http://localhost:3000/api/auth/me
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjgsInJvbGUiOiJtZW1iZXIiLCJpYXQiOjE3NjE4MzEwMTgsImV4cCI6MTc2MTg0MTgxOH0.6y4l8fRN7GlqufG-DiDKN9SWc-loF0Uqgj6DE8-O73I

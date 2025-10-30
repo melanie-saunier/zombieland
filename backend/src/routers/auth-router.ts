@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { authController } from "../controllers/auth-controller";
+import { authenticateToken } from "../middlewares/authenticate-token";
 
 export const authRouter = Router();
 
@@ -66,6 +67,7 @@ authRouter.post("/register", authController.register);
 authRouter.post("/login", authController.login);
 
 // route /me qui doit décodé le token si ok elle renvoie les infos user
-// authRouter.get("/me", authController.getCurrentUser);
+//on ajouter authenticateToken pour vérifier le cookie et le token qu'il contient et on ajoute les infos du token au req.user dans le but de s'en servir pour récuperer les infos et les transmettre au front
+authRouter.get("/me", authenticateToken, authController.getCurrentUser);
 
 // Route logout ??
