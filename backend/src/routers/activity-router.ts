@@ -59,10 +59,10 @@ activityRouter.get("/", activityController.getAll);
 activityRouter.get("/most-scary", activityController.getRandomedScaryActivities);
 
 /**
- * GET /activities/:id
+ * GET /activities/{id}
  * @tags Activity
  * @summary Returns an activity by its id, including its category and its level
- * @param {number} id.path.required - The ID of the activity
+ * @param {integer} id.path.required - The ID of the activity
  * @return {Activity} 200 - Successful response with the activity object
  * @return {object} 404 - No activity found
  * @return {object} 500 - Internal server error

@@ -1,5 +1,6 @@
 import { Response, Request } from "express";
-import { Category } from "../models/category";
+import { Category } from "../models/association";
+import { idSchema } from "../schema";
 
 export const categoryController = {
   
@@ -28,8 +29,8 @@ export const categoryController = {
    * @param res 
    */
   async getById(req: Request, res: Response) {
-    // On récupère l'id dans les param de req et le parseInt
-    const id = parseInt(req.params.id, 10);
+    // On récupère l'id dans les param de req et le parse avec notre schéma id
+    const { id } = idSchema.parse(req.params);
 
     // On récupère la catégorie correspondante à cet id
     const category = await Category.findByPk(id);
