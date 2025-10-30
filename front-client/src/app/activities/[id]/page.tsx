@@ -34,7 +34,7 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
     <div className="bg-neutral-700 py-4 px-8">
       <Link
         href="/activities"
-        className="hover:text-primary-purple-300 transition"
+        className="hover:text-primary-300 transition"
       >
         
         ⭠ Retour à la liste des activités
@@ -47,7 +47,7 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
             alt={`Image de l'activité ${activity.name}`}
             width={400} 
             height={300}
-            className="border-solid border-2 border-primary-purple-300 rounded-xl drop-shadow-[0_0_4px_var(--color-primary-purple-200)] md:w-full"
+            className="border-solid border-2 border-primary-300 rounded-xl drop-shadow-[0_0_4px_var(--color-primary-200)] md:w-full"
           />
         </div>
 
@@ -92,7 +92,7 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
             /* Avertissement femme enceinte : si pregnancy_warning = true, on affiche cette div, sinon, on ne l'affiche pas */
             activity.pregnancy_warning &&
             <div className="flex items-center gap-2">
-              <TriangleAlert size={24} color="var(--color-primary-purple-300)" className="w-1/4 md:w-auto"/><p className="italic">Cette attraction est fortement déconseillée aux femmes enceintes.</p>
+              <TriangleAlert size={24} color="var(--color-primary-300)" className="w-1/4 md:w-auto"/><p className="italic">Cette attraction est fortement déconseillée aux femmes enceintes.</p>
             </div>
           }
         </div>

@@ -62,7 +62,7 @@ export default function cgvPage() {
       <p>Les présentes CGV sont régies par le droit français. Tout litige sera soumis aux tribunaux compétents.</p>
 
       <h3 className="font-semibold p-2">Contact</h3>
-      <p>Pour toute question, écrivez-nous à : <a href="mailto:contact@zombieland.fr" className="hover:text-primary-purple-300 transition">contact@zombieland.fr</a></p>
+      <p>Pour toute question, écrivez-nous à : <a href="mailto:contact@zombieland.fr" className="hover:text-primary-300 transition">contact@zombieland.fr</a></p>
       <div className="flex justify-center pt-6"><Skull size={24} color="var(--color-secondary-300)"/></div>
     </div>
 

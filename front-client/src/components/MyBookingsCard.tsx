@@ -2,14 +2,7 @@
 
 import { Calendar, Users, Check } from "lucide-react";
 import { MyBookingCardProps, InfoItemProps } from "@/@types/my-bookings";
-
-/** Helpers */
-const formatDate = (dateString: string) =>
-  new Date(dateString).toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
+import { formatDate } from "@/utils/mybookingsUtils";
 
 const statusClasses = {
   confirmed: "bg-secondary-500/20 text-secondary-200 border-secondary-300",
@@ -31,7 +24,7 @@ const canCancel = (visitDate: string) => {
 /** Composant de carte de réservation */
 export default function MyBookingsCard({ reservation, onModify, onCancel }: MyBookingCardProps) {
   return (
-    <div className="bg-[#201041] border border-primary-purple-300 rounded-lg p-6 shadow-[0_0_12px_0_rgba(180,130,255,0.3)] hover:shadow-[0_0_20px_0_rgba(180,130,255,0.5)] transition-all">
+    <div className="bg-[#201041] border border-primary-300 rounded-lg p-6 shadow-[0_0_12px_0_rgba(180,130,255,0.3)] hover:shadow-[0_0_20px_0_rgba(180,130,255,0.5)] transition-all">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
         {/* Informations */}
         <div className="flex-1 space-y-4">
@@ -49,7 +42,7 @@ export default function MyBookingsCard({ reservation, onModify, onCancel }: MyBo
               icon={<Calendar />}
               label="Date de réservation"
               value={formatDate(reservation.bookingDate)}
-              color="text-primary-purple-300"
+              color="text-primary-300"
             />
             <InfoItem
               icon={<Calendar />}
@@ -92,7 +85,7 @@ export default function MyBookingsCard({ reservation, onModify, onCancel }: MyBo
               Annuler
             </button>
             {!canCancel(reservation.visitDate) && (
-              <p className="text-xs text-primary-purple-200/70 text-center">
+              <p className="text-xs text-primary-200/70 text-center">
                 Annulation possible jusqu'à 48h avant
               </p>
             )}
@@ -108,13 +101,13 @@ const InfoItem = ({
   icon,
   label,
   value,
-  color = "text-primary-purple-200",
+  color = "text-primary-200",
   highlight = false,
 }: InfoItemProps) => (
   <div className="flex items-start gap-3">
     <div className={`h-5 w-5 mt-0.5 flex items-center justify-center ${color}`}>{icon}</div>
     <div>
-      <p className="text-sm text-primary-purple-200">{label}</p>
+      <p className="text-sm text-primary-200">{label}</p>
       <p className={`font-medium ${highlight ? "text-secondary-200 text-lg font-bold" : "text-neutral-50"}`}>
         {value}
       </p>

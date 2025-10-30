@@ -38,7 +38,7 @@ export default function HeaderMobile() {
   return (
     <>
       {/* Header mobile fixe en haut de l'écran */}
-      <header className="fixed top-0 z-50 w-full md:hidden bg-neutral-700 border-b-2 border-solid border-primary-purple-300 flex justify-between items-center">
+      <header className="fixed top-0 z-50 w-full md:hidden bg-neutral-700 border-b-2 border-solid border-primary-300 flex justify-between items-center">
         
         {/* Logo cliquable qui renvoie à l'accueil */}
         <Link href="/" className="mx-4">
@@ -80,7 +80,7 @@ export default function HeaderMobile() {
                     - size : taille de l'icône
                   */}
                   <item.Icon
-                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                    color={ `${pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}`}
                     className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
                     size={24}
                   />
@@ -99,7 +99,7 @@ export default function HeaderMobile() {
                   onClick={() => setMenuOpen(false)}
                 >
                   <item.Icon
-                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                    color={ `${pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}`}
                     className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
                     size={24}
                   />
@@ -117,7 +117,7 @@ export default function HeaderMobile() {
                   onClick={() => setMenuOpen(false)}
                 >
                   <item.Icon
-                    color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                    color={ `${pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}`}
                     className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
                     size={24}
                   />

@@ -29,7 +29,7 @@ export default function NavBarMobile() {
   
   return (
     // Navigation mobile fixe en bas
-    <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-neutral-700/90 p-2 rounded-t-xl border-t-2 border-solid border-primary-purple-300 drop-shadow-[0_0_4px_var(--color-primary-purple-200)] ">
+    <nav className="md:hidden fixed bottom-0 left-0 w-full z-50 bg-neutral-700/90 p-2 rounded-t-xl border-t-2 border-solid border-primary-300 drop-shadow-[0_0_4px_var(--color-primary-200)] ">
       <ul className="flex justify-between px-2 text-neutral-50">
         {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}
         {navItems.map((item) => {
@@ -43,7 +43,7 @@ export default function NavBarMobile() {
               >
                 {/* Icône de l'item */}
                 <item.Icon
-                  color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                  color={ `${pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}`}
                   className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
                   size={24}
                 />
@@ -61,7 +61,7 @@ export default function NavBarMobile() {
                 className={ `${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"}`}
               >
                 <item.Icon
-                  color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                  color={ `${pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}`}
                   className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
                   size={24}
                 />
@@ -78,7 +78,7 @@ export default function NavBarMobile() {
                 className={ `${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"}`}
               >
                 <item.Icon
-                  color={ `${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                  color={ `${pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}`}
                   className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
                   size={24}
                 />

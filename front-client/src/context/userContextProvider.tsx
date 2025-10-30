@@ -1,3 +1,4 @@
+"use client";
 // On importe les hooks React nécessaires :
 // - useEffect : pour exécuter du code au montage du composant (chargement initial)
 // - useState : pour gérer l’état local (ici, l’utilisateur connecté)

@@ -49,7 +49,7 @@ export default function LoginPage() {
           </div>
           <button className="button_booking m-2 p-2 md:m-4 md:py-4 md:px-12  font-bold">Se connecter</button>
         </form>
-        <p className="text-center drop-shadow-lg/30">Pas encore de compte ? <Link href={"/register"} className="font-semibold underline hover:text-primary-purple-200 transition">Créer un compte ici</Link></p>
+        <p className="text-center drop-shadow-lg/30">Pas encore de compte ? <Link href={"/register"} className="font-semibold underline hover:text-primary-200 transition">Créer un compte ici</Link></p>
       </div>
     </div>
   );

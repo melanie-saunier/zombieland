@@ -11,7 +11,7 @@ import Image from "next/image";
 
 export default function SocialMediaBarDesktop() {
   return (
-    <div className="hidden md:flex justify-end gap-4 border-solid border-b-2 border-primary-purple-300 bg-black p-4">
+    <div className="hidden md:flex justify-end gap-4 border-solid border-b-2 border-primary-300 bg-black p-4">
       {/* Lien vers YouTube */}
       <a href={"https://www.youtube.com/"} target="_blank" rel="noopener noreferrer" className="hover:scale-115 transition-transform duration-200">
         <Image src="/images/icons/youtube-circle.png" alt="Logo de Youtube" width={24} height={24}/>
