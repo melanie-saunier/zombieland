@@ -9,7 +9,7 @@ import "react-calendar/dist/Calendar.css";
 import type { BookingData, TicketPricing, ValueDate } from "@/@types/booking.d.ts";
 
 /**
- * 📅 formatLocalDate
+ * Fonction formatLocalDate
  * Fonction utilitaire pour formater une date au format local français sans problème de fuseau horaire
  * - dateString : string "YYYY-MM-DD"
  * - options : options de formatage (facultatif)
@@ -147,9 +147,9 @@ export default function BookingPage() {
     if (!bookingData.date) {
       newErrors.push("Veuillez sélectionner une date de visite");
     } else {
-      const [year, month, day] = bookingData.date.split('-').map(Number);
-      const selectedDateObj = new Date(year, month - 1, day);
-      selectedDateObj.setHours(0, 0, 0, 0);
+      const [year, month, day] = bookingData.date.split('-').map(Number); // On sépare l'année, le mois et le jour
+      const selectedDateObj = new Date(year, month - 1, day); // On crée un objet Date avec la date sélectionnée
+      selectedDateObj.setHours(0, 0, 0, 0); // On met l'heure à 00:00 pour éviter le décalage horaire
 
       if (selectedDateObj < today) {
         newErrors.push("La date de visite ne peut pas être dans le passé");
@@ -165,7 +165,7 @@ export default function BookingPage() {
       newErrors.push(`Maximum ${pricing.maxTicketsPerBooking} billets par réservation`);
     }
 
-    // Si erreurs, on les affiche et on arrête la soumission
+    // Si erreurs, on les affiche et on arrête la soumission *
     if (newErrors.length) {
       setErrors(newErrors);
       return;
@@ -208,7 +208,7 @@ export default function BookingPage() {
   };
 
   /** Erreur de chargement des prix */
-  if (!pricing) {
+  if (!pricing) { // Si le prix n'est pas chargé, on affiche le message d'erreur dans un div avec les bonnes props
     return (
       <section className="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="bg-red-900/30 border-2 border-red-500 rounded-lg p-6 max-w-md">
@@ -227,7 +227,7 @@ export default function BookingPage() {
         </h1>
 
         {/* Erreurs de validation */}
-        {errors.length > 0 && (
+        {errors.length > 0 && ( // Si il y a des erreurs, on affiche le message d'erreur dans un div avec les bonnes props
           <div 
             className="p-4 bg-red-900/30 border-2 border-red-500 rounded-lg shadow-[0_0_12px_0_rgba(255,0,0,0.3)]"
             role="alert"
@@ -328,7 +328,7 @@ export default function BookingPage() {
                   </p>
                 </div>
 
-                {/* 💰 Prix total */}
+                {/* Prix total */}
                 <div 
                   className="p-6 bg-secondary-500/20 rounded-lg border-2 border-secondary-300 shadow-[0_0_12px_0_rgba(139,255,132,0.5)] text-center"
                   role="status"
@@ -345,7 +345,7 @@ export default function BookingPage() {
                   </p>
                 </div>
 
-                {/* ✅ Bouton de soumission */}
+                {/* Bouton de soumission */}
                 <button
                   type="submit"
                   disabled={!bookingData.date || isSubmitting}
@@ -378,7 +378,7 @@ export default function BookingPage() {
           </div>
         )}
 
-        {/* 💀 Message d'ambiance */}
+        {/* Message d'ambiance */}
         <div className="p-4 bg-primary-purple-500/20 rounded-lg border border-primary-purple-300 text-center">
           <p className="text-sm text-neutral-50">
             💀 Préparez-vous à vivre une expérience terrifiante à ZombieLand ! 💀
