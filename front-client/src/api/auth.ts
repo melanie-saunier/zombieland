@@ -11,7 +11,9 @@ export const authApi = {
    */
   getCurrentUser: async (): Promise<IUser | null> => {
     try {
-      const res = await axios.get(`${API_URL}/auth/me`, { withCredentials: true });
+      const res = await axios.get(`${API_URL}/auth/me`, 
+        { withCredentials: true } // important pour envoyer le cookie HTTPOnly
+      );
 
       const data = res.data;
       if (!data) return null;
