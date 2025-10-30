@@ -1,5 +1,6 @@
-"use client";
+// src/app/booking/page.tsx 
 
+"use client";
 import { useState, useEffect } from "react";
 import { Calendar as CalendarIcon, Plus, Minus, Users, CheckCircle } from "lucide-react";
 import Calendar from "react-calendar";
