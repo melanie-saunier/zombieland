@@ -126,7 +126,7 @@ export const authController = {
   },
 
   /**
-   * Get current User
+   * Gets current User
    * @param req 
    * @param res 
    */
@@ -146,6 +146,12 @@ export const authController = {
   
     res.json(user);
   },
+  
+  /**
+   * Update a user (excluding password updates)
+   * @param req 
+   * @param res 
+   */
   async updateMe (req: AuthRequest, res: Response) {
     const validation = updateMeSchema.safeParse(req.body);
     // Si la validation échoue :
@@ -184,6 +190,12 @@ export const authController = {
     // Réponse JSON propre
     res.status(200).json(userJson);
   },
+  
+  /**
+   * Update user's password
+   * @param req 
+   * @param res 
+   */
   async updatePassword(req: AuthRequest, res: Response) {
     const validation = updateMePasswordSchema.safeParse(req.body);
     // Si la validation échoue :
@@ -219,6 +231,12 @@ export const authController = {
     // Réponse JSON propre
     res.status(200).json(userJson);
   },
+
+  /**
+   * Log out the user
+   * @param req 
+   * @param res 
+   */
   logout(req: Request, res: Response) {
     // on détruit le cookie qui contient le token
     res.clearCookie("token", {

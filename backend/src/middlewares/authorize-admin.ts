@@ -7,7 +7,7 @@ export function authorizeAdmin(req: AuthRequest, res: Response, next: NextFuncti
   // on vérifie que la requete possède bien un user (req.user a été ajouté dans le middelware authenticate, donc si req.user existe c'est que le cookie/token existe)
   if(!req.user) return res.status(401).json({error: "Unauthorized"});
   // on vérifier que l'utilisateur est admin
-  if(req.user.role !== "admin" && req.user.role !== "superadmin") return res.status(403).json({ error: "Forbidden: Admins only" });
+  if(req.user.role !== "admin" && req.user.role !== "super admin") return res.status(403).json({ error: "Forbidden: Admins only" });
 
   //l'utilisateur est admin ou super admin on peut passer au suivant
   next();

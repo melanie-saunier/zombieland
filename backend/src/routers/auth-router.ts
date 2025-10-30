@@ -20,26 +20,22 @@ export const authRouter = Router();
  */
 
 /**
- * @typedef {object} AuthRegisterResponse
- * @property {number} id - User's unique id
- * @property {string} email - User's email
+ * @typedef {object} UpdateMeInput
  * @property {string} firstname - User's firstname
  * @property {string} lastname - User's lastname
- * @property {number} role_id - User's role id
- * @property {Date} updated_at - TS of the last update (same as created_at at creation)
- * @property {Date} created_at - TS when the user account was created
+ * @property {string} email - User's email
  */
 
 /**
- * @typedef {object} AuthLoginResponse
+ * @typedef {object} AuthResponse
  * @property {number} id - User's unique id
  * @property {string} email - User's email
  * @property {string} firstname - User's firstname
  * @property {string} lastname - User's lastname
  * @property {number} role_id - User's role id
- * @property {Date} updated_at - TS of the last update (same as created_at at creation)
- * @property {Date} created_at - TS when the user account was created
- * @property {RoleName} role - User's role name
+ * @property {string} updated_at - TS of last update
+ * @property {string} created_at - TS when user account was created
+ * @property {RoleName} [role] - User's role name (optional)
  */
 
 /**
@@ -47,9 +43,9 @@ export const authRouter = Router();
  * @tags Auth
  * @summary Register a new user
  * @param {RegisterInput} request.body.required - User data to register
- * @return {AuthRegisterResponse} 201 - User successfully registered
+ * @return {AuthResponse} 201 - User successfully registered
  * @return {object} 400 - Invalid input data or email already used
- * @return {object} 404 - Default role "member" not found
+ * @return {object} 404 - Validation error or email already used
  * @return {object} 500 - Internal server error
  */
 authRouter.post("/register", authController.register);
@@ -59,23 +55,53 @@ authRouter.post("/register", authController.register);
  * @tags Auth
  * @summary Log in a user
  * @param {LoginInput} request.body.required - User login credentials
- * @return {AuthLoginResponse} 200 - Successful login, user data returned (without password)
- * @return {object} 400 - Invalid credentials or malformed input
+ * @return {AuthResponse} 200 - Successful login, user data returned (without password)
+ * @return {object} 400 - Validation error or bad credentials
  * @return {object} 404 - User not found
  * @return {object} 500 - Internal server error
  */
 authRouter.post("/login", authController.login);
 
-// route /me qui doit décodé le token si ok elle renvoie les infos user
-//on ajouter authenticateToken pour vérifier le cookie et le token qu'il contient et on ajoute les infos du token au req.user dans le but de s'en servir pour récuperer les infos et les transmettre au front
+/**
+ * GET /auth/me
+ * @tags Auth
+ * @summary Get current logged-in user
+ * @return {AuthResponse} 200 - Current user info
+ * @return {object} 401 - Access denied (not logged in)
+ * @return {object} 404 - User not found
+ */
+// on ajoute authenticateToken pour vérifier le cookie et le token qu'il contient et on ajoute les infos du token au req.user dans le but de s'en servir pour récuperer les infos et les transmettre au front
 authRouter.get("/me", authenticateToken, authController.getCurrentUser);
 
-// Route /me/ en put pour qu'un utilisateur puisse modifier ses infos (pas son mot de passe)
+/**
+ * PUT /auth/me
+ * @tags Auth
+ * @summary Update current user's info (except password)
+ * @param {UpdateMeInput} request.body.required - Data to update
+ * @return {AuthResponse} 200 - Updated user info
+ * @return {object} 400 - Validation error or email already used
+ * @return {object} 401 - Access denied (not logged in)
+ * @return {object} 404 - User not found
+ */
 authRouter.put("/me", authenticateToken, authController.updateMe);
 
-//route /me/password pour d'une utilisateur puisse modifier son mot de passe
+/**
+ * PATCH /auth/me/password
+ * @tags Auth
+ * @summary Update current user's password
+ * @param {UserPasswordUpdate} request.body.required - Old and new passwords
+ * @return {object} 200 - Password successfully updated
+ * @return {object} 400 - Validation error or bad credentials
+ * @return {object} 401 - Access denied (not logged in)
+ * @return {object} 404 - User not found
+ */
 authRouter.patch("/me/password", authenticateToken, authController.updatePassword);
 
-//Route logout on supprime le cookie
-//c'est une route POST car on détruit quelque chose: on a un effet de bord (sur les routes get pas d'effet de bord)
+/**
+ * POST /auth/logout
+ * @tags Auth
+ * @summary Logout current user (delete cookie)
+ * @return {object} 200 - Logout successful
+ */
+// c'est une route POST car on détruit quelque chose: on a un effet de bord (sur les routes get pas d'effet de bord)
 authRouter.post("/logout", authenticateToken, authController.logout);
