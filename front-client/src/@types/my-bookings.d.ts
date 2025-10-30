@@ -28,7 +28,7 @@ export type Booking = {
 /**
  * Type pour l'affichage frontend
  */
-export type ReservationDisplay = {
+export type ReservationDisplay = { 
   id: number;
   bookingDate: string;
   visitDate: string;
@@ -37,13 +37,13 @@ export type ReservationDisplay = {
   totalPrice: number;
 };
 
-export interface MyBookingCardProps {
+export interface MyBookingCardProps { // Props pour le composant MyBookingsCard
   reservation: ReservationDisplay;
   onModify: (reservation: ReservationDisplay) => void;
   onCancel: (reservation: ReservationDisplay) => void;
 }
 
-export interface InfoItemProps {
+export interface InfoItemProps { // Props pour le composant InfoItem du composant MyBookingsCard
   icon: ReactNode;
   label: string;
   value: string;

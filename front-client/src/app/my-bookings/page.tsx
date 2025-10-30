@@ -190,7 +190,7 @@ export default function MesReservationsPage() {
         )}
       </div>
 
-      {/* Modal Modifier */} // On affiche le modal de modification
+      {/* Modal Modifier */}
       {modalType === "modify" && selected && (
         <Modal title="Modifier la réservation" onClose={resetModal}>
           <form onSubmit={handleModify} className="space-y-6">
@@ -223,7 +223,7 @@ export default function MesReservationsPage() {
         </Modal>
       )}
 
-      {/* Modal Confirmer */} // On affiche le modal de confirmation
+      {/* Modal Confirmer */}
       {modalType === "confirm" && selected && (
         <Modal title="Confirmer les modifications" icon={<AlertCircle className="h-8 w-8 text-secondary-200" />} onClose={resetModal}>
           <div className="space-y-4 mb-6">
@@ -238,7 +238,7 @@ export default function MesReservationsPage() {
         </Modal>
       )}
 
-      {/* Modal Annuler */} // On affiche le modal d'annulation
+      {/* Modal Annuler */}
       {modalType === "cancel" && selected && (
         <Modal title="Confirmer l'annulation" icon={<AlertCircle className="h-8 w-8 text-red-400" />} borderColor="border-red-500" onClose={resetModal}>
           <div className="space-y-4 mb-6">
