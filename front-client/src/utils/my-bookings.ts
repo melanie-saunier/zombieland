@@ -30,10 +30,10 @@ export function transformBookingToDisplay(
 
   // Calcul du prix total
   let totalPrice = 0;
-  if (booking.bookingPrices && booking.bookingPrices.length > 0) {
+  if (booking.bookingPrices && booking.bookingPrices.length > 0) { // Si le booking a des bookingPrices, on calcule le prix total en ajoutant les prix appliqués
     totalPrice = booking.bookingPrices.reduce((sum, bp) => sum + bp.applied_price, 0);
   } else {
-    totalPrice = booking.nb_people * unitPrice;
+    totalPrice = booking.nb_people * unitPrice; // Sinon, on calcule le prix total en multipliant le nombre de personnes par le prix unitaire
   }
 
   return {

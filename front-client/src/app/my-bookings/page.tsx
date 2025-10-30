@@ -86,86 +86,86 @@ const mockBackendBookings: Booking[] = [
 
 const TICKET_PRICE = 30; // Aligné sur backend: data/seed-db.sql → price.value = 30.00
 
-const formatDate = (dateString: string) =>
-  new Date(dateString).toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
+const formatDate = (dateString: string) => // Fonction pour formater la date
+  new Date(dateString).toLocaleDateString("fr-FR", { // On formate la date en français
+    day: "numeric", // On affiche le jour
+    month: "long", // On affiche le mois
+    year: "numeric", // On affiche l'année
   });
 
 export default function MesReservationsPage() {
-  // État backend (structure DB)
-  const [backendBookings, setBackendBookings] = useState<Booking[]>(mockBackendBookings);
+  // État backend (structure DB) *
+  const [backendBookings, setBackendBookings] = useState<Booking[]>(mockBackendBookings); // On crée un état pour les bookings backend
   
   // Transformation pour affichage
-  const displayReservations = backendBookings.map(b => transformBookingToDisplay(b, TICKET_PRICE));
+  const displayReservations = backendBookings.map(b => transformBookingToDisplay(b, TICKET_PRICE)); // On transforme les bookings backend en bookings affichables
 
-  const [selected, setSelected] = useState<ReservationDisplay | null>(null);
+  const [selected, setSelected] = useState<ReservationDisplay | null>(null); // On crée un état pour la réservation sélectionnée
   const [modalType, setModalType] = useState<"modify" | "cancel" | "confirm" | null>(null);
-  const [form, setForm] = useState({ visitDate: "", ticketCount: 1 });
+  const [form, setForm] = useState({ visitDate: "", ticketCount: 1 }); // On crée un état pour le formulaire
 
   const openModify = (res: ReservationDisplay) => {
-    setSelected(res);
+    setSelected(res); // On sélectionne la réservation
     setForm({ visitDate: res.visitDate, ticketCount: res.ticketCount });
-    setModalType("modify");
+    setModalType("modify"); // On ouvre le modal de modification
   };
 
   const openCancel = (res: ReservationDisplay) => {
-    setSelected(res);
-    setModalType("cancel");
+    setSelected(res); // On sélectionne la réservation
+    setModalType("cancel"); // On ouvre le modal d'annulation
   };
 
   const handleModify = (e: React.FormEvent) => {
     e.preventDefault();
-    setModalType("confirm");
+    setModalType("confirm"); // On ouvre le modal de confirmation
   };
 
   const confirmModify = () => {
-    if (!selected) return;
+    if (!selected) return; // Si aucune réservation n'est sélectionnée, on arrête la fonction
     
-    // Mise à jour côté backend (PATCH /api/bookings/:id)
+    // Mise à jour côté backend (PATCH /api/bookings/:id) *
     setBackendBookings(
-      backendBookings.map((b) =>
-        b.id === selected.id
+      backendBookings.map((b) => // On met à jour le booking backend
+        b.id === selected.id // Si l'id du booking backend est égal à l'id de la réservation sélectionnée, on met à jour le booking
           ? {
-              ...b,
+              ...b, // On met à jour le booking backend
               visit_date: form.visitDate,
-              nb_people: form.ticketCount,
+              nb_people: form.ticketCount, // On met à jour le nombre de personnes
               updated_at: new Date().toISOString(),
-              // Recalcul du bookingPrice applied_price
+              // Recalcul du bookingPrice applied_price *
               bookingPrices: b.bookingPrices?.map(bp => ({
-                ...bp,
+                ...bp, // On met à jour le bookingPrice backend
                 applied_price: form.ticketCount * TICKET_PRICE
-              }))
+              })) // On met à jour le bookingPrice backend
             }
-          : b
+          : b // Sinon, on retourne le booking backend
       )
-    );
+    ); // On met à jour le booking backend
     resetModal();
-  };
+  }; // On ferme le modal
 
   const confirmCancel = () => {
-    if (!selected) return;
+    if (!selected) return; // Si aucune réservation n'est sélectionnée, on arrête la fonction
     
-    // Mise à jour du status backend (PATCH /api/bookings/:id → status: false)
+    // Mise à jour du status backend (PATCH /api/bookings/:id → status: false) *
     setBackendBookings(
-      backendBookings.map((b) =>
-        b.id === selected.id
+      backendBookings.map((b) => // On met à jour le booking backend
+        b.id === selected.id // Si l'id du booking backend est égal à l'id de la réservation sélectionnée, on met à jour le booking
           ? { 
-              ...b, 
+              ...b, // On met à jour le booking backend
               status: false, // Backend: false = cancelled
-              updated_at: new Date().toISOString() 
+              updated_at: new Date().toISOString() // On met à jour la date de mise à jour
             }
-          : b
+          : b // Sinon, on retourne le booking backend
       )
-    );
-    resetModal();
-  };
+    ); // On met à jour le booking backend
+    resetModal(); // On ferme le modal
+  }; // On ferme le modal
 
   const resetModal = () => {
-    setSelected(null);
+    setSelected(null); // On réinitialise la réservation sélectionnée
     setModalType(null);
-  };
+  }; // On réinitialise le type de modal
 
   return (
     <div className="bg-radial from-[#961990] to-[#000000] p-12">
@@ -190,7 +190,7 @@ export default function MesReservationsPage() {
         )}
       </div>
 
-      {/* Modal Modifier */}
+      {/* Modal Modifier */} // On affiche le modal de modification
       {modalType === "modify" && selected && (
         <Modal title="Modifier la réservation" onClose={resetModal}>
           <form onSubmit={handleModify} className="space-y-6">
@@ -223,7 +223,7 @@ export default function MesReservationsPage() {
         </Modal>
       )}
 
-      {/* Modal Confirmer */}
+      {/* Modal Confirmer */} // On affiche le modal de confirmation
       {modalType === "confirm" && selected && (
         <Modal title="Confirmer les modifications" icon={<AlertCircle className="h-8 w-8 text-secondary-200" />} onClose={resetModal}>
           <div className="space-y-4 mb-6">
@@ -238,7 +238,7 @@ export default function MesReservationsPage() {
         </Modal>
       )}
 
-      {/* Modal Annuler */}
+      {/* Modal Annuler */} // On affiche le modal d'annulation
       {modalType === "cancel" && selected && (
         <Modal title="Confirmer l'annulation" icon={<AlertCircle className="h-8 w-8 text-red-400" />} borderColor="border-red-500" onClose={resetModal}>
           <div className="space-y-4 mb-6">
@@ -257,7 +257,7 @@ export default function MesReservationsPage() {
 }
 
 /** Composants utilitaires */
-interface InputProps {
+interface InputProps { // Props pour le composant Input du formulaire de modification et d'annulation de réservation (date de visite et nombre de personnes) que l'on garde ici car il n'est pas réutilisé ailleurs.
   label: string;
   type: string;
   value: string;
@@ -275,7 +275,7 @@ const Input = ({ label, type, value, onChange, ...props }: InputProps) => (
       onChange={(e) => onChange(e.target.value)}
       className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-purple-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-purple-300 transition-all"
       required
-      {...props}
+      {...props} // On passe les props au composant input
     />
   </div>
 );
