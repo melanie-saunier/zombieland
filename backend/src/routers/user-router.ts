@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { userController } from "../controllers/user-controller";
+import { authenticateToken } from "../middlewares/authenticate-token";
+import { authorizeAdmin } from "../middlewares/authorize-admin";
 
 export const userRouter = Router();
 
@@ -53,7 +55,7 @@ export const userRouter = Router();
  * @return {object} 404 - No users found
  * @return {object} 500 - Internal server error
  */
-userRouter.get("/", userController.getAll);
+userRouter.get("/", authenticateToken, authorizeAdmin, userController.getAll);
 
 /**
  * GET /users/{id}
@@ -64,7 +66,7 @@ userRouter.get("/", userController.getAll);
  * @return {object} 404 - No user found
  * @return {object} 500 - Internal server error
  */
-userRouter.get("/:id", userController.getById);
+userRouter.get("/:id", authenticateToken, authorizeAdmin, userController.getById);
 
 /**
  * POST /users
@@ -75,7 +77,7 @@ userRouter.get("/:id", userController.getById);
  * @return {object} 400 - Bad input
  * @return {object} 500 - Internal server error
  */
-userRouter.post("/", userController.createUser);
+userRouter.post("/", authenticateToken, authorizeAdmin, userController.createUser);
 
 /**
  * PUT /users/{id}
@@ -87,7 +89,7 @@ userRouter.post("/", userController.createUser);
  * @return {object} 400 - Bad input
  * @return {object} 500 - Internal server error
  */
-userRouter.put("/:id", userController.updateUser);
+userRouter.put("/:id", authenticateToken, authorizeAdmin, userController.updateUser);
 
 /**
  * DELETE /users/{id}
@@ -98,7 +100,7 @@ userRouter.put("/:id", userController.updateUser);
  * @return {object} 400 - Bad input
  * @return {object} 500 - Internal server error
  */
-userRouter.delete("/:id", userController.deleteUser);
+userRouter.delete("/:id", authenticateToken, authorizeAdmin, userController.deleteUser);
 
 /**
  * PATCH /users/{id}
@@ -110,4 +112,4 @@ userRouter.delete("/:id", userController.deleteUser);
  * @return {object} 400 - Bad input
  * @return {object} 500 - Internal server error
  */
-userRouter.patch("/:id", userController.updatePassword);
+userRouter.patch("/:id", authenticateToken, authorizeAdmin, userController.updatePassword);
