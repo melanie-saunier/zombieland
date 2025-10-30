@@ -6,6 +6,8 @@ import Footer from "@/components/Footer";
 import NavBarMobile from "@/components/NavBarMobile";
 import NavBarDesktop from "@/components/NavBarDesktop";
 import SocialMediaBarDesktop from "@/components/SocialMediaBarDesktop";
+import UserContextProvider from "@/context/userContextProvider";
+
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -33,19 +35,21 @@ export default function RootLayout({
       <body
         className={`${montserrat.variable} ${barlow.variable} antialiased flex flex-col min-h-screen`}
       >
-        {/* header mobile */}
-        <HeaderMobile/>
-        {/* navbar desktop */}
-        <NavBarDesktop/>
-        {/* social media bar en haut */}
-        <SocialMediaBarDesktop/>
-        <main className="grow md:ml-[20%] md:w-[80%] mt-15 md:mt-0 bg-neutral-700">
-          {children}
-        </main>
-        {/* Barre de navigation mobile en bas d'écran */}
-        <NavBarMobile />
-        {/* footer */}
-        <Footer />
+        <UserContextProvider>
+          {/* header mobile */}
+          <HeaderMobile/>
+          {/* navbar desktop */}
+          <NavBarDesktop/>
+          {/* social media bar en haut */}
+          <SocialMediaBarDesktop/>
+          <main className="grow md:ml-[20%] md:w-[80%] mt-15 md:mt-0 bg-neutral-700">
+            {children}
+          </main>
+          {/* Barre de navigation mobile en bas d'écran */}
+          <NavBarMobile />
+          {/* footer */}
+          <Footer />
+        </UserContextProvider>
       </body>
     </html>
   );

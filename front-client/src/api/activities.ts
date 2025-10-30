@@ -1,3 +1,5 @@
+// src/api/activities.ts
+
 import IActivity from "@/@types/activity";
 import axios, { AxiosError } from "axios";
 import { notFound } from "next/navigation";
