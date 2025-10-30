@@ -255,7 +255,7 @@ export default function BookingPage() {
   }
 
   return (
-    <section className="min-h-screen p-4 md:p-8">
+    <section className="bg-radial from-[#961990] to-[#000000] min-h-screen p-4 md:p-8">
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className="title text-4xl md:text-5xl text-center mb-8">
           Réserver vos billets
@@ -279,9 +279,9 @@ export default function BookingPage() {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="p-6 bg-neutral-700 rounded-lg border border-primary-purple-300 shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
-            <h2 className="text-xl font-bold text-neutral-50 mb-6 pb-2 border-b border-primary-purple-300 flex items-center gap-2">
-              <CalendarIcon size={24} className="text-primary-purple-300" />
+          <div className="p-6 bg-neutral-700 rounded-lg border border-primary-300 shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
+            <h2 className="text-xl font-bold text-neutral-50 mb-6 pb-2 border-b border-primary-300 flex items-center gap-2">
+              <CalendarIcon size={24} className="text-primary-300" />
               Détails de votre réservation
             </h2>
 
@@ -291,7 +291,7 @@ export default function BookingPage() {
               <div className="flex flex-col gap-2">
                 <label 
                   htmlFor="booking-calendar"
-                  className="text-lg text-primary-purple-200 font-semibold"
+                  className="text-lg text-primary-200 font-semibold"
                 >
                   Date de visite
                 </label>
@@ -320,7 +320,7 @@ export default function BookingPage() {
                 <div className="flex flex-col gap-3">
                   <label 
                     htmlFor="ticket-count"
-                    className="text-lg text-primary-purple-200 font-semibold flex items-center gap-2"
+                    className="text-lg text-primary-200 font-semibold flex items-center gap-2"
                   >
                     <Users size={18} /> Nombre de billets
                   </label>
@@ -331,7 +331,7 @@ export default function BookingPage() {
                       onClick={() => updateTickets(bookingData.nb_people - 1)} /* Appelle la fonction updateTickets pour diminuer le nombre de billets */
                       disabled={bookingData.nb_people <= 1} /* Désactive le bouton si le nombre de billets est inférieur ou égal à 1 */
                       aria-label="Diminuer le nombre de billets"
-                      className="w-12 h-12 flex items-center justify-center bg-primary-purple-500 text-neutral-50 rounded-full hover:bg-primary-purple-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
+                      className="w-12 h-12 flex items-center justify-center bg-primary-500 text-neutral-50 rounded-full hover:bg-primary-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
                     >
                       <Minus size={20} />
                     </button>
@@ -344,7 +344,7 @@ export default function BookingPage() {
                       min="1"
                       max={MAX_TICKETS_PER_BOOKING} /* Définit le nombre maximum de billets */
                       aria-label="Nombre de billets"
-                      className="w-24 text-center p-3 bg-neutral-700/50 rounded border border-primary-purple-500 text-neutral-50 text-xl font-bold focus:outline-none focus:border-primary-purple-300 focus:ring-2 focus:ring-primary-purple-300"
+                      className="w-24 text-center p-3 bg-neutral-700/50 rounded border border-primary-500 text-neutral-50 text-xl font-bold focus:outline-none focus:border-primary-300 focus:ring-2 focus:ring-primary-300"
                     />
 
                     <button
@@ -352,14 +352,14 @@ export default function BookingPage() {
                       onClick={() => updateTickets(bookingData.nb_people + 1)} /* Appelle la fonction updateTickets pour augmenter le nombre de billets */
                       disabled={bookingData.nb_people >= MAX_TICKETS_PER_BOOKING} /* Désactive le bouton si le nombre de billets est supérieur ou égal au nombre maximum de billets */
                       aria-label="Augmenter le nombre de billets"
-                      className="w-12 h-12 flex items-center justify-center bg-primary-purple-500 text-neutral-50 rounded-full hover:bg-primary-purple-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
+                      className="w-12 h-12 flex items-center justify-center bg-primary-500 text-neutral-50 rounded-full hover:bg-primary-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
                     >
                       <Plus size={20} />
                     </button>
                   </div>
 
                   <p className="text-center text-sm text-neutral-50">
-                    Prix unitaire : <strong className="text-primary-purple-200">{pricing.value}€</strong>
+                    Prix unitaire : <strong className="text-primary-200">{pricing.value}€</strong>
                   </p>
                 </div>
 
@@ -414,7 +414,7 @@ export default function BookingPage() {
         )}
 
         {/* Message d'ambiance */}
-        <div className="p-4 bg-primary-purple-500/20 rounded-lg border border-primary-purple-300 text-center">
+        <div className="p-4 bg-primary-500/20 rounded-lg border border-primary-300 text-center">
           <p className="text-sm text-neutral-50">
             💀 Préparez-vous à vivre une expérience terrifiante à ZombieLand ! 💀
           </p>

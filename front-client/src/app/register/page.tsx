@@ -75,7 +75,7 @@ export default function RegisterPage() {
               required/>
           </div>
           <div className="w-64 md:w-120">
-            <p className="text-sm text-justify">Les informations recueillies lors de ton inscription sont utilisées uniquement pour la création et la gestion de ton compte Zombieland. Tes données personnelles ne seront jamais partagées à des tiers sans ton consentement. Pour en savoir plus sur la gestion de tes données et tes droits, consulte notre <Link href="/privacy-policy" className="underline font-bold hover:text-primary-purple-200 transition">politique de confidentialité</Link>.</p>
+            <p className="text-sm text-justify">Les informations recueillies lors de ton inscription sont utilisées uniquement pour la création et la gestion de ton compte Zombieland. Tes données personnelles ne seront jamais partagées à des tiers sans ton consentement. Pour en savoir plus sur la gestion de tes données et tes droits, consulte notre <Link href="/privacy-policy" className="underline font-bold hover:text-primary-200 transition">politique de confidentialité</Link>.</p>
           </div>
           <button className="button_booking m-2 p-2 md:m-4 md:py-4 md:px-12  font-bold">S&apos;inscrire</button>
         </form>

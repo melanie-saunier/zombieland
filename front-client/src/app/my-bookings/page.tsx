@@ -5,7 +5,8 @@ import { useState } from "react";
 import { X, AlertCircle } from "lucide-react";
 import MyBookingCard from "@/components/MyBookingsCard"; // Composant affichant une carte de réservation
 import { Booking, ReservationDisplay } from "@/@types/my-bookings";
-import { transformBookingToDisplay, formatDate, MAX_TICKETS_PER_BOOKING } from "@/utils/mybookingsUtils";
+import { transformBookingToDisplay, formatDate } from "@/utils/mybookingsUtils";
+import { MAX_TICKETS_PER_BOOKING, formatLocalDate } from "@/utils/bookingUtils";
 
 // Mock data aligné sur le backend
 // TODO: Remplacer par fetch /api/bookings
@@ -178,7 +179,7 @@ export default function MyBookingsPage() {
         {/* Liste des réservations */}
         {displayReservations.length === 0 ? (
           // Cas où l’utilisateur n’a aucune réservation
-          <div className="bg-neutral-700 border border-primary-purple-300 rounded-lg p-8 text-center shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
+          <div className="bg-neutral-700 border border-primary-300 rounded-lg p-8 text-center shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
             <p className="text-neutral-50 text-lg">Vous n'avez aucune réservation pour le moment.</p>
           </div>
         ) : (
@@ -203,7 +204,7 @@ export default function MyBookingsPage() {
           <form onSubmit={handleModify} className="space-y-6">
             {/* Champ date */}
             <fieldset>
-              <label className="block text-sm font-semibold text-primary-purple-200 mb-2">
+              <label className="block text-sm font-semibold text-primary-200 mb-2">
                 Date de visite
               </label>
               <input
@@ -212,14 +213,14 @@ export default function MyBookingsPage() {
                 // On met à jour le state avec la nouvelle valeur saisie
                 onChange={(e) => setForm({ ...form, visitDate: e.target.value })}
                 min={new Date().toISOString().split("T")[0]} // Empêche de sélectionner une date passée
-                className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-purple-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-purple-300 transition-all"
+                className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-300 transition-all"
                 required
               />
             </fieldset>
 
             {/* Champ nombre de personnes */}
             <fieldset>
-              <label className="block text-sm font-semibold text-primary-purple-200 mb-2">
+              <label className="block text-sm font-semibold text-primary-200 mb-2">
                 Nombre de personnes
               </label>
               <input
@@ -229,14 +230,14 @@ export default function MyBookingsPage() {
                 onChange={(e) => setForm({ ...form, ticketCount: parseInt(e.target.value) || 1 })}
                 min="1"
                 max={MAX_TICKETS_PER_BOOKING}
-                className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-purple-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-purple-300 transition-all"
+                className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-300 transition-all"
                 required
               />
             </fieldset>
 
             {/* Calcul automatique du nouveau prix */}
             <div className="bg-secondary-500/20 border-2 border-secondary-300 rounded-lg p-4 text-center shadow-[0_0_12px_0_rgba(139,255,132,0.5)]">
-              <p className="text-sm text-primary-purple-200 mb-1">Nouveau prix total</p>
+              <p className="text-sm text-primary-200 mb-1">Nouveau prix total</p>
               <p className="text-3xl font-bold text-secondary-200">{(form.ticketCount * TICKET_PRICE).toFixed(2)}€</p>
             </div>
             {/* Bouton de soumission */}
@@ -298,8 +299,8 @@ export default function MyBookingsPage() {
  * @param highlight - Booléen pour mettre en valeur la valeur (ex : prix total)
  */
 const SummaryRow = ({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) => (
-  <div className="flex justify-between bg-neutral-700/50 border border-primary-purple-500 rounded-lg p-3">
-    <span className="text-primary-purple-200">{label}</span>
+  <div className="flex justify-between bg-neutral-700/50 border border-primary-500 rounded-lg p-3">
+    <span className="text-primary-200">{label}</span>
     <span className={`font-medium ${highlight ? "text-secondary-200 text-lg font-bold" : "text-neutral-50"}`}>{value}</span>
   </div>
 );
@@ -320,7 +321,7 @@ const ActionButtons = ({ onCancel, onConfirm, confirmLabel, danger = false }: {
   <div className="flex gap-3">
     <button
       onClick={onCancel}
-      className="flex-1 px-6 py-3 bg-neutral-700/50 hover:bg-neutral-700 border border-primary-purple-500 rounded-lg font-medium text-neutral-50 transition-colors"
+      className="flex-1 px-6 py-3 bg-neutral-700/50 hover:bg-neutral-700 border border-primary-500 rounded-lg font-medium text-neutral-50 transition-colors"
     >
       Retour
     </button>
@@ -346,7 +347,7 @@ const ActionButtons = ({ onCancel, onConfirm, confirmLabel, danger = false }: {
 const Modal = ({ 
   title, 
   icon, 
-  borderColor = "border-primary-purple-300", 
+  borderColor = "border-primary-300", 
   onClose, 
   children 
 }: {
@@ -361,9 +362,9 @@ const Modal = ({
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
           {icon}
-          <h2 className="text-2xl font-bold text-primary-purple-300">{title}</h2>
+          <h2 className="text-2xl font-bold text-primary-300">{title}</h2>
         </div>
-        <button onClick={onClose} className="text-primary-purple-200 hover:text-neutral-50 transition-colors">
+        <button onClick={onClose} className="text-primary-200 hover:text-neutral-50 transition-colors">
           <X className="h-6 w-6" />
         </button>
       </div>

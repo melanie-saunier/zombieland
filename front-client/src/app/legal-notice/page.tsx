@@ -30,19 +30,19 @@ export default function legalNoticePage() {
       <p>Le Directeur de la publication du Site est Emilie Dupont.</p>
 
       <h2 className="p-6 font-bold ">Nous contacter</h2>
-      <p>Par téléphone : <a href="tel:+33666666666" className="hover:text-primary-purple-300 transition">06 66 66 66 66</a></p>
-      <p>Par email : <a href="mailto:contact@zombieland.fr" className="hover:text-primary-purple-300 transition">contact@zombieland.fr</a></p>
-      <p>Par courrier : 10 Bd de Parc, 77700 Coupvray</p>
+      <p>Par téléphone : <a href="tel:+33666666666" className="hover:text-primary-300 transition">06 66 66 66 66</a></p>
+      <p>Par email : <a href="mailto:contact@zombieland.fr" className="hover:text-primary-300 transition">contact@zombieland.fr</a></p>
+      <p>Par courrier : 66 rue du Cerveau enragé 42190 Néonville</p>
 
       <h2 className="p-6 font-bold ">Données personnelles</h2>
       <p>Le traitement de vos données à caractère personnel est régi par notre Charte du respect de la vie privée, disponible depuis la section &quot;Charte de Protection des Données Personnelles&quot;, conformément au Règlement Général sur la Protection des Données 2016/679 du 27 avril 2016 («RGPD»).</p>
-      <p>a désigné un Délégué à la Protection des Données (DPO) auprès de la CNIL (Désignation N° ). Les coordonnées de notre Délégué à la Protection des Données sont les suivantes :</p>
+      <p>Zombieland a désigné un Délégué à la Protection des Données (DPO) auprès de la CNIL (Désignation N° ). Les coordonnées de notre Délégué à la Protection des Données sont les suivantes :</p>
 
       <div className="p-3">
         <p>Nom : Arthur Smith</p>
-        <p>Adresse : 2 rue de l’échappée 75010 PARIS</p>
-        <p>Téléphone : <a href="tel:+33666666666" className="hover:text-primary-purple-300 transition">06 66 66 66 66</a></p>
-        <p>Email : <a href="mailto:contact@zombieland.fr" className="hover:text-primary-purple-300 transition">casmith@zombieland.com</a></p>
+        <p>Adresse : 66 rue du Cerveau enragé 42190 Néonville</p>
+        <p>Téléphone : <a href="tel:+33666666666" className="hover:text-primary-300 transition">06 66 66 66 66</a></p>
+        <p>Email : <a href="mailto:contact@zombieland.fr" className="hover:text-primary-300 transition">arthur.smith@zombieland.com</a></p>
       </div>
       <div className="flex justify-center p-4"><Skull size={24} color="var(--color-secondary-300)"/></div>
     </div>

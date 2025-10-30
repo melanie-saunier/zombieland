@@ -12,9 +12,6 @@ import { Booking, ReservationDisplay } from "@/@types/my-bookings";
  * @param unitPrice - Prix unitaire par défaut (30€ selon seed-db.sql)
  */
 
-// Définition de maximum de tickets possibles par réservation
-export const MAX_TICKETS_PER_BOOKING = 15;
-
 export function transformBookingToDisplay(
   booking: Booking, 
   unitPrice: number = 30

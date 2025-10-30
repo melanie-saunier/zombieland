@@ -164,7 +164,7 @@ export default function ProfilePage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-purple-300 border-t-transparent mx-auto mb-4" />
+          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-300 border-t-transparent mx-auto mb-4" />
           <p className="text-neutral-300">Chargement du profil...</p>
         </div>
       </div>
@@ -205,8 +205,8 @@ export default function ProfilePage() {
         )}
 
         {/* Avatar */}
-        <div className="flex flex-col items-center gap-4 p-6 bg-neutral-700 rounded-lg border border-primary-purple-300 shadow-[0_0_12px_rgba(180,130,255,0.3)]">
-          <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-primary-purple-300 shadow-[0_0_20px_rgba(180,130,255,0.5)]">
+        <div className="flex flex-col items-center gap-4 p-6 bg-neutral-700 rounded-lg border border-primary-300 shadow-[0_0_12px_rgba(180,130,255,0.3)]">
+          <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-primary-300 shadow-[0_0_20px_rgba(180,130,255,0.5)]">
             <Image
               src="/images/zombie-avatar.png"
               alt={`Avatar de ${userData.firstName} ${userData.lastName}`} // On affiche le prénom et le nom de l'utilisateur connecté
@@ -223,8 +223,8 @@ export default function ProfilePage() {
         </div>
 
         {/* Informations personnelles */}
-        <div className="p-6 bg-neutral-700 rounded-lg border border-primary-purple-300 shadow-[0_0_12px_rgba(180,130,255,0.3)]">
-          <h3 className="text-xl font-bold text-neutral-50 mb-6 pb-2 border-b border-primary-purple-300">
+        <div className="p-6 bg-neutral-700 rounded-lg border border-primary-300 shadow-[0_0_12px_rgba(180,130,255,0.3)]">
+          <h3 className="text-xl font-bold text-neutral-50 mb-6 pb-2 border-b border-primary-300">
             Informations personnelles
           </h3>
 
@@ -234,7 +234,7 @@ export default function ProfilePage() {
             {(["firstName", "lastName", "email"] as const).map((key) => (
               <div key={key} className="flex flex-col gap-1">
                 {/* Label descriptif du champ */}
-                <label htmlFor={key} className="text-sm text-primary-purple-200 font-semibold">
+                <label htmlFor={key} className="text-sm text-primary-200 font-semibold">
                   {key === "firstName" ? "Prénom" : key === "lastName" ? "Nom" : "Email"}
                 </label>
                 {/* Si le mode édition est actif → input modifiable */}
@@ -244,12 +244,12 @@ export default function ProfilePage() {
                     type={key === "email" ? "email" : "text"}
                     value={userData[key]}
                     onChange={(e) => setUserData({ ...userData, [key]: e.target.value })}
-                    className="p-3 bg-neutral-700/50 rounded border border-primary-purple-500 text-neutral-50 focus:outline-none focus:border-primary-purple-300 focus:ring-1 focus:ring-primary-purple-300 transition-all"
+                    className="p-3 bg-neutral-700/50 rounded border border-primary-500 text-neutral-50 focus:outline-none focus:border-primary-300 focus:ring-1 focus:ring-primary-300 transition-all"
                     required
                   />
                 ) : (
                   // Sinon, simple affichage non modifiable
-                  <div className="p-3 bg-neutral-700/50 rounded border border-primary-purple-500 text-neutral-50">
+                  <div className="p-3 bg-neutral-700/50 rounded border border-primary-500 text-neutral-50">
                     {userData[key]}
                   </div>
                 )}
@@ -306,16 +306,16 @@ export default function ProfilePage() {
           aria-labelledby="password-modal-title"
         >
           {/* Conteneur principal de la modale */}
-          <div className="relative w-full max-w-md bg-neutral-700 rounded-lg border-2 border-primary-purple-300 shadow-[0_0_30px_rgba(180,130,255,0.5)]">
+          <div className="relative w-full max-w-md bg-neutral-700 rounded-lg border-2 border-primary-300 shadow-[0_0_30px_rgba(180,130,255,0.5)]">
             
             {/* En-tête de la modale avec titre + bouton de fermeture */}
-            <div className="sticky top-0 bg-neutral-700 border-b border-primary-purple-300 p-6 flex justify-between items-center">
+            <div className="sticky top-0 bg-neutral-700 border-b border-primary-300 p-6 flex justify-between items-center">
               <h3 id="password-modal-title" className="text-xl font-bold text-neutral-50">
                 Modification du mot de passe
               </h3>
               <button
                 onClick={() => setPasswordState((p) => ({ ...p, isOpen: false }))}
-                className="text-primary-purple-300 hover:text-primary-purple-200"
+                className="text-primary-300 hover:text-primary-200"
                 aria-label="Fermer"
               >
                 <X size={24} />
@@ -327,7 +327,7 @@ export default function ProfilePage() {
               {/* Trois champs : ancien, nouveau et confirmation */}
               {(["oldPassword", "newPassword", "confirmedPassword"] as const).map((field) => (
                 <div key={field} className="flex flex-col gap-1">
-                  <label htmlFor={`password-${field}`} className="text-sm text-primary-purple-200 font-semibold">
+                  <label htmlFor={`password-${field}`} className="text-sm text-primary-200 font-semibold">
                     {field === "oldPassword" ? "Mot de passe actuel" : field === "newPassword" ? "Nouveau mot de passe" : "Confirmer le mot de passe"}
                   </label>
                   {/* Champ de saisie du mot de passe avec bouton pour afficher/masquer */}
@@ -342,7 +342,7 @@ export default function ProfilePage() {
                         field === "newPassword" ? "Entrez votre nouveau mot de passe" :
                         "Confirmez votre nouveau mot de passe"
                       }
-                      className="w-full p-3 pr-12 bg-neutral-700/50 rounded border border-primary-purple-500 text-neutral-50 focus:outline-none focus:border-primary-purple-300 focus:ring-1 focus:ring-primary-purple-300"
+                      className="w-full p-3 pr-12 bg-neutral-700/50 rounded border border-primary-500 text-neutral-50 focus:outline-none focus:border-primary-300 focus:ring-1 focus:ring-primary-300"
                       required
                     />
                     {/* Bouton œil pour afficher ou masquer le mot de passe */}
@@ -354,7 +354,7 @@ export default function ProfilePage() {
                           show: { ...p.show, [field]: !p.show[field] }, /* Affiche ou masque le mot de passe */
                         }))
                       }
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-purple-300 hover:text-primary-purple-200"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-primary-300 hover:text-primary-200"
                       aria-label={passwordState.show[field] ? "Masquer" : "Afficher"}
                     >
                       {passwordState.show[field] ? <EyeOff size={20} /> : <Eye size={20} />}

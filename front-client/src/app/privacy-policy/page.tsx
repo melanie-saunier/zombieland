@@ -57,7 +57,7 @@ export default function privacyPolicyPage() {
         <li><strong className="font-semibold">Demander leur portabilité.</strong></li >
         <li><strong className="font-semibold">Retirer votre consentement</strong> à tout moment.</li>
       </ul>
-      <p>Pour exercer ces droits, contactez-nous à : <a href="mailto:contact@zombieland.fr" className="hover:text-primary-purple-300 transition">contact@zombieland.fr</a>.</p>
+      <p>Pour exercer ces droits, contactez-nous à : <a href="mailto:contact@zombieland.fr" className="hover:text-primary-300 transition">contact@zombieland.fr</a>.</p>
 
       <h2 className="p-4">6. Cookies et technologies similaires</h2>
       <p>Notre site utilise des cookies pour améliorer votre expérience et analyser le trafic. Vous pouvez gérer vos préférences de cookies via notre bannière de consentement ou les paramètres de votre navigateur.</p>
@@ -66,7 +66,7 @@ export default function privacyPolicyPage() {
       <p>Nous nous réservons le droit de mettre à jour cette politique. Toute modification sera publiée sur cette page avec la date de mise à jour.</p>
 
       <h3 className="font-semibold p-2">Contact</h3>
-      <p>Pour toute question concernant cette politique ou le traitement de vos données, écrivez-nous à : <a href="mailto:contact@zombieland.fr" className="hover:text-primary-purple-300 transition">contact@zombieland.fr</a></p>
+      <p>Pour toute question concernant cette politique ou le traitement de vos données, écrivez-nous à : <a href="mailto:contact@zombieland.fr" className="hover:text-primary-300 transition">contact@zombieland.fr</a></p>
       <div className="flex justify-center pt-6"><Skull size={24} color="var(--color-secondary-300)"/></div>
     </div>
   );
