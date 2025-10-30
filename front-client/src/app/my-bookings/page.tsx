@@ -1,16 +1,18 @@
-"use client";
+// src/app/my-bookings/page.tsx 
 
+"use client";
 import { useState } from "react";
 import { X, AlertCircle } from "lucide-react";
-import MyBookingCard from "@/components/MyBookingsCard";
-import { Booking, ReservationDisplay } from "@/@types/my-bookings";
-import { transformBookingToDisplay } from "@/utils/my-bookings";
+import MyBookingCard from "@/components/MyBookingsCard"; // Composant affichant une carte de réservation
+import { Booking, InputProps, ReservationDisplay } from "@/@types/my-bookings";
+import { transformBookingToDisplay, formatDate, MAX_TICKETS_PER_BOOKING } from "@/utils/mybookingsUtils";
 
-// Mock data aligné sur le backend - TODO: Remplacer par fetch /api/bookings
+// Mock data aligné sur le backend
+// TODO: Remplacer par fetch /api/bookings
 const mockBackendBookings: Booking[] = [
   {
     id: 1,
-    visit_date: "2025-11-05",
+    visit_date: new Date("2025-11-05"),
     nb_people: 3,
     status: true, // active
     user_id: 1,
@@ -28,7 +30,7 @@ const mockBackendBookings: Booking[] = [
   },
   {
     id: 2,
-    visit_date: "2025-10-25", // Date passée
+    visit_date: new Date("2025-10-25"), // Date passée
     nb_people: 2,
     status: true, // toujours active mais passée
     user_id: 1,
@@ -46,7 +48,7 @@ const mockBackendBookings: Booking[] = [
   },
   {
     id: 3,
-    visit_date: "2025-11-15",
+    visit_date: new Date("2025-11-15"),
     nb_people: 4,
     status: true, // active
     user_id: 1,
@@ -64,7 +66,7 @@ const mockBackendBookings: Booking[] = [
   },
   {
     id: 4,
-    visit_date: "2025-11-30",
+    visit_date: new Date("2025-11-30"),
     nb_people: 6,
     status: false, // annulée
     user_id: 1,
@@ -84,38 +86,46 @@ const mockBackendBookings: Booking[] = [
 
 const TICKET_PRICE = 30; // Aligné sur backend: data/seed-db.sql → price.value = 30.00
 
-const formatDate = (dateString: string) => // Fonction pour formater la date
-  new Date(dateString).toLocaleDateString("fr-FR", { // On formate la date en français
-    day: "numeric", // On affiche le jour
-    month: "long", // On affiche le mois
-    year: "numeric", // On affiche l'année
-  });
-
-export default function MesReservationsPage() {
-  // État backend (structure DB) *
-  const [backendBookings, setBackendBookings] = useState<Booking[]>(mockBackendBookings); // On crée un état pour les bookings backend
+export default function MyBookingsPage() {
+  // État backend (structure BDD)
+  // Cet état représente les données “brutes” venant du backend.
+  // TODO: fetch API
+  const [backendBookings, setBackendBookings] = useState<Booking[]>(mockBackendBookings);
   
   // Transformation pour affichage
-  const displayReservations = backendBookings.map(b => transformBookingToDisplay(b, TICKET_PRICE)); // On transforme les bookings backend en bookings affichables
+  // On convertit chaque objet Booking (structure BDD) en un objet plus simple ReservationDisplay,
+  // plus adapté à l’affichage (par exemple : formatage des dates, calcul du prix total, etc.)
+  const displayReservations = backendBookings.map(b => transformBookingToDisplay(b, TICKET_PRICE)); 
 
-  const [selected, setSelected] = useState<ReservationDisplay | null>(null); // On crée un état pour la réservation sélectionnée
+  // Réservation actuellement sélectionnée (pour modifier ou annuler)
+  const [selected, setSelected] = useState<ReservationDisplay | null>(null);
+  // Type de modal actuellement ouvert (“modify” pour modifier, “cancel” pour annuler, “confirm” pour confirmer la modif)
   const [modalType, setModalType] = useState<"modify" | "cancel" | "confirm" | null>(null);
-  const [form, setForm] = useState({ visitDate: "", ticketCount: 1 }); // On crée un état pour le formulaire
+  // Contenu du formulaire utilisé pour la modification d'une réservation
+  const [form, setForm] = useState<{
+    visitDate: Date;
+    ticketCount: number;
+  }>({
+    visitDate: new Date(),
+    ticketCount: 1,
+  });
 
+  // --- Fonctions d’ouverture des modales ---
   const openModify = (res: ReservationDisplay) => {
-    setSelected(res); // On sélectionne la réservation
-    setForm({ visitDate: res.visitDate, ticketCount: res.ticketCount });
-    setModalType("modify"); // On ouvre le modal de modification
+    setSelected(res);  // On mémorise la réservation sélectionnée
+    setForm({ visitDate: res.visitDate, ticketCount: res.ticketCount }); // On pré-remplit le formulaire
+    setModalType("modify"); // On ouvre la modale de modification
   };
 
   const openCancel = (res: ReservationDisplay) => {
     setSelected(res); // On sélectionne la réservation
-    setModalType("cancel"); // On ouvre le modal d'annulation
+    setModalType("cancel"); // On ouvre la modale d'annulation
   };
 
+   // --- Gestion de la modification ---
   const handleModify = (e: React.FormEvent) => {
-    e.preventDefault();
-    setModalType("confirm"); // On ouvre le modal de confirmation
+    e.preventDefault(); // Empêche le rechargement de la page
+    setModalType("confirm"); // Passe à l’étape de confirmation
   };
 
   const confirmModify = () => {
@@ -129,84 +139,103 @@ export default function MesReservationsPage() {
               ...b, // On met à jour le booking backend
               visit_date: form.visitDate,
               nb_people: form.ticketCount, // On met à jour le nombre de personnes
-              updated_at: new Date().toISOString(),
-              // Recalcul du bookingPrice applied_price *
-              bookingPrices: b.bookingPrices?.map(bp => ({
-                ...bp, // On met à jour le bookingPrice backend
-                applied_price: form.ticketCount * TICKET_PRICE
-              })) // On met à jour le bookingPrice backend
             }
-          : b // Sinon, on retourne le booking backend
+          : b // Sinon, on garde la réservation inchangée
       )
-    ); // On met à jour le booking backend
-    resetModal();
-  }; // On ferme le modal
+    ); 
+    // TODO: On met à jour le booking backend
+    resetModal(); // On ferme les modales et on réinitialise
+  }; 
 
+  // --- Gestion de l’annulation ---
   const confirmCancel = () => {
     if (!selected) return; // Si aucune réservation n'est sélectionnée, on arrête la fonction
     
-    // Mise à jour du status backend (PATCH /api/bookings/:id → status: false) *
+    // Mise à jour du status backend (PATCH /api/bookings/:id → status: false)
     setBackendBookings(
       backendBookings.map((b) => // On met à jour le booking backend
         b.id === selected.id // Si l'id du booking backend est égal à l'id de la réservation sélectionnée, on met à jour le booking
           ? { 
               ...b, // On met à jour le booking backend
               status: false, // Backend: false = cancelled
-              updated_at: new Date().toISOString() // On met à jour la date de mise à jour
             }
-          : b // Sinon, on retourne le booking backend
+          : b // Sinon, on garde la réservation inchangée
       )
-    ); // On met à jour le booking backend
-    resetModal(); // On ferme le modal
-  }; // On ferme le modal
+    ); 
+    // TODO: On met à jour le booking backend
+    resetModal(); // On ferme les modales et on réinitialise
+  }; 
 
+  // --- Réinitialisation de l’état des modales --
   const resetModal = () => {
     setSelected(null); // On réinitialise la réservation sélectionnée
-    setModalType(null);
-  }; // On réinitialise le type de modal
+    setModalType(null); // On réinitialise le type de modal
+  }; 
 
   return (
     <div className="bg-radial from-[#961990] to-[#000000] p-12">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <header className="text-center">
-          <h1 className="text-4xl md:text-5xl font-bold mb-2">Mes Réservations</h1>
+          <h1 className="title text-4xl md:text-5xl font-bold mb-2">Mes Réservations</h1>
           <p className="text-lg text-neutral-50">Gérez mes réservations</p>
         </header>
 
         {/* Liste des réservations */}
         {displayReservations.length === 0 ? (
+          // Cas où l’utilisateur n’a aucune réservation
           <div className="bg-neutral-700 border border-primary-purple-300 rounded-lg p-8 text-center shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
             <p className="text-neutral-50 text-lg">Vous n'avez aucune réservation pour le moment.</p>
           </div>
         ) : (
+          // Cas normal : on affiche les cartes de réservation
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {displayReservations.map((res) => (
-              <MyBookingCard key={res.id} reservation={res} onModify={openModify} onCancel={openCancel} />
+              <MyBookingCard 
+                key={res.id} 
+                reservation={res} 
+                onModify={openModify} 
+                onCancel={openCancel} 
+              />
             ))}
           </div>
         )}
       </div>
 
-      {/* Modal Modifier */}
+      {/* Modale de modification */}
       {modalType === "modify" && selected && (
         <Modal title="Modifier la réservation" onClose={resetModal}>
           <form onSubmit={handleModify} className="space-y-6">
-            <Input
-              label="Date de visite"
-              type="date"
-              value={form.visitDate}
-              onChange={(v) => setForm({ ...form, visitDate: v })}
-              min={new Date().toISOString().split("T")[0]}
-            />
-            <Input
-              label="Nombre de personnes"
-              type="number"
-              value={String(form.ticketCount)}
-              onChange={(v) => setForm({ ...form, ticketCount: parseInt(v) || 1 })}
-              min="1"
-              max="50"
-            />
+            {/* Champ date */}
+            <fieldset>
+              <label className="block text-sm font-semibold text-primary-purple-200 mb-2">
+                Date de visite
+              </label>
+              <input
+                type="date"
+                value={form.visitDate}
+                onChange={(v) => setForm({ ...form, visitDate: v })}
+                min={new Date().toISOString().split("T")[0]} // Empêche les dates passées
+                className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-purple-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-purple-300 transition-all"
+                required
+              />
+            </fieldset>
+            {/* Champ nombre de personnes */}
+            <fieldset>
+              <label className="block text-sm font-semibold text-primary-purple-200 mb-2">
+                Nombre de personnes
+              </label>
+              <input
+                type="number"
+                value={String(form.ticketCount)}
+                onChange={(v) => setForm({ ...form, ticketCount: parseInt(v) || 1 })}
+                min="1"
+                max={MAX_TICKETS_PER_BOOKING}
+                className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-purple-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-purple-300 transition-all"
+                required
+              />
+            </fieldset>
+            {/* Calcul automatique du nouveau prix */}
             <div className="bg-secondary-500/20 border-2 border-secondary-300 rounded-lg p-4 text-center shadow-[0_0_12px_0_rgba(139,255,132,0.5)]">
               <p className="text-sm text-primary-purple-200 mb-1">Nouveau prix total</p>
               <p className="text-3xl font-bold text-secondary-200">{(form.ticketCount * TICKET_PRICE).toFixed(2)}€</p>
@@ -227,7 +256,7 @@ export default function MesReservationsPage() {
           <div className="space-y-4 mb-6">
             <p className="text-neutral-50">Confirmer la modification de votre réservation ?</p>
             <div className="space-y-2">
-              <SummaryRow label="Nouvelle date" value={formatDate(form.visitDate)} />
+              <SummaryRow label="Nouvelle date" value={form.visitDate} />
               <SummaryRow label="Personnes" value={String(form.ticketCount)} />
               <SummaryRow label="Prix total" value={`${(form.ticketCount * TICKET_PRICE).toFixed(2)}€`} highlight />
             </div>
@@ -242,7 +271,7 @@ export default function MesReservationsPage() {
           <div className="space-y-4 mb-6">
             <p className="text-neutral-50">Êtes-vous sûr de vouloir annuler cette réservation ?</p>
             <div className="space-y-2">
-              <SummaryRow label="Date de visite" value={formatDate(selected.visitDate)} />
+              <SummaryRow label="Date de visite" value={selected.visitDate} />
               <SummaryRow label="Personnes" value={String(selected.ticketCount)} />
             </div>
             <p className="text-sm text-red-400 font-semibold">⚠️ Cette action est irréversible.</p>
@@ -255,28 +284,6 @@ export default function MesReservationsPage() {
 }
 
 /** Composants utilitaires */
-interface InputProps { // Props pour le composant Input du formulaire de modification et d'annulation de réservation (date de visite et nombre de personnes) que l'on garde ici car il n'est pas réutilisé ailleurs.
-  label: string;
-  type: string;
-  value: string;
-  onChange: (value: string) => void;
-  min?: string;
-  max?: string;
-}
-
-const Input = ({ label, type, value, onChange, ...props }: InputProps) => (
-  <div>
-    <label className="block text-sm font-semibold text-primary-purple-200 mb-2">{label}</label>
-    <input
-      type={type}
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-purple-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-purple-300 transition-all"
-      required
-      {...props} // On passe les props au composant input
-    />
-  </div>
-);
 
 const SummaryRow = ({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) => (
   <div className="flex justify-between bg-neutral-700/50 border border-primary-purple-500 rounded-lg p-3">

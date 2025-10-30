@@ -2,9 +2,11 @@
  * Type Booking - Structure exacte du backend Sequelize
  * Modèle : backend/src/models/booking.ts
  */
+
+//TODO: à mettre à jour en fonction du back
 export type Booking = {
   id: number;
-  visit_date: string;
+  visit_date: Date;
   nb_people: number;
   status: boolean;
   user_id: number;
@@ -29,7 +31,7 @@ export type Booking = {
 export type ReservationDisplay = { 
   id: number;
   bookingDate: string;
-  visitDate: string;
+  visitDate: Date;
   ticketCount: number;
   status: "confirmed" | "past" | "cancelled";
   totalPrice: number;

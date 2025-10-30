@@ -11,6 +11,10 @@ import { Booking, ReservationDisplay } from "@/@types/my-bookings";
  * @param booking - Objet Booking du backend
  * @param unitPrice - Prix unitaire par défaut (30€ selon seed-db.sql)
  */
+
+// Définition de maximum de tickets possibles par réservation
+export const MAX_TICKETS_PER_BOOKING = 15;
+
 export function transformBookingToDisplay(
   booking: Booking, 
   unitPrice: number = 30
@@ -44,4 +48,14 @@ export function transformBookingToDisplay(
     status: displayStatus,
     totalPrice,
   };
+}
+
+// Fonction pour formater la date
+export function formatDate (dateString: string) {
+  const updatedDate = new Date(dateString).toLocaleDateString("fr-FR", { // On formate la date en français
+    day: "numeric", // On affiche le jour
+    month: "long", // On affiche le mois
+    year: "numeric", // On affiche l'année
+  });
+  return updatedDate;
 }
