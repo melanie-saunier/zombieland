@@ -15,12 +15,14 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import LinkButton from "./LinkButton";
+import useUserContext from "../context/useUserContext";
+
 
 export default function NavBarDesktop() {
   // Varible pour récupérer le chemin de la page actuelle, grâce au hook "usePathname" de React
   const pathname= usePathname();
-  // State provisoire pour gérer la connexion
-  const [isLogged, setIsLogged] = useState(false);
+  // Utilisation du contexte pour savoir si un utilisateur est connecté
+  const { logged } = useUserContext();
   
   // Variables qui rassemblent les items de la navigation sous forme de liste
   // Propriété "always" : doit toujours apparaitre dans le mnu
@@ -58,7 +60,7 @@ export default function NavBarDesktop() {
         {navItems
           .filter(item => !item.isAction) // Exclut "Se connecter" et "Se déconnecter"
           .map((item) => {
-            if (item.always || (isLogged && item.logged)) {
+            if (item.always || (logged && item.logged)) {
               return (
                 <li key={item.path}>
                   {/*
@@ -97,7 +99,7 @@ export default function NavBarDesktop() {
         {navItems
           .filter(item => item.isAction)
           .map((item) => {
-            if ((!isLogged && item.onlyLoggedOut) || (isLogged && item.logged)) {
+            if ((!logged && item.onlyLoggedOut) || (logged && item.logged)) {
               return (
                 <div key={item.path} className="border-b border-t border-solid border-primary-purple-300 w-full">
                   <Link
