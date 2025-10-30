@@ -1,17 +1,16 @@
 import { Router } from "express";
 import { bookingController } from "../controllers/bookings-controller";
-import { User } from "../models/user";
 
 
 export const bookingRouter = Router();
 
 /**
  * @typedef {object} Booking
- * @property {number} id - booking unique id (UUID)
- * @property {string} visit_date - booking date
- * @property {number} nb_people - booking volume
+ * @property {number} id - booking unique id 
+ * @property {string} visit_date - visit date
+ * @property {number} nb_people - number of people in the booking
  * @property {boolean} status - booking status
- * @property {string} user_id - user who has made the reservation
+ * @property {string} user_id - user who has made the booking
  * @property {string} created_at - booking creation TS
  * @property {string} updated_at - booking latest update TS
 */
@@ -27,7 +26,18 @@ export const bookingRouter = Router();
 bookingRouter.get("/", bookingController.getAll);
 
 /**
- * GET /booking/:id
+ * GET /booking/user/{id}
+ * @tags Booking
+ * @summary Returns bookings by user_id
+ * @param {string} id.path.required - The ID of the user
+ * @return {Booking[]} 200 - Successful response with the User object
+ * @return {object} 404 - No booking found
+ * @return {object} 500 - Internal server error
+ */
+bookingRouter.get("/user/:id", bookingController.getAllBookingsForUser);
+
+/**
+ * GET /booking/{id}
  * @tags Booking
  * @summary Returns a booking by its id
  * @param {string} id.path.required - The ID of the booking
@@ -40,7 +50,7 @@ bookingRouter.get("/:id", bookingController.getById);
 /**
  * POST /booking
  * @tags Booking
- * @summary creates a booking
+ * @summary Creates a booking
  * @return {Booking} 201 - Successful response with booking created
  * @return {object} 404 - No bookings found
  * @return {object} 500 - Internal server error
@@ -48,9 +58,9 @@ bookingRouter.get("/:id", bookingController.getById);
 bookingRouter.post("/", bookingController.createOne);
 
 /**
- * PUT /booking
+ * PUT /booking/{id}
  * @tags Booking
- * @summary updates a booking
+ * @summary Updates a booking
  * @param {string} id.path.required - The ID of the booking
  * @return {Booking} 200 - Successful response with booking updated
  * @return {object} 404 - No bookings found
@@ -59,9 +69,9 @@ bookingRouter.post("/", bookingController.createOne);
 bookingRouter.put("/:id", bookingController.updateOneById);
 
 /**
- * DELETE /booking
+ * DELETE /booking/{id}
  * @tags Booking
- * @summary deletes a booking
+ * @summary Deletes a booking
  * @param {string} id.path.required - The ID of the booking
  * @return {object} 204 - Successful response with booking deleted
  * @return {object} 404 - No bookings found
@@ -69,15 +79,6 @@ bookingRouter.put("/:id", bookingController.updateOneById);
  */
 bookingRouter.delete("/:id", bookingController.deleteOneById);
 
-/**
- * GET /booking/:id/user
- * @tags Booking
- * @summary Returns bookings by user_id
- * @param {string} id.path.required - The ID of the user
- * @return {User} 200 - Successful response with the User object
- * @return {object} 404 - No booking found
- * @return {object} 500 - Internal server error
- */
-bookingRouter.get("/:id/user", bookingController.getAllBookingsForUser);
+
 
 

@@ -1,10 +1,10 @@
 import { Response, Request } from "express";
-import { bookingSchema, updateBookingSchema, idSchema } from "../schemas/index.js";
-import { User } from "../models/association";
-import { Booking } from './../models/association';
+import { priceSchema, updatePriceSchema, idSchema } from "../schemas/index.js";
+import { User } from "../models/association.js";
+import { Price } from '../models/association.js';
 
 
-export const bookingController = {
+export const priceController = {
   
   /**
    * Returns all categories
@@ -12,8 +12,8 @@ export const bookingController = {
    * @param res 
    */
   async getAll(req: Request, res: Response) {
-    // On récupère toutes les bookings dans l'ordre de la date de visite
-    const bookings = await Booking.findAll({
+    // On récupère toutes les prices dans l'ordre d'id'
+    const prices = await Price.findAll({
       include: [{ 
               association: "bookingPrices",
               attributes: ["applied_price"],
