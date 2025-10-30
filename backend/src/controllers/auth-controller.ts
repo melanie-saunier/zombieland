@@ -3,11 +3,12 @@ import { loginSchema, registerSchema } from "../schema/auth";
 import { User } from "../models/association";
 import argon2 from "argon2";
 import { Role } from "../models/association";
+import { generateAccessToken } from "../utils/jwt";
 
 export const authController = {
   // controller pour créer un compte 
-    /**
-   * register
+  /**
+   * Register
    * @param req 
    * @param res 
    */
@@ -49,15 +50,32 @@ export const authController = {
       password: hashedPassword,
       role_id: roleToSet.id
     });
-    // TODO: JWT +cookie à ajouter
+    
+    // On génère notre JWT en incluant le userID et le nom du rôle de l'utilisateur qu'on vient de créer
+    const token = generateAccessToken({ userId: userCreated.id, role: roleToSet.name});
+
+    // On place notre token dans un cookie httpOnly
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,  // TODO: mettre à true en production: en HTTPS
+      sameSite: "strict",
+      maxAge: 3 * 60 * 60 * 1000, // 3 heures
+    }); 
+
     // Conversion en objet simple
     const user = userCreated.toJSON();
     // Suppression du mot de passe avant d’envoyer la réponse
     delete user.password;
 
-    // Je renvoie les informations
+    // Je renvoie les informations de l'utilisateur
     res.json(user);
   },
+
+  /**
+   * Login
+   * @param req 
+   * @param res 
+   */
   async login(req: Request, res : Response) {
     const validation = loginSchema.safeParse(req.body);
     // Si la validation échoue :
@@ -84,8 +102,19 @@ export const authController = {
 
      // Si les 2 passwords ne correspondent pas, on renvoie une erreur 400
     if(!isValidPassword) return res.status(400).json({ error: "Bad credentials" });
+    
+    // On définit "roleName" avec le role de notre userFound. Si c'est undefined, ça sera "member" par défaut
+    const roleName = userFound.role?.name || "member"; 
+    // On génère notre JWT en incluant le userID et le nom du rôle de l'utilisateur qu'on vient de créer (ou "member" par défaut)
+    const token = generateAccessToken({ userId: userFound.id, role: roleName});
 
-    // TODO: ajout du token+cookie
+    // On place notre token dans un cookie httpOnly
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,  // TODO: mettre à true en production: en HTTPS
+      sameSite: "strict",
+      maxAge: 3 * 60 * 60 * 1000, // 3 heures
+    }); 
 
     const user = userFound.toJSON();
     // Suppression du mot de passe avant d’envoyer la réponse
