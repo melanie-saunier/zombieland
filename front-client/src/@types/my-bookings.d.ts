@@ -6,7 +6,7 @@
 //TODO: à mettre à jour en fonction du back
 export type Booking = {
   id: number;
-  visit_date: Date;
+  visit_date: string;
   nb_people: number;
   status: boolean;
   user_id: number;
@@ -31,7 +31,7 @@ export type Booking = {
 export type ReservationDisplay = { 
   id: number;
   bookingDate: string;
-  visitDate: Date;
+  visitDate: string;
   ticketCount: number;
   status: "confirmed" | "past" | "cancelled";
   totalPrice: number;

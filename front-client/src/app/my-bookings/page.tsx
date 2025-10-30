@@ -4,7 +4,7 @@
 import { useState } from "react";
 import { X, AlertCircle } from "lucide-react";
 import MyBookingCard from "@/components/MyBookingsCard"; // Composant affichant une carte de réservation
-import { Booking, InputProps, ReservationDisplay } from "@/@types/my-bookings";
+import { Booking, ReservationDisplay } from "@/@types/my-bookings";
 import { transformBookingToDisplay, formatDate, MAX_TICKETS_PER_BOOKING } from "@/utils/mybookingsUtils";
 
 // Mock data aligné sur le backend
@@ -12,7 +12,7 @@ import { transformBookingToDisplay, formatDate, MAX_TICKETS_PER_BOOKING } from "
 const mockBackendBookings: Booking[] = [
   {
     id: 1,
-    visit_date: new Date("2025-11-05"),
+    visit_date: "2025-11-05",
     nb_people: 3,
     status: true, // active
     user_id: 1,
@@ -30,7 +30,7 @@ const mockBackendBookings: Booking[] = [
   },
   {
     id: 2,
-    visit_date: new Date("2025-10-25"), // Date passée
+    visit_date: "2025-10-25", // Date passée
     nb_people: 2,
     status: true, // toujours active mais passée
     user_id: 1,
@@ -48,7 +48,7 @@ const mockBackendBookings: Booking[] = [
   },
   {
     id: 3,
-    visit_date: new Date("2025-11-15"),
+    visit_date: "2025-11-15",
     nb_people: 4,
     status: true, // active
     user_id: 1,
@@ -66,7 +66,7 @@ const mockBackendBookings: Booking[] = [
   },
   {
     id: 4,
-    visit_date: new Date("2025-11-30"),
+    visit_date: "2025-11-30",
     nb_people: 6,
     status: false, // annulée
     user_id: 1,
@@ -102,13 +102,7 @@ export default function MyBookingsPage() {
   // Type de modal actuellement ouvert (“modify” pour modifier, “cancel” pour annuler, “confirm” pour confirmer la modif)
   const [modalType, setModalType] = useState<"modify" | "cancel" | "confirm" | null>(null);
   // Contenu du formulaire utilisé pour la modification d'une réservation
-  const [form, setForm] = useState<{
-    visitDate: Date;
-    ticketCount: number;
-  }>({
-    visitDate: new Date(),
-    ticketCount: 1,
-  });
+  const [form, setForm] = useState({ visitDate: "", ticketCount: 1 });
 
   // --- Fonctions d’ouverture des modales ---
   const openModify = (res: ReservationDisplay) => {
@@ -204,6 +198,7 @@ export default function MyBookingsPage() {
 
       {/* Modale de modification */}
       {modalType === "modify" && selected && (
+        // On affiche cette modale uniquement si le type de modal est "modify" et qu'une réservation est sélectionnée
         <Modal title="Modifier la réservation" onClose={resetModal}>
           <form onSubmit={handleModify} className="space-y-6">
             {/* Champ date */}
@@ -214,12 +209,14 @@ export default function MyBookingsPage() {
               <input
                 type="date"
                 value={form.visitDate}
-                onChange={(v) => setForm({ ...form, visitDate: v })}
-                min={new Date().toISOString().split("T")[0]} // Empêche les dates passées
+                // On met à jour le state avec la nouvelle valeur saisie
+                onChange={(e) => setForm({ ...form, visitDate: e.target.value })}
+                min={new Date().toISOString().split("T")[0]} // Empêche de sélectionner une date passée
                 className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-purple-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-purple-300 transition-all"
                 required
               />
             </fieldset>
+
             {/* Champ nombre de personnes */}
             <fieldset>
               <label className="block text-sm font-semibold text-primary-purple-200 mb-2">
@@ -227,19 +224,22 @@ export default function MyBookingsPage() {
               </label>
               <input
                 type="number"
-                value={String(form.ticketCount)}
-                onChange={(v) => setForm({ ...form, ticketCount: parseInt(v) || 1 })}
+                value={String(form.ticketCount)} // Convertit le nombre en string pour l'input
+                // Parse la valeur saisie et remplace par 1 si invalide
+                onChange={(e) => setForm({ ...form, ticketCount: parseInt(e.target.value) || 1 })}
                 min="1"
                 max={MAX_TICKETS_PER_BOOKING}
                 className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-purple-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-purple-300 transition-all"
                 required
               />
             </fieldset>
+
             {/* Calcul automatique du nouveau prix */}
             <div className="bg-secondary-500/20 border-2 border-secondary-300 rounded-lg p-4 text-center shadow-[0_0_12px_0_rgba(139,255,132,0.5)]">
               <p className="text-sm text-primary-purple-200 mb-1">Nouveau prix total</p>
               <p className="text-3xl font-bold text-secondary-200">{(form.ticketCount * TICKET_PRICE).toFixed(2)}€</p>
             </div>
+            {/* Bouton de soumission */}
             <button
               type="submit"
               className="w-full px-6 py-3 button_booking text-neutral-50 font-bold rounded-lg hover:scale-105 transition-all"
@@ -252,30 +252,36 @@ export default function MyBookingsPage() {
 
       {/* Modal Confirmer */}
       {modalType === "confirm" && selected && (
+        // Affichage uniquement si l'utilisateur a cliqué sur "Continuer" dans la modale modify
         <Modal title="Confirmer les modifications" icon={<AlertCircle className="h-8 w-8 text-secondary-200" />} onClose={resetModal}>
           <div className="space-y-4 mb-6">
             <p className="text-neutral-50">Confirmer la modification de votre réservation ?</p>
             <div className="space-y-2">
-              <SummaryRow label="Nouvelle date" value={form.visitDate} />
+              {/* On affiche un résumé des modifications à confirmer grâce au composant SummaryRow*/}
+              <SummaryRow label="Nouvelle date" value={formatDate(form.visitDate)} />
               <SummaryRow label="Personnes" value={String(form.ticketCount)} />
               <SummaryRow label="Prix total" value={`${(form.ticketCount * TICKET_PRICE).toFixed(2)}€`} highlight />
             </div>
           </div>
+          {/* Deux boutons : Retour ou Confirmer */}
           <ActionButtons onCancel={resetModal} onConfirm={confirmModify} confirmLabel="Confirmer" />
         </Modal>
       )}
 
       {/* Modal Annuler */}
       {modalType === "cancel" && selected && (
+        // Affichage uniquement si l'utilisateur a cliqué sur le bouton d'annulation dans la carte de réservation
         <Modal title="Confirmer l'annulation" icon={<AlertCircle className="h-8 w-8 text-red-400" />} borderColor="border-red-500" onClose={resetModal}>
           <div className="space-y-4 mb-6">
             <p className="text-neutral-50">Êtes-vous sûr de vouloir annuler cette réservation ?</p>
             <div className="space-y-2">
-              <SummaryRow label="Date de visite" value={selected.visitDate} />
+              {/* On affiche un résumé de la réservation à annuler grâce au composant SummaryRow*/}
+              <SummaryRow label="Date de visite" value={formatDate(form.visitDate)} />
               <SummaryRow label="Personnes" value={String(selected.ticketCount)} />
             </div>
             <p className="text-sm text-red-400 font-semibold">⚠️ Cette action est irréversible.</p>
           </div>
+          {/* Deux boutons : Retour ou Annuler */}
           <ActionButtons onCancel={resetModal} onConfirm={confirmCancel} confirmLabel="Annuler la réservation" danger />
         </Modal>
       )}
@@ -285,6 +291,12 @@ export default function MyBookingsPage() {
 
 /** Composants utilitaires */
 
+/** 
+ * SummaryRow : Composant pour afficher une ligne résumé label / valeur
+ * @param label - Le texte du label (ex : "Date de visite")
+ * @param value - La valeur correspondante (ex : "05 novembre 2025")
+ * @param highlight - Booléen pour mettre en valeur la valeur (ex : prix total)
+ */
 const SummaryRow = ({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) => (
   <div className="flex justify-between bg-neutral-700/50 border border-primary-purple-500 rounded-lg p-3">
     <span className="text-primary-purple-200">{label}</span>
@@ -292,6 +304,13 @@ const SummaryRow = ({ label, value, highlight = false }: { label: string; value:
   </div>
 );
 
+/** 
+ * ActionButtons : Composant pour afficher deux boutons d'action (Retour / Confirmer)
+ * @param onCancel - fonction appelée lors du clic sur "Retour"
+ * @param onConfirm - fonction appelée lors du clic sur "Confirmer"
+ * @param confirmLabel - texte du bouton de confirmation
+ * @param danger - booléen pour styliser le bouton de confirmation en rouge (ex : annulation)
+ */
 const ActionButtons = ({ onCancel, onConfirm, confirmLabel, danger = false }: {
   onCancel: () => void;
   onConfirm: () => void;
@@ -316,6 +335,14 @@ const ActionButtons = ({ onCancel, onConfirm, confirmLabel, danger = false }: {
   </div>
 );
 
+/** 
+ * Modal : Composant générique pour afficher une modale centrée
+ * @param title - Titre de la modale
+ * @param icon - Icône optionnelle à gauche du titre
+ * @param borderColor - Couleur de la bordure (par défaut violet)
+ * @param onClose - Fonction appelée lors du clic sur la croix pour fermer
+ * @param children - Contenu de la modale (formulaire, résumé, etc.)
+ */
 const Modal = ({ 
   title, 
   icon, 
