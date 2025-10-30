@@ -34,3 +34,16 @@ Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjgsInJvbGUiOiJtZW1iZ
   "lastname": "Le chien",
   "email": "octave.lechat@gmail.com"
 }
+
+### ME update user
+## test sans cookie
+PUT http://localhost:3000/api/auth/me
+Content-Type: application/json
+
+{
+  "firstname": "Chipie",
+  "lastname": "Le chat",
+  "email": "chipie.lechat@gmail.com"
+}
+
+

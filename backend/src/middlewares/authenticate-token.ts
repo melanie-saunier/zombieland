@@ -21,6 +21,7 @@ export function authenticateToken(req: AuthRequest, res: Response, next: NextFun
     if (typeof decoded === "object" && decoded.sub && decoded.role) {
       // Si oui, on l'ajoute au req.user et on passe à la suite
       req.user = { id: Number(decoded.sub), role: String(decoded.role) };
+      console.log("User dans req :", req.user);
       next();
     } else {
       // Si non, on envoie un message d'erreur

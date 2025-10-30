@@ -72,4 +72,10 @@ authRouter.get("/me", authenticateToken, authController.getCurrentUser);
 
 // Route /me/ en put pour qu'un utilisateur puisse modifier ses infos (pas son mot de passe)
 authRouter.put("/me", authenticateToken, authController.updateMe);
-// Route logout ??
+
+//route /me/password pour d'une utilisateur puisse modifier son mot de passe
+authRouter.patch("/me/password", authenticateToken, authController.updatePassword);
+
+//Route logout on supprime le cookie
+//c'est une route POST car on détruit quelque chose: on a un effet de bord (sur les routes get pas d'effet de bord)
+authRouter.post("/logout", authenticateToken, authController.logout);

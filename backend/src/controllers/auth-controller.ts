@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { loginSchema, registerSchema, updateMeSchema } from "../schema/auth";
+import { loginSchema, registerSchema, updateMePasswordSchema, updateMeSchema } from "../schema/auth";
 import { User } from "../models/association";
 import argon2 from "argon2";
 import { Role } from "../models/association";
@@ -183,5 +183,49 @@ export const authController = {
 
     // Réponse JSON propre
     res.status(200).json(userJson);
+  },
+  async updatePassword(req: AuthRequest, res: Response) {
+    const validation = updateMePasswordSchema.safeParse(req.body);
+    // Si la validation échoue :
+    // error.issues contient la liste des erreurs détectées par Zod
+    if (!validation.success) return res.status(400).json({ errors: validation.error.issues.map(e => e.message) });
+
+    const data = validation.data; //data: oldpassword, new password et confirmesPassword
+
+    // on récupère l'id du user connecté que l'on a dans le req.user
+    const userId = req.user?.id; 
+    if(!userId) return res.status(401).json({ error: "Unauthorized" });
+
+    // on récupère le user en bdd grâce à son id 
+    const user = await User.findByPk(userId);
+    if(!user) return  res.status(404).json({ error: "User not found" });
+
+    const isPasswordValid = await argon2.verify(user.password, data.oldPassword);
+    // Si les 2 passwords ne correspondent pas, on renvoie une erreur 400
+    if(!isPasswordValid) return res.status(400).json({ message:`Bad credentials`});
+
+    // On hache le nouveau mot de passe
+    const hashedNewPassword = await argon2.hash(data.newPassword);
+
+    // on modifie le password en bdd
+    const userUpdated = await user.update({ password: hashedNewPassword });
+
+    // Conversion en objet simple
+    const userJson = userUpdated.toJSON();
+
+    // Suppression du mot de passe avant d’envoyer la réponse
+    delete userJson.password;
+
+    // Réponse JSON propre
+    res.status(200).json(userJson);
+  },
+  logout(req: Request, res: Response) {
+    // on détruit le cookie qui contient le token
+    res.clearCookie("token", {
+      httpOnly: true,
+      secure: false, // TODO: mettre true en prod en HTTPS
+      sameSite: "strict",
+    });
+    res.status(200).json({"message": "Logged out"});
   }
 }
