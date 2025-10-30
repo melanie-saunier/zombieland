@@ -1,22 +1,7 @@
 "use client";
 
 import { Calendar, Users, Check } from "lucide-react";
-
-/** Type de réservation */
-export type Reservation = {
-  id: string;
-  bookingDate: string;
-  visitDate: string;
-  ticketCount: number;
-  status: "confirmed" | "past" | "cancelled";
-  totalPrice: number;
-};
-
-interface MyBookingCardProps {
-  reservation: Reservation;
-  onModify: (reservation: Reservation) => void;
-  onCancel: (reservation: Reservation) => void;
-}
+import { MyBookingCardProps, InfoItemProps } from "@/@types/my-bookings";
 
 /** Helpers */
 const formatDate = (dateString: string) =>
@@ -59,7 +44,7 @@ export default function MyBookingsCard({ reservation, onModify, onCancel }: MyBo
             {statusLabel[reservation.status]}
           </span>
 
-          <div>
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
             <InfoItem
               icon={<Calendar />}
               label="Date de réservation"
@@ -74,19 +59,19 @@ export default function MyBookingsCard({ reservation, onModify, onCancel }: MyBo
             />
             <InfoItem
               icon={<Users />}
-              label="Nombre de billets"
-              value={`${reservation.ticketCount} billet${reservation.ticketCount > 1 ? "s" : ""}`}
+              label="Nombre de personnes"
+              value={`${reservation.ticketCount} personne${reservation.ticketCount > 1 ? "s" : ""}`}
             />
             <InfoItem
               icon={<span>€</span>}
               label="Prix total"
-              value={`${reservation.totalPrice}€`}
+              value={`${reservation.totalPrice.toFixed(2)}€`}
               highlight
             />
           </div>
         </div>
 
-        {/* Actions */}
+        {/* Actions - Uniquement pour les réservations confirmées (futures) */}
         {reservation.status === "confirmed" && (
           <div className="flex flex-col gap-3 lg:w-48">
             <button
@@ -125,13 +110,7 @@ const InfoItem = ({
   value,
   color = "text-primary-purple-200",
   highlight = false,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  value: string;
-  color?: string;
-  highlight?: boolean;
-}) => (
+}: InfoItemProps) => (
   <div className="flex items-start gap-3">
     <div className={`h-5 w-5 mt-0.5 flex items-center justify-center ${color}`}>{icon}</div>
     <div>

@@ -2,17 +2,89 @@
 
 import { useState } from "react";
 import { X, AlertCircle } from "lucide-react";
-import MyBookingCard, { type Reservation } from "@/components/MyBookingsCard";
+import MyBookingCard from "@/components/MyBookingsCard";
+import { Booking, ReservationDisplay } from "@/@types/my-bookings";
+import { transformBookingToDisplay } from "@/utils/my-bookings";
 
-// Mock data - TODO: Remplacer par fetch API
-const mockReservations: Reservation[] = [
-  { id: "1", bookingDate: "2025-10-15", visitDate: "2025-11-05", ticketCount: 3, status: "confirmed", totalPrice: 135 },
-  { id: "2", bookingDate: "2025-09-20", visitDate: "2025-10-25", ticketCount: 2, status: "past", totalPrice: 90 },
-  { id: "3", bookingDate: "2025-10-28", visitDate: "2025-11-15", ticketCount: 4, status: "confirmed", totalPrice: 180 },
-  { id: "4", bookingDate: "2025-11-01", visitDate: "2025-11-30", ticketCount: 6, status: "cancelled", totalPrice: 250 },
+// ... reste du code identique
+
+// Mock data aligné sur le backend - TODO: Remplacer par fetch /api/bookings
+const mockBackendBookings: Booking[] = [
+  {
+    id: 1,
+    visit_date: "2025-11-05",
+    nb_people: 3,
+    status: true, // active
+    user_id: 1,
+    created_at: "2025-10-15T10:30:00Z",
+    updated_at: "2025-10-15T10:30:00Z",
+    bookingPrices: [
+      { 
+        id: 1, 
+        applied_price: 90,
+        booking_id: 1,
+        price_id: 1,
+        price: { id: 1, label: "Tarif unique", value: 30 } 
+      }
+    ]
+  },
+  {
+    id: 2,
+    visit_date: "2025-10-25", // Date passée
+    nb_people: 2,
+    status: true, // toujours active mais passée
+    user_id: 1,
+    created_at: "2025-09-20T14:20:00Z",
+    updated_at: "2025-09-20T14:20:00Z",
+    bookingPrices: [
+      { 
+        id: 2, 
+        applied_price: 60,
+        booking_id: 2,
+        price_id: 1,
+        price: { id: 1, label: "Tarif unique", value: 30 }
+      }
+    ]
+  },
+  {
+    id: 3,
+    visit_date: "2025-11-15",
+    nb_people: 4,
+    status: true, // active
+    user_id: 1,
+    created_at: "2025-10-28T09:15:00Z",
+    updated_at: "2025-10-28T09:15:00Z",
+    bookingPrices: [
+      { 
+        id: 3, 
+        applied_price: 120,
+        booking_id: 3,
+        price_id: 1,
+        price: { id: 1, label: "Tarif unique", value: 30 }
+      }
+    ]
+  },
+  {
+    id: 4,
+    visit_date: "2025-11-30",
+    nb_people: 6,
+    status: false, // annulée
+    user_id: 1,
+    created_at: "2025-11-01T16:45:00Z",
+    updated_at: "2025-11-02T10:00:00Z",
+    bookingPrices: [
+      { 
+        id: 4, 
+        applied_price: 180,
+        booking_id: 4,
+        price_id: 1,
+        price: { id: 1, label: "Tarif unique", value: 30 }
+      }
+    ]
+  },
 ];
 
-const TICKET_PRICE = 45;
+const TICKET_PRICE = 30; // Aligné sur backend: data/seed-db.sql → price.value = 30.00
 
 const formatDate = (dateString: string) =>
   new Date(dateString).toLocaleDateString("fr-FR", {
@@ -22,18 +94,23 @@ const formatDate = (dateString: string) =>
   });
 
 export default function MesReservationsPage() {
-  const [reservations, setReservations] = useState<Reservation[]>(mockReservations);
-  const [selected, setSelected] = useState<Reservation | null>(null);
+  // État backend (structure DB)
+  const [backendBookings, setBackendBookings] = useState<Booking[]>(mockBackendBookings);
+  
+  // Transformation pour affichage
+  const displayReservations = backendBookings.map(b => transformBookingToDisplay(b, TICKET_PRICE));
+
+  const [selected, setSelected] = useState<ReservationDisplay | null>(null);
   const [modalType, setModalType] = useState<"modify" | "cancel" | "confirm" | null>(null);
   const [form, setForm] = useState({ visitDate: "", ticketCount: 1 });
 
-  const openModify = (res: Reservation) => {
+  const openModify = (res: ReservationDisplay) => {
     setSelected(res);
     setForm({ visitDate: res.visitDate, ticketCount: res.ticketCount });
     setModalType("modify");
   };
 
-  const openCancel = (res: Reservation) => {
+  const openCancel = (res: ReservationDisplay) => {
     setSelected(res);
     setModalType("cancel");
   };
@@ -45,11 +122,23 @@ export default function MesReservationsPage() {
 
   const confirmModify = () => {
     if (!selected) return;
-    setReservations(
-      reservations.map((r) =>
-        r.id === selected.id
-          ? { ...r, visitDate: form.visitDate, ticketCount: form.ticketCount, totalPrice: form.ticketCount * TICKET_PRICE }
-          : r
+    
+    // Mise à jour côté backend (PATCH /api/bookings/:id)
+    setBackendBookings(
+      backendBookings.map((b) =>
+        b.id === selected.id
+          ? {
+              ...b,
+              visit_date: form.visitDate,
+              nb_people: form.ticketCount,
+              updated_at: new Date().toISOString(),
+              // Recalcul du bookingPrice applied_price
+              bookingPrices: b.bookingPrices?.map(bp => ({
+                ...bp,
+                applied_price: form.ticketCount * TICKET_PRICE
+              }))
+            }
+          : b
       )
     );
     resetModal();
@@ -57,7 +146,19 @@ export default function MesReservationsPage() {
 
   const confirmCancel = () => {
     if (!selected) return;
-    setReservations(reservations.map((r) => (r.id === selected.id ? { ...r, status: "cancelled" } : r)));
+    
+    // Mise à jour du status backend (PATCH /api/bookings/:id → status: false)
+    setBackendBookings(
+      backendBookings.map((b) =>
+        b.id === selected.id
+          ? { 
+              ...b, 
+              status: false, // Backend: false = cancelled
+              updated_at: new Date().toISOString() 
+            }
+          : b
+      )
+    );
     resetModal();
   };
 
@@ -67,22 +168,22 @@ export default function MesReservationsPage() {
   };
 
   return (
-    <div className="min-h-screen p-4 md:p-8">
+    <div className="bg-radial from-[#961990] to-[#000000] p-12">
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <header className="text-center">
           <h1 className="text-4xl md:text-5xl font-bold mb-2">Mes Réservations</h1>
-          <p className="text-lg text-neutral-700">Gérez vos réservations passées et à venir</p>
+          <p className="text-lg text-neutral-50">Gérez mes réservations</p>
         </header>
 
         {/* Liste des réservations */}
-        {reservations.length === 0 ? (
+        {displayReservations.length === 0 ? (
           <div className="bg-neutral-700 border border-primary-purple-300 rounded-lg p-8 text-center shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
             <p className="text-neutral-50 text-lg">Vous n'avez aucune réservation pour le moment.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {reservations.map((res) => (
+            {displayReservations.map((res) => (
               <MyBookingCard key={res.id} reservation={res} onModify={openModify} onCancel={openCancel} />
             ))}
           </div>
@@ -101,7 +202,7 @@ export default function MesReservationsPage() {
               min={new Date().toISOString().split("T")[0]}
             />
             <Input
-              label="Nombre de billets"
+              label="Nombre de personnes"
               type="number"
               value={String(form.ticketCount)}
               onChange={(v) => setForm({ ...form, ticketCount: parseInt(v) || 1 })}
@@ -110,7 +211,7 @@ export default function MesReservationsPage() {
             />
             <div className="bg-secondary-500/20 border-2 border-secondary-300 rounded-lg p-4 text-center shadow-[0_0_12px_0_rgba(139,255,132,0.5)]">
               <p className="text-sm text-primary-purple-200 mb-1">Nouveau prix total</p>
-              <p className="text-3xl font-bold text-secondary-200">{form.ticketCount * TICKET_PRICE}€</p>
+              <p className="text-3xl font-bold text-secondary-200">{(form.ticketCount * TICKET_PRICE).toFixed(2)}€</p>
             </div>
             <button
               type="submit"
@@ -129,8 +230,8 @@ export default function MesReservationsPage() {
             <p className="text-neutral-50">Confirmer la modification de votre réservation ?</p>
             <div className="space-y-2">
               <SummaryRow label="Nouvelle date" value={formatDate(form.visitDate)} />
-              <SummaryRow label="Billets" value={String(form.ticketCount)} />
-              <SummaryRow label="Prix total" value={`${form.ticketCount * TICKET_PRICE}€`} highlight />
+              <SummaryRow label="Personnes" value={String(form.ticketCount)} />
+              <SummaryRow label="Prix total" value={`${(form.ticketCount * TICKET_PRICE).toFixed(2)}€`} highlight />
             </div>
           </div>
           <ActionButtons onCancel={resetModal} onConfirm={confirmModify} confirmLabel="Confirmer" />
@@ -144,7 +245,7 @@ export default function MesReservationsPage() {
             <p className="text-neutral-50">Êtes-vous sûr de vouloir annuler cette réservation ?</p>
             <div className="space-y-2">
               <SummaryRow label="Date de visite" value={formatDate(selected.visitDate)} />
-              <SummaryRow label="Billets" value={String(selected.ticketCount)} />
+              <SummaryRow label="Personnes" value={String(selected.ticketCount)} />
             </div>
             <p className="text-sm text-red-400 font-semibold">⚠️ Cette action est irréversible.</p>
           </div>
@@ -155,7 +256,7 @@ export default function MesReservationsPage() {
   );
 }
 
-/** Composants utilitaires (modals, inputs, etc.) */
+/** Composants utilitaires */
 interface InputProps {
   label: string;
   type: string;
