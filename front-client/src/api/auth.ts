@@ -11,7 +11,7 @@ export const authApi = {
    */
   getCurrentUser: async (): Promise<IUser | null> => {
     try {
-      const res = await axios.get("/auth/me");
+      const res = await axios.get(`${API_URL}/auth/me`);
       return res.data;
     } catch (err) {
       console.error("Erreur lors de la récupération du user :", err);
@@ -25,7 +25,7 @@ export const authApi = {
    */
   login: async (data: ILoginInput): Promise<IUser | null> => {
     try {
-      const res = await axios.post("/auth/login", data);
+      const res = await axios.post(`${API_URL}/auth/login`, data);
       return res.data;
     } catch (err) {
       console.error("Erreur lors du login :", err);
@@ -39,7 +39,7 @@ export const authApi = {
    */
   register: async (data: IRegisterInput): Promise<IUser | null> => {
     try {
-      const res = await axios.post("/auth/register", data);
+      const res = await axios.post(`${API_URL}/auth/register`, data);
       return res.data;
     } catch (err) {
       console.error("Erreur lors de l'inscription :", err);
@@ -53,7 +53,7 @@ export const authApi = {
    */
   logout: async (): Promise<void> => {
     try {
-      await axios.post("/auth/logout"); // à créer côté back si nécessaire
+      await axios.post(`${API_URL}/auth/logout`);
     } catch (err) {
       console.error("Erreur lors du logout :", err);
     }
