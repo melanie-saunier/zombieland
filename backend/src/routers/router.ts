@@ -2,6 +2,7 @@ import { Router } from "express";
 import { categoryRouter } from "./category-router";
 import { activityRouter } from "./activity-router";
 import { bookingRouter } from "./booking-router";
+import { priceRouter } from "./price-router"
 
 // Création du router de Express
 export const router = Router();
@@ -19,3 +20,9 @@ router.use("/categories", categoryRouter);
 
 // Router des bookings
 router.use("/bookings", bookingRouter);
+
+// Router des prices
+router.use("/prices", priceRouter);
+
+// // Router des bookingPrices
+// router.use("/bookingPrices", bookingPriceRouter);

@@ -1,6 +1,5 @@
 import { Response, Request } from "express";
 import { priceSchema, updatePriceSchema, idSchema } from "../schemas/index.js";
-import { User } from "../models/association.js";
 import { Price } from '../models/association.js';
 
 
@@ -14,27 +13,19 @@ export const priceController = {
   async getAll(req: Request, res: Response) {
     // On récupère toutes les prices dans l'ordre d'id'
     const prices = await Price.findAll({
-      include: [{ 
-              association: "bookingPrices",
-              attributes: ["applied_price"],
-              include: [{
-                    association: "price",
-                    attributes: ["label", "value"]
-                  },]              
-               }],
       order: [
-        ["visit_date", "ASC"]
+        ["id", "ASC"]
       ],  
   });
     
-    // Si booking est vide, on retourne une erreur 404 avec un message d'erreur
-    if (!bookings || bookings.length === 0) return res.status(404).json({ message:"No bookings stored in the database"});
+    // Si price est vide, on retourne une erreur 404 avec un message d'erreur
+    if (!prices || prices.length === 0) return res.status(404).json({ message:"No prices stored in the database"});
     
-    res.status(200).json(bookings);
+    res.status(200).json(prices);
   },
 
   /**
-   * Returns a booking by its id
+   * Returns a price by its id
    * @param req 
    * @param res 
    */
@@ -42,127 +33,76 @@ export const priceController = {
     // On récupère l'id dans les param de req et le parseInt
     const { id } = idSchema.parse(req.params);
 
-    // On récupère le booking correspondante à cet id
-    const booking = await Booking.findByPk(id,{
-      include: [{ 
-              association: "bookingPrices",
-              attributes: ["applied_price"],
-              include: [{
-                    association: "price",
-                    attributes: ["label", "value"]
-                  },]              
-               }],
-      order: [
-        ["visit_date", "ASC"]
-      ],  
-  })
-    // Si booking est vide, on retourne une erreur 404 avec un message d'erreur
-    if(!booking) return res.status(404).json({ message:`No booking found with id: ${id}`});
+    // On récupère le price correspondante à cet id
+    const price = await Price.findByPk(id)
+    
+    // Si price n'existe pas, on retourne une erreur 404 avec un message d'erreur
+    if(!price) return res.status(404).json({ message:`No price found with id: ${id}`});
 
-    res.status(200).json(booking);
+    res.status(200).json(price);
   },
   /**
-   * Creates a new booking
+   * Creates a new price
    * @param req 
    * @param res 
    */
-   // Créer une nouvelle Booking
+   // Créer un nouveau prix
   async createOne(req: Request, res: Response) {
 
     // On récupère les informations du body
-    const data = bookingSchema.parse(req.body);
+    const data = priceSchema.parse(req.body);
 
-     // On crée un nouveau booking
-    const booking = await Booking.create(data);
+     // On crée un nouveau prix
+    const price = await Price.create(data);
     
-    res.status(201).json(booking);
+    res.status(201).json(price);
   },
 
   /**
-   * Updates a booking
+   * Updates a price
    * @param req 
    * @param res 
    */
 
-   // Mettre à jour un booking par son id
+   // Mettre à jour un price par son id
   async updateOneById(req: Request, res: Response) {
     
     // on récupère les informations à mettre à jour du body
-    const data = updateBookingSchema.parse(req.body);
+    const data = updatePriceSchema.parse(req.body);
 
-    // on récupère le id du booking à mettre à jour 
+    // on récupère le id du prix à mettre à jour 
     const { id } = idSchema.parse(req.params);
 
-    // on récupère le booking par son id
-    const booking = await Booking.findByPk(id);
+    // on récupère le prix par son id
+    const price = await Price.findByPk(id);
 
-      // Si le booking n'existe pas, on retourne une erreur 404 avec un message d'erreur
-    if(!booking) return res.status(404).json({ message:`No booking found with id: ${id}`});
+      // Si le prix n'existe pas, on retourne une erreur 404 avec un message d'erreur
+    if(!price) return res.status(404).json({ message:`No price found with id: ${id}`});
     
-    // le booking est mise à jour
-    await booking.update(data);
+    // le prix est mise à jour
+    await price.update(data);
 
-    res.status(200).json(booking);
+    res.status(200).json(price);
   },
 
   /**
-   * deletes a booking
+   * deletes a price
    * @param req 
    * @param res 
    */
 
-  // Supprimer un booking par son id
+  // Supprimer un price par son id
   async deleteOneById(req: Request, res: Response) {
     const { id } = idSchema.parse(req.params);
 
-    // on récupère le booking par son id
-    const booking = await Booking.findByPk(id);
+    // on récupère le prix par son id
+    const price = await Price.findByPk(id);
 
-    // Si le booking n'existe pas, on retourne une erreur 404 avec un message d'erreur
-    if(!booking) return res.status(404).json({ message:`No booking found with id: ${id}`});
+    // Si le prix n'existe pas, on retourne une erreur 404 avec un message d'erreur
+    if(!price) return res.status(404).json({ message:`No price found with id: ${id}`});
 
-    await booking.destroy();
+    await price.destroy();
 
     res.status(204).json();
-  },
-
-  /**
-   * deletes a booking
-   * @param req 
-   * @param res 
-   */
-
-  // Récuperer toutes les bookings d'un utilisateur
-  async getAllBookingsForUser(req: Request, res: Response) {
-
-    // récuperer ET valider l'id de l'utilisateur'
-    const { id } = idSchema.parse(req.params);
-
-    // vérifier que l'utilisateur existe
-    const userExists = await User.findByPk(id);
-    
-    if(!userExists) return res.status(404).json({ message: `No user found with id: ${id}`})
-
-    // interroger la bdd pour récuperer l'utilisateur qui porte cet id
-    const bookings = await Booking.findAll({
-      where: { user_id: id }, // filtrer par l'id de la liste
-      include: [{ 
-              association: "bookingPrices",
-              attributes: ["applied_price"],
-              include: [{
-                    association: "price",
-                    attributes: ["label", "value"]
-                  },]              
-               }],
-      order: [
-        ["visit_date", "ASC"]
-      ],  
-  });
-
-    // existe t'il des bookings pour cette utilisateur ?
-    if(!bookings) return res.status(404).json({ message: `The user with the id: ${id} has no bookings`});
-
-    // retourner la liste
-    return res.status(200).json(bookings);
-  }
+  }, 
 }

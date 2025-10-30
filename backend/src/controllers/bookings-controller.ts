@@ -127,7 +127,7 @@ export const bookingController = {
   },
 
   /**
-   * deletes a booking
+   * returns all the bookings made by a user
    * @param req 
    * @param res 
    */
