@@ -11,14 +11,15 @@ import Image from "next/image";
 import { LogIn, Menu, House, LogOut, UserPen, Info, CalendarCheck, SignpostBig, Rocket } from "lucide-react";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import useUserContext from "../context/useUserContext";
 
 export default function HeaderMobile() {
   // Varible pour récupérer le chemin de la page actuelle, grâce au hook "usePathname" de React
   const pathname= usePathname();
   // State pour gérer l'ouverture du menu hamburger
   const [menuOpen, setMenuOpen] = useState(false);
-  // State provisoire pour gérer la connexion
-  const [isLogged, setIsLogged] = useState(false);
+  // Utilisation du contexte pour savoir si un utilisateur est connecté
+  const { logged } = useUserContext();
 
   // Variables qui rassemblent les items de la navigation sous forme de liste
   // Propriété "always" : doit toujours apparaitre dans le mnu
@@ -91,7 +92,7 @@ export default function HeaderMobile() {
             );
 
             // Afficher si connecté
-            if (isLogged && item.logged) return (
+            if (logged && item.logged) return (
               <li key={item.path}>
                 <Link
                   href={item.path}
@@ -109,7 +110,7 @@ export default function HeaderMobile() {
             );
 
             // Afficher si pas connecté
-            if (!isLogged && item.onlyLoggedOut) return (
+            if (!logged && item.onlyLoggedOut) return (
               <li key={item.path}>
                 <Link
                   href={item.path}
