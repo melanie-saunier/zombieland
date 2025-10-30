@@ -1,5 +1,5 @@
 import z from "zod";
-
+// schema de validation de création de compte
 export const registerSchema = z.object({
   email: z.email("Le format de l'email n'est pas valide"),
   lastname: z.string().trim().min(1, "Le nom de famille est obligatoire"),
@@ -31,3 +31,9 @@ export const loginSchema = z.object({
 })
 
 export type loginSchemaInput = z.infer<typeof loginSchema>;
+
+// schema de validation pour modification de compte (sans mdp)
+export const updateMeSchema = registerSchema.omit({
+  password: true,
+  confirmedPassword: true
+});

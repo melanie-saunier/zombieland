@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
-import { loginSchema, registerSchema } from "../schema/auth";
+import { loginSchema, registerSchema, updateMeSchema } from "../schema/auth";
 import { User } from "../models/association";
 import argon2 from "argon2";
 import { Role } from "../models/association";
 import { generateAccessToken } from "../utils/jwt";
 import { AuthRequest } from "../@types";
+import { Op } from "sequelize";
 
 export const authController = {
   // controller pour créer un compte 
@@ -144,5 +145,43 @@ export const authController = {
     if (!user) return res.status(404).json({ error: "User not found" });
   
     res.json(user);
+  },
+  async updateMe (req: AuthRequest, res: Response) {
+    const validation = updateMeSchema.safeParse(req.body);
+    // Si la validation échoue :
+    // error.issues contient la liste des erreurs détectées par Zod
+    if (!validation.success) return res.status(400).json({ errors: validation.error.issues.map(e => e.message) });
+
+    const data = validation.data; //data: firstname, lastname, email
+
+    // on récupère l'id du user connecté que l'on a dans le req.user
+    const userId = req.user?.id; 
+    if(!userId) return res.status(401).json({ error: "Unauthorized" });
+
+    // on récupère le user en bdd grâce à son id 
+    const user = await User.findByPk(userId);
+    if(!user) return  res.status(404).json({ error: "User not found" });
+    // Vérification de l’unicité de l’email
+    // On vérifie si un utilisateur existe déjà avec cet email (autre que notre user qui veut modifier ses infos)
+    const userWithSameEmail = await User.findOne({
+      where: {
+        email: data.email, 
+        id: { [Op.ne]: user.id } // Op.ne = "not equal", donc on ignore l'utilisateur courant}
+        } 
+    });
+    // Si un compte existe déjà, on renvoie une erreur 400
+    if(userWithSameEmail) return res.status(400).json({ error: "An account with this email address already exists." });
+
+    // On applique les modifications validées sur l’utilisateur trouvé
+    const userUpdated = await user.update(data);
+
+    // Conversion en objet simple
+    const userJson = userUpdated.toJSON();
+
+    // Suppression du mot de passe avant d’envoyer la réponse
+    delete userJson.password;
+
+    // Réponse JSON propre
+    res.status(200).json(userJson);
   }
 }

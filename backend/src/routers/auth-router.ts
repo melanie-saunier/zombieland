@@ -70,4 +70,6 @@ authRouter.post("/login", authController.login);
 //on ajouter authenticateToken pour vérifier le cookie et le token qu'il contient et on ajoute les infos du token au req.user dans le but de s'en servir pour récuperer les infos et les transmettre au front
 authRouter.get("/me", authenticateToken, authController.getCurrentUser);
 
+// Route /me/ en put pour qu'un utilisateur puisse modifier ses infos (pas son mot de passe)
+authRouter.put("/me", authenticateToken, authController.updateMe);
 // Route logout ??
