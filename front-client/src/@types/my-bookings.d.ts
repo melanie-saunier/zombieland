@@ -1,5 +1,3 @@
-import { ReactNode } from "react";
-
 /**
  * Type Booking - Structure exacte du backend Sequelize
  * Modèle : backend/src/models/booking.ts
