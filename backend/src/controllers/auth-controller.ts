@@ -4,6 +4,7 @@ import { User } from "../models/association";
 import argon2 from "argon2";
 import { Role } from "../models/association";
 import { generateAccessToken } from "../utils/jwt";
+import { AuthRequest } from "../@types";
 
 export const authController = {
   // controller pour créer un compte 
@@ -122,4 +123,26 @@ export const authController = {
 
     res.json(user);
   },
+
+  /**
+   * Get current User
+   * @param req 
+   * @param res 
+   */
+  async getCurrentUser(req: AuthRequest, res: Response) {
+    // on récupère le user grâce à l'id stocké la request
+    const user = await User.findByPk(req.user!.id, {
+      attributes: { exclude: ["password"] }, // on enlève le password
+      include: [
+        {
+          association: "role",
+          attributes: ["name"],
+        }
+      ]
+    });
+    
+    if (!user) return res.status(404).json({ error: "User not found" });
+  
+    res.json(user);
+  }
 }
