@@ -1,4 +1,4 @@
-import { User } from "../models/user"
+import { User } from "../models/association"
 import { Response, Request } from "express";
 import { idSchema } from "../schema";
 import { updateUserPasswordSchema, updateUserSchema, userSchema } from "../schema";

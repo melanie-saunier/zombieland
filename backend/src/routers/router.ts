@@ -2,6 +2,7 @@ import { Router } from "express";
 import { categoryRouter } from "./category-router";
 import { activityRouter } from "./activity-router";
 import { userRouter } from "./user-router";
+import { authRouter } from "./auth-router";
 
 // Création du router de Express
 export const router = Router();
@@ -19,3 +20,7 @@ router.use("/categories", categoryRouter);
 
 // Router des users
 router.use("/users", userRouter);
+
+//Router auth
+router.use("/auth", authRouter);
+
