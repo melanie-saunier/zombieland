@@ -6,8 +6,6 @@ import MyBookingCard from "@/components/MyBookingsCard";
 import { Booking, ReservationDisplay } from "@/@types/my-bookings";
 import { transformBookingToDisplay } from "@/utils/my-bookings";
 
-// ... reste du code identique
-
 // Mock data aligné sur le backend - TODO: Remplacer par fetch /api/bookings
 const mockBackendBookings: Booking[] = [
   {
