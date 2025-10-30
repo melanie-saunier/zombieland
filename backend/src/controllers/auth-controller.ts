@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { registerSchema } from "../schema/auth";
+import { loginSchema, registerSchema } from "../schema/auth";
 import { User } from "../models/association";
 import argon2 from "argon2";
 import { Role } from "../models/association";
@@ -50,14 +50,47 @@ export const authController = {
       role_id: roleToSet.id
     });
     // TODO: JWT +cookie à ajouter
+    // Conversion en objet simple
+    const user = userCreated.toJSON();
+    // Suppression du mot de passe avant d’envoyer la réponse
+    delete user.password;
 
+    // Je renvoie les informations
+    res.json(user);
+  },
+  async login(req: Request, res : Response) {
+    const validation = loginSchema.safeParse(req.body);
+    // Si la validation échoue :
+    // error.issues contient la liste des erreurs détectées par Zod
+    if (!validation.success) return res.status(400).json({ errors: validation.error.issues.map(e => e.message) });
 
-        // Je renvoie les informations
-    res.json({
-      ...userCreated,
-      // Je ne veux pas renvoyer le mot de passe
-      // Je le définis à undefined, il ne sera donc pas renvoyer par express
-      password: undefined,
+    const { email, password } = validation.data;
+
+    // on récupère le user grâce à son mail:
+    const userFound = await User.findOne({
+      where: {email: email},
+      include: [
+        {
+          association: "role",
+          attributes: ["name"], // on ne récupère que le nom du rôle
+        }
+      ]
     });
+
+    if(!userFound) return res.status(404).json({ error: "Bad credentials" });
+
+    // Puis on vérifie que le MPD correspond avec celui en BDD
+    const isValidPassword = await argon2.verify(userFound.password, password);
+
+     // Si les 2 passwords ne correspondent pas, on renvoie une erreur 400
+    if(!isValidPassword) return res.status(400).json({ error: "Bad credentials" });
+
+    // TODO: ajout du token+cookie
+
+    const user = userFound.toJSON();
+    // Suppression du mot de passe avant d’envoyer la réponse
+    delete user.password;
+
+    res.json(user);
   },
 }
