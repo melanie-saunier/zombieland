@@ -3,6 +3,8 @@ import { categoryRouter } from "./category-router";
 import { activityRouter } from "./activity-router";
 import { userRouter } from "./user-router";
 import { authRouter } from "./auth-router";
+import { authenticateToken } from "../middlewares/authenticate-token";
+import { authorizeAdmin } from "../middlewares/authorize-admin";
 
 // Création du router de Express
 export const router = Router();
@@ -19,7 +21,7 @@ router.use("/activities", activityRouter);
 router.use("/categories", categoryRouter);
 
 // Router des users
-router.use("/users", userRouter);
+router.use("/users", authenticateToken, authorizeAdmin, userRouter);
 
 //Router auth
 router.use("/auth", authRouter);
