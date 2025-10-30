@@ -1,89 +1,78 @@
-"use client";
+// src/app/page.tsx (home page)
 
+"use client";
 import CardActivity from "@/components/CardActivity";
 import LinkButton from "@/components/LinkButton";
 import { Bell, Clock, MapPinned, Phone, Rocket } from "lucide-react";
 import Image from "next/image";
-import { EffectCoverflow, Navigation, Pagination } from "swiper/modules";
+import { Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper styles
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import IActivity from "@/@types/activity";
+import fetchMostScaryActivities from "@/api/activities";
+import Loader from "@/components/Loader";
 
 export default function Home() {
-  //TODO: fetch des activities depuis le back, quand back sera prêt. En attendant, j'ai créé une variable statique qui contient un tableau d'activités, pour mis en forme du front.
-
-  const activities = [
-    { id: "activity-id1",
-      name: "Target Panic",
-      description: "Un stand futuriste où vous devez viser des têtes de zombies mécaniques avec des pistolets lumineux. Capteurs, sons délirants et effets LED à chaque tir réussi.",
-      duration: 5,
-      min_height: 110,
-      pregnancy_warning: false,
-      image_ref: "target_panic.png",
-      category: {id: "category-id2", name: "Instinct de survie", color: "#C41E3A"},
-      level: {id: "level-id1", name: "Facile", value: 1} 
-    }, 
-    { id: "activity-id2",
-      name: "The Grinder",
-      description: "Les visiteurs embarquent dans une machine à broyer les morts-vivants : nacelles rotatives, étincelles de métal, néons roses et verts, cris mécaniques et rires zombifiés en fond sonore. Sensations garanties !",
-      duration: 15,
-      min_height: 130,
-      pregnancy_warning: true,
-      image_ref: "the_grinder.png",
-      category: {id: "category-id1", name: "Frissons mécaniques", color: "#1BE7FF"},
-      level: {id: "level-id3", name: "Difficile", value: 3} 
-    }, 
-    { id: "activity-id3",
-      name: "The Core",
-      description: "Un tunnel lumineux et sonore à explorer : capteurs de mouvement, illusions lumineuses, effets sonores 3D, hologrammes de zombies et une fin humoristique inattendue.",
-      duration: 15,
-      min_height: 110,
-      pregnancy_warning: false,
-      image_ref: "the_core.png",
-      category: {id: "category-id3", name: "Réalité Inhumaine", color: "#7A00FF"},
-      level: {id: "level-id2", name: "Intermédiaire", value: 2} 
-    }, 
-    { id: "activity-id4",
-      name: "Rebirth Live Show",
-      description: "Danseurs zombies, lasers verts, beats techno et projections futuristes : un show déjanté entre concert électro et théâtre d’outbreak.",
-      duration: 30,
-      min_height: 110,
-      pregnancy_warning: false,
-      image_ref: "rebirth_live_show.png",
-      category: {id: "category-id4", name: "Freak Shows", color: "#E3C014"},
-      level: {id: "level-id1", name: "Facile", value: 1} 
-    },
-  ];
+  
+  // State pour le fetch des activités avec state d'erreur et de loading
+  const [activities, setActivities] = useState<IActivity[]>([]);
+  const [errorActivities, setErrorActivities] = useState<string | null>(null);
+  const [isLoadingActivities, setIsLoadingActivities] = useState(true);
+  // use effect pour récupérer les données avec un fetch
+  useEffect(() => {
+    // on récup les données des activités
+    const loadActivities = async () => {
+      // on remet le state d'erreur à zéro
+      // on met le loading à true
+      setIsLoadingActivities(true);
+      setErrorActivities(null);
+      try {
+        // appelle de la fonction qui fetch les activités avec axios
+        const dataActivities = await fetchMostScaryActivities();
+        setActivities(dataActivities);
+  
+      } catch(err) {
+        console.error(err);
+        setErrorActivities("Erreur lors de la récupération des activitées"); 
+      } finally {
+        // quand c'est chargé on met loading à false
+        setIsLoadingActivities(false);
+      }
+    };
+    // on appelle la fonction de récupération des données:
+    loadActivities();
+  }, []);
   return (
     <>
-      <section className="relative h-screen w-full">
-        <div className="relative w-full h-[200px] md:h-screen">
+      <section className="md:relative md:h-screen w-full">
+        <div className="md:relative w-full h-[200px] md:h-screen">
           {/* Image de fond 1 */}
           <Image
             src="/images/bg1.png"
             alt="Zombie sans lumière"
-            fill
-            priority
-            className="object-cover object-top-right"
+            width={400}           // largeur mobile
+            height={200}          // hauteur mobile
+            className="absolute top-10 md:top-0 left-0 object-cover object-top-right w-full h-[200px] md:w-full md:h-screen"
           />
 
           {/* Image de fond 2 (avec lumière néon) */}
           <Image
             src="/images/bg0.png"
             alt="Zombie éclairé par le néon vert"
-            fill
-            priority
-            className="object-cover object-top-right animate-flicker"
+            width={400}           // largeur mobile
+            height={200}          // hauteur mobile
+            className="absolute top-10 md:top-0 left-0 object-cover object-top-right animate-flicker w-full h-[200px] md:w-full md:h-screen"
           />
         </div>
 
-        <div className="absolute md:bottom-24 z-10 flex flex-col items-center justify-end gap-2 p-4 md:justify-center md:items-start md:w-2/3 md:h-auto min-h-[300px] max-h-screen bg-neutral-700 md:bg-transparent">
+        <div className="md:absolute md:bottom-24 z-10 flex flex-col items-center justify-end gap-2 p-4 md:justify-center md:items-start md:w-2/3 md:h-auto min-h-[300px] max-h-screen bg-neutral-700 md:bg-transparent">
           <div className="text-neutral-50 text-center md:mx-4 md:text-left md:pb-8 flex flex-col justify-around gap-8">
-            <h1 className="text-2xl md:text-4xl">
+            <h1 className="title text-3xl md:text-5xl">
             Bienvenue à Zombieland ! 
             </h1>
             <p className="font-bold md:text-2xl w-3/4 m-auto md:m-0">
@@ -104,32 +93,38 @@ export default function Home() {
       </section>
       <section>
         {/* section pour le slider d'activités du parc */}
-        <div className="w-full h-[400px] p-4  flex flex-col items-center justify-center gap-4">
-          <h2 className="text-xl md:text-2xl">NOS ATTRACTIONS LES PLUS FLIPPANTES</h2>
-          <Swiper
-            modules={[Navigation, Pagination]}
-            navigation
-            pagination={{ clickable: true }}
-            spaceBetween={20}
-            slidesPerView={1} //mobile une activitée
-            breakpoints={{
-              768: {
-                slidesPerView: 2, // desktop 2 activité
-              },
-            }}
-            className="w-full "
-          >
-            {activities.map((activity) => {
-              return (
-                <SwiperSlide key={activity.id} >
-                  <div className="flex justify-center w-full mb-8">
-                    <CardActivity  activity={activity}/>
-                  </div>
-                </SwiperSlide>
-              );
-            })}
-          </Swiper>
-        </div>
+        <div className="w-full h-[450px] p-4  flex flex-col items-center justify-center gap-4">
+          <h2 className="title text-xl md:text-3xl uppercase">Nos attractions les plus flippantes</h2>
+          {errorActivities && 
+           <p className="text-center font-bold text-xl">{errorActivities}</p>
+          }
+          {isLoadingActivities ? 
+            <Loader /> :
+            <Swiper
+              modules={[Navigation, Pagination]}
+              navigation
+              pagination={{ clickable: true }}
+              spaceBetween={20}
+              slidesPerView={1} //mobile une activitée
+              breakpoints={{
+                768: {
+                  slidesPerView: 2, // desktop 2 activité
+                },
+              }}
+              className="w-full"
+            >
+              {activities.map((activity) => {
+                return (
+                  <SwiperSlide key={activity.id} >
+                    <div className="flex justify-center w-full mb-8">
+                      <CardActivity  activity={activity}/>
+                    </div>
+                  </SwiperSlide>
+                );
+              })}
+            </Swiper>
+          }
+         </div>
       </section>
       <section>
         {/* section informations utiles du parc */}
@@ -145,7 +140,7 @@ export default function Home() {
           <div className="absolute inset-0 bg-linear-to-r from-black/40 to-transparent z-1"></div>
 
           <div className="absolute z-10 m-4 flex flex-col justify-center gap-4 w-full md:w-[60%] md:left-[10%] md:top-1/2 md:-translate-y-1/2">
-            <h2 className="text-xl md:text-2xl">PRÉPARE TA VENUE</h2>
+            <h2 className="title text-xl md:text-3xl uppercase">Prépare ta venue</h2>
             <div className="">
               <div className="flex gap-2 font-bold text-base md:text-lg drop-shadow-lg/60">
                 <Clock />
@@ -178,7 +173,7 @@ export default function Home() {
               </div>
             </div>
             <div className="self-center md:self-auto md:w-xs">
-              <LinkButton path="/visitor-information" text="En savoir plus ..." style="button_activity" Icon={undefined}/>
+              <LinkButton path="/visitor-information" text="En savoir plus" style="button_activity" Icon={undefined}/>
             </div>
           </div>
         
@@ -188,5 +183,3 @@ export default function Home() {
     </>
   );
 }
-
-

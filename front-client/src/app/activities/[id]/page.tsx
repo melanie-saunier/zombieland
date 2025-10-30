@@ -1,30 +1,34 @@
+// src/app/activities/id/page.tsx 
+
+import { fetchOneActivityById } from "@/api/activities";
 import renderSkulls from "@/components/RenderSkulls";
 import { TriangleAlert } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+
 
 type ActivityDetailPageProps = {
-  // TODO: si on modifie le type de id activity (UUID à integer) alors il faudra modifier string en integer
-  params: Promise<{ id: string }>;
+  params: Promise<{ id: number }>;
 };
 
 export default async function ActivityDetailPage({params}: ActivityDetailPageProps) {
   // on veut recuperer l'id de l'activité de l'URL pour récupérer les infos de cette activité via un fetch
   // on reçoit direct en props du composant une promesse avec les valeurs des segments dynamiques
   const { id } = await params;
+  const idNumber = Number(id);
+  if (isNaN(idNumber)) notFound();
+  //ICI, utilisation du fect directement dans le code, pas besoin de stocker dans un state car on affiche "juste" du html
+  // C'est un composant serveur 
+  // (lorsque l'on utilise des states et que l"on modifie le DOM, on ne peut pas faire directement le fetch
+  // on doit obligatoirement passer par un useEffect, dans ce cas là c'est un composant Client)
+  const activity = await fetchOneActivityById(idNumber);
 
-  // TODO: fetch à faire quand back sera prêt. En attendant, on a un objet "activity" à la place (provisoire, pour mise en place du front)
-  const activity =
-    { id: "activity-id1",
-      name: "Target Panic",
-      description: "Un stand futuriste où vous devez viser des têtes de zombies mécaniques avec des pistolets lumineux. Capteurs, sons délirants et effets LED à chaque tir réussi.",
-      duration: 5,
-      min_height: 110,
-      pregnancy_warning: true,
-      image_ref: "zombie_glam_lab.png",
-      category: {id: "category-id2", name: "Instinct de survie", color: "#C41E3A"},
-      level: {id: "level-id1", name: "Facile", value: 2} 
-    };
+  // si activity n'existe pas on redirige vers la page 404 avec la fct notFound de next
+  // if(!activity) {
+  //   notFound();
+  // }
+
 
   return (
     <div className="bg-neutral-700 py-4 px-8">
@@ -32,6 +36,7 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
         href="/activities"
         className="hover:text-primary-purple-300 transition"
       >
+        
         ⭠ Retour à la liste des activités
       </Link>
       <div className="flex flex-col md:flex-row-reverse justify-around gap-8 md:gap-16 pt-4">
@@ -50,7 +55,7 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
         <div className="md:w-1/2 flex flex-col gap-2 md:gap-8 md:px-8">
           <div>
             {/* {Nom de l'activité} */}
-            <h1 className="text-3xl md:text-4xl pb-4">{activity.name}</h1>
+            <h1 className="title text-3xl md:text-5xl pb-4">{activity.name}</h1>
             {/* {Badge de la catégorie} */}
             <span 
               className="rounded-xl text-neutral-50 px-2 md:text-sm text-xs font-medium w-fit"
@@ -76,7 +81,11 @@ export default async function ActivityDetailPage({params}: ActivityDetailPagePro
             <div>
               {/* {Taille minimum pour participer à l'activité} */}
               <h2 className="font-bold text-xl pb-1">Taille Minimum</h2>
-              <p>{activity.min_height} cm</p>
+              {
+                activity.min_height === 0 ? 
+                  <p>Pas de taille minimum requise.</p> :
+                  <p>{activity.min_height} cm</p>
+              }
             </div>
           </div>
           {

@@ -109,7 +109,7 @@ h5 {
 }
 
 
-h1, h2{
+.title {
   color: var(--color-neutral-50);
   text-shadow:
     3px 3px 0 var(--color-secondary-300),
