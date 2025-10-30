@@ -11,10 +11,10 @@ import type { User, PasswordState } from "@/@types/profile.d.ts";
 /**
  * Composant principal : ProfilePage
  * Gère toute la logique et l'affichage du profil :
- *  - 
- *  - 
- *  - 
- *  - 
+ *  - L’affichage du profil utilisateur
+ *  - Le mode édition (modification des infos personnelles)
+ *  - Le changement de mot de passe via un modal
+ *  - Les messages d’erreur et de succès
  */
 export default function ProfilePage() {
   // State qui contient les informations de l'utilisateur (nom, prénom, email). Null par défaut.
@@ -33,18 +33,12 @@ export default function ProfilePage() {
     isOpen: false, // Affiche ou non le modal de changement de mot de passe
     oldPassword: "", // Mot de passe actuel
     newPassword: "", // Nouveau mot de passe
-    confirmPassword: "", // Confirmation du nouveau mot de passe
-    show: { oldPassword: false, newPassword: false, confirmPassword: false }, // Gère l'affichage/masquage des mots de passe
+    confirmedPassword: "", // Confirmation du nouveau mot de passe
+    show: { oldPassword: false, newPassword: false, confirmedPassword: false }, // Gère l'affichage/masquage des mots de passe
     errors: [], // Liste d'erreurs liées au formulaire mot de passe
   });
 
-  /**
-   * useEffect : hook React appelé après le premier rendu (montage) du composant
-   * Ici, il sert à récupérer les informations de l'utilisateur
-   * Une fois les données reçues :
-   *  - 
-   *  - 
-   */
+  // Au montage, on simule la récupération du profil utilisateur
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -59,7 +53,8 @@ export default function ProfilePage() {
           email: "max.dupont@zombieland.fr",
         };
 
-        setUserData(data); // On met à jour l’état avec les données reçues
+        // On met à jour l’état avec les données reçues
+        setUserData(data); 
       } catch (err) {
         // En cas d’erreur, on affiche un message d’erreur utilisateur
         setError(err instanceof Error ? err.message : "Erreur de chargement");
@@ -70,13 +65,11 @@ export default function ProfilePage() {
     };
     
     fetchUser(); // Appel effectif de la fonction de récupération
-  }, []); // [] = le hook ne s’exécute qu’une seule fois (au montage du composant)
+  }, []); 
 
-
-  /* ----------------------------- SAUVEGARDE DU PROFIL ----------------------------- */
-
-  const handleSave = async () => {
-    // Fonction appelée quand l'utilisateur clique sur "Sauvegarder"
+  // Fonction appelée quand l'utilisateur clique sur "Sauvegarder" pour sauvegarder les modifications de son profil (hors password)
+  const handleUpdateSubmit = async (e: React.FormEvent) => {
+    e.preventDefault(); // empêche le rechargement de la page
 
     // Vérifie que tous les champs obligatoires sont remplis
     if (!userData?.firstName || !userData?.lastName || !userData?.email) {
@@ -85,7 +78,7 @@ export default function ProfilePage() {
     }
 
     // Vérifie que l'email est au bon format via une expression régulière
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     if (!emailRegex.test(userData.email)) {
       setError("Email invalide");
       return;
@@ -94,7 +87,7 @@ export default function ProfilePage() {
     try {
       setError(null); // Réinitialise les erreurs
 
-      // ⚠️ Appel API à venir (updateUserData(userData))
+      // TODO: Appel API à venir (updateUserData(userData))
       
       setSuccessMessage("Profil mis à jour !");
       setIsEditing(false); // Sort du mode édition
@@ -107,36 +100,53 @@ export default function ProfilePage() {
     }
   };
 
-
-  /* ----------------------------- FORMULAIRE DE CHANGEMENT DE MOT DE PASSE ----------------------------- */
-
+  // Fonction appelée quand l'utilisateur modifie son mot de passe
   const handlePasswordSubmit = async (e: React.FormEvent) => {
-    e.preventDefault(); // Empêche le rechargement automatique du formulaire
+    e.preventDefault(); // empêche le rechargement de la page
 
-    const errors: string[] = [];
+    // On créé un tableau d'erreur vide, pour contenir toutes les erreurs possibles
+    const newErrors: string[] = [];
+    
+    // Il faut l'ancien mot de passe
+    if (!passwordState.oldPassword) newErrors.push("Mot de passe actuel requis");
 
     // Vérifications simples côté client
-    if (!passwordState.current) errors.push("Mot de passe actuel requis");
-    if (passwordState.new.length < 8) errors.push("Minimum 8 caractères");
-    if (passwordState.new !== passwordState.confirm) errors.push("Mots de passe différents");
+    const pwd = passwordState.newPassword;
+    // Longueur minimale
+    if (pwd.length < 8)
+      newErrors.push("Le mot de passe doit contenir au moins 8 caractères");
+    // Lettre minuscule
+    if (!/[a-z]/.test(pwd))
+      newErrors.push("Le mot de passe doit contenir au moins une lettre minuscule");
+    // Lettre majuscule
+    if (!/[A-Z]/.test(pwd))
+      newErrors.push("Le mot de passe doit contenir au moins une lettre majuscule");
+    // Chiffre
+    if (!/\d/.test(pwd))
+      newErrors.push("Le mot de passe doit contenir au moins un chiffre");
+    // Caractère spécial (parmi les plus courants)
+    if (!/[!@#$%^&*]/.test(pwd))
+      newErrors.push("Le mot de passe doit contenir au moins un caractère spécial");
+    // Confirmation identique
+    if (pwd !== passwordState.confirmedPassword)
+      newErrors.push("Les mots de passe ne correspondent pas");
 
-    // Si des erreurs sont trouvées, on les enregistre et on arrête le processus
-    if (errors.length) {
-      setPasswordState((p) => ({ ...p, errors }));
+    if (newErrors.length) {
+      setPasswordState((p) => ({ ...p, errors: newErrors }));
       return;
     }
 
     try {
-      // ⚠️ Appel API futur : updatePassword({ current, new })
+      // TODO: Appel API à venir (updateUserData(userData))
       
       // Si tout se passe bien :
-      setSuccessMessage("Mot de passe changé !");
+      setSuccessMessage("Ton mot de passe a bien été mis à jour !");
       setPasswordState({
         isOpen: false, // Ferme le modal
-        current: "",
-        new: "",
-        confirm: "",
-        show: { current: false, new: false, confirm: false },
+        oldPassword: "",
+        newPassword: "",
+        confirmedPassword: "",
+        show: { oldPassword: false, newPassword: false, confirmedPassword: false },
         errors: [], // Vide les erreurs
       });
 
@@ -149,7 +159,7 @@ export default function ProfilePage() {
     }
   };
 
-  // A MAJ avec le composant loader de Mélanie /!\
+  // TODO : mettre à jour avec le Loader existant
    if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -174,17 +184,20 @@ export default function ProfilePage() {
   if (!userData) return null; // Si aucune donnée d'utilisateur n'est trouvée, on ne rend rien //
 
   return (
-    <section className="min-h-screen p-4 md:p-8">
+    // SECTION PRINCIPALE — englobe toute la page profil
+    <section className="min-h-screen p-4 md:p-8 bg-radial from-[#961990] to-[#000000]">
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className="text-4xl md:text-5xl font-bold text-center mb-8">Mon Profil</h1>
 
         {/* Messages de feedback */}
+        {/* Message de succès après une mise à jour réussie (par ex. infos modifiées ou mot de passe changé) */}
         {successMessage && (
           <div className="p-4 bg-green-900/30 border border-green-500 rounded-lg text-green-300 text-center">
             {successMessage}
           </div>
         )}
         
+        {/* Message d’erreur si une action échoue (erreur serveur, validation, etc.) */}
         {error && (
           <div className="p-4 bg-red-900/30 border border-red-500 rounded-lg text-red-300 text-center">
             {error}
@@ -195,14 +208,15 @@ export default function ProfilePage() {
         <div className="flex flex-col items-center gap-4 p-6 bg-neutral-700 rounded-lg border border-primary-purple-300 shadow-[0_0_12px_rgba(180,130,255,0.3)]">
           <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-primary-purple-300 shadow-[0_0_20px_rgba(180,130,255,0.5)]">
             <Image
-              src="/images/default-avatar.png"
-              alt={`Avatar de ${userData.firstName} ${userData.lastName}`} // MAJ en fonction du back//
+              src="/images/zombie-avatar.png"
+              alt={`Avatar de ${userData.firstName} ${userData.lastName}`} // On affiche le prénom et le nom de l'utilisateur connecté
               fill
               sizes="192px"
               className="object-cover"
               priority
             />
           </div>
+          {/* Nom complet de l’utilisateur connecté */}
           <h2 className="text-2xl font-bold text-neutral-50">
             {userData.firstName} {userData.lastName}
           </h2>
@@ -214,13 +228,16 @@ export default function ProfilePage() {
             Informations personnelles
           </h3>
 
-//* AJOUTER LA BALISE forms pour les inputs avec les bonnes props /!\//
-          <div className="space-y-4">
+          {/* FORMULAIRE D’EDITION DES INFOS (prénom, nom, email) */}
+          <form onSubmit={handleUpdateSubmit} className="space-y-4">
+            {/* Boucle sur les champs à afficher */}
             {(["firstName", "lastName", "email"] as const).map((key) => (
               <div key={key} className="flex flex-col gap-1">
+                {/* Label descriptif du champ */}
                 <label htmlFor={key} className="text-sm text-primary-purple-200 font-semibold">
                   {key === "firstName" ? "Prénom" : key === "lastName" ? "Nom" : "Email"}
                 </label>
+                {/* Si le mode édition est actif → input modifiable */}
                 {isEditing ? (
                   <input
                     id={key}
@@ -231,49 +248,56 @@ export default function ProfilePage() {
                     required
                   />
                 ) : (
+                  // Sinon, simple affichage non modifiable
                   <div className="p-3 bg-neutral-700/50 rounded border border-primary-purple-500 text-neutral-50">
                     {userData[key]}
                   </div>
                 )}
               </div>
             ))}
-          </div>
-
-          <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3">
-            {isEditing ? (
-              <>
+          
+             {/* --- BOUTONS D’ACTION --- */}
+            <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3">
+              {isEditing ? (
+                // Boutons visibles quand on édite les infos
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setIsEditing(false)}
+                    className="px-6 py-2 bg-neutral-600 text-neutral-50 font-bold rounded hover:bg-neutral-500 transition"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    type="submit"
+                    className="px-6 py-2 button_activity text-neutral-50 font-bold rounded hover:scale-105 transition"
+                  >
+                    Sauvegarder
+                  </button>
+                </>
+              ) : (
+                // Bouton pour activer le mode édition
                 <button
-                  onClick={() => setIsEditing(false)}
-                  className="px-6 py-2 bg-neutral-600 text-neutral-50 font-bold rounded hover:bg-neutral-500 transition"
-                >
-                  Annuler
-                </button>
-                <button
-                  onClick={handleSave}
+                  onClick={() => setIsEditing(true)}
                   className="px-6 py-2 button_activity text-neutral-50 font-bold rounded hover:scale-105 transition"
                 >
-                  Sauvegarder
+                  Modifier mes informations
                 </button>
-              </>
-            ) : (
+              )}
+
+              {/* Bouton pour ouvrir la modale de changement de mot de passe */}
               <button
-                onClick={() => setIsEditing(true)}
-                className="px-6 py-2 button_activity text-neutral-50 font-bold rounded hover:scale-105 transition"
+                onClick={() => setPasswordState((p) => ({ ...p, isOpen: true, errors: [] }))}
+                className="px-6 py-2 button_booking text-neutral-50 font-bold rounded hover:scale-105 transition"
               >
-                Modifier mes informations
+                Changer mon mot de passe
               </button>
-            )}
-            <button
-              onClick={() => setPasswordState((p) => ({ ...p, isOpen: true, errors: [] }))}
-              className="px-6 py-2 button_booking text-neutral-50 font-bold rounded hover:scale-105 transition"
-            >
-              Changer mon mot de passe
-            </button>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
 
-      {/* Modal mot de passe (identique avec aria-labels ajoutés) */}
+      {/* Modal pour modifier le mot de passe */}
       {passwordState.isOpen && (
         <div 
           className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
@@ -281,7 +305,10 @@ export default function ProfilePage() {
           aria-modal="true"
           aria-labelledby="password-modal-title"
         >
+          {/* Conteneur principal de la modale */}
           <div className="relative w-full max-w-md bg-neutral-700 rounded-lg border-2 border-primary-purple-300 shadow-[0_0_30px_rgba(180,130,255,0.5)]">
+            
+            {/* En-tête de la modale avec titre + bouton de fermeture */}
             <div className="sticky top-0 bg-neutral-700 border-b border-primary-purple-300 p-6 flex justify-between items-center">
               <h3 id="password-modal-title" className="text-xl font-bold text-neutral-50">
                 Modification du mot de passe
@@ -295,12 +322,15 @@ export default function ProfilePage() {
               </button>
             </div>
 
+            {/* Formulaire du changement de mot de passe */}
             <form onSubmit={handlePasswordSubmit} className="p-6 space-y-4">
-              {(["current", "new", "confirm"] as const).map((field) => (
+              {/* Trois champs : ancien, nouveau et confirmation */}
+              {(["oldPassword", "newPassword", "confirmedPassword"] as const).map((field) => (
                 <div key={field} className="flex flex-col gap-1">
                   <label htmlFor={`password-${field}`} className="text-sm text-primary-purple-200 font-semibold">
-                    {field === "current" ? "Mot de passe actuel" : field === "new" ? "Nouveau mot de passe" : "Confirmer le mot de passe"}
+                    {field === "oldPassword" ? "Mot de passe actuel" : field === "newPassword" ? "Nouveau mot de passe" : "Confirmer le mot de passe"}
                   </label>
+                  {/* Champ de saisie du mot de passe avec bouton pour afficher/masquer */}
                   <div className="relative">
                     <input
                       id={`password-${field}`}
@@ -308,13 +338,14 @@ export default function ProfilePage() {
                       value={passwordState[field]}
                       onChange={(e) => setPasswordState({ ...passwordState, [field]: e.target.value })}
                       placeholder={
-                        field === "current" ? "Entrez votre mot de passe actuel" :
-                        field === "new" ? "Entrez votre nouveau mot de passe" :
+                        field === "oldPassword" ? "Entrez votre mot de passe actuel" :
+                        field === "newPassword" ? "Entrez votre nouveau mot de passe" :
                         "Confirmez votre nouveau mot de passe"
                       }
                       className="w-full p-3 pr-12 bg-neutral-700/50 rounded border border-primary-purple-500 text-neutral-50 focus:outline-none focus:border-primary-purple-300 focus:ring-1 focus:ring-primary-purple-300"
                       required
                     />
+                    {/* Bouton œil pour afficher ou masquer le mot de passe */}
                     <button
                       type="button"
                       onClick={() =>
@@ -332,6 +363,7 @@ export default function ProfilePage() {
                 </div>
               ))}
 
+              {/* Liste des erreurs de validation du mot de passe */}
               {passwordState.errors.length > 0 && (
                 <div className="p-3 bg-red-900/30 border border-red-500 rounded" role="alert">
                   <ul className="list-disc list-inside text-red-300 text-sm space-y-1">
@@ -342,6 +374,7 @@ export default function ProfilePage() {
                 </div>
               )}
 
+              {/* Boutons d’action dans la modale */}
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"

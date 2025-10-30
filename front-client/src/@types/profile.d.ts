@@ -13,9 +13,9 @@ export interface User {
    */
 export interface PasswordState {
     isOpen: boolean; // État du modal (ouvert/fermé)
-    current: string; // Mot de passe actuel
-    new: string; // Nouveau mot de passe
-    confirm: string; // Confirmation du mot de passe
-    show: { current: boolean; new: boolean; confirm: boolean }; // Affichage des champs
+    oldPassword: string; // Mot de passe actuel
+    newPassword: string; // Nouveau mot de passe
+    confirmedPassword: string; // Confirmation du mot de passe
+    show: { oldPassword: boolean; newPassword: boolean; confirmedPassword: boolean }; // Affichage des champs
     errors: string[]; // Liste des erreurs de validation
   }
