@@ -15,7 +15,6 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import LinkButton from "./LinkButton";
 import useUserContext from "../context/useUserContext";
-import { useHandleLogout } from "../utils/authUtils";
 
 
 export default function NavBarDesktop() {
@@ -23,8 +22,6 @@ export default function NavBarDesktop() {
   const pathname= usePathname();
   // Utilisation du contexte pour savoir si un utilisateur est connecté
   const { logged, logout } = useUserContext();
-  // Utilisation du hook custom handleLogout avec comme paramètres la fonction logout du user context
-  const handleLogout = useHandleLogout(logout);
   
   // Variables qui rassemblent les items de la navigation sous forme de liste
   // Propriété "always" : doit toujours apparaitre dans le mnu
@@ -107,7 +104,7 @@ export default function NavBarDesktop() {
                   {item.name === "Se déconnecter" ? (
                     // Pour logout → utiliser un bouton et appeler handleLogout
                     <button
-                      onClick={handleLogout}
+                      onClick={() => logout()}
                       className={`flex items-center gap-2 px-8 py-4 w-full
                       hover:scale-110 transition-transform duration-200 text-left`}
                     >

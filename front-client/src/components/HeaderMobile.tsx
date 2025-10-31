@@ -10,20 +10,18 @@ import Link from "next/link";
 import Image from "next/image";
 import { LogIn, Menu, House, LogOut, UserPen, Info, CalendarCheck, SignpostBig, Rocket } from "lucide-react";
 import { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import useUserContext from "../context/useUserContext";
-import { useHandleLogout } from "../utils/authUtils";
+import { useRouter } from "next/navigation";
 
 export default function HeaderMobile() {
+  const router = useRouter();
   // Varible pour récupérer le chemin de la page actuelle, grâce au hook "usePathname" de React
   const pathname= usePathname();
-  const router = useRouter();
   // State pour gérer l'ouverture du menu hamburger
   const [menuOpen, setMenuOpen] = useState(false);
   // Utilisation du contexte pour savoir si un utilisateur est connecté et pour gérer la déconnexion
   const { logged, logout } = useUserContext();
-  // Utilisation du hook custom handleLogout avec comme paramètres la fonction logout du user context
-  const handleLogout = useHandleLogout(logout);
 
   // Variables qui rassemblent les items de la navigation sous forme de liste
   // Propriété "always" : doit toujours apparaitre dans le mnu
@@ -76,7 +74,7 @@ export default function HeaderMobile() {
                     <button
                         onClick={() => {
                           setMenuOpen(false);  // fermer le menu
-                          handleLogout();      // puis déconnexion
+                          logout();      // puis déconnexion
                         }}
                       className="flex items-center w-full text-left px-4 py-2 hover:bg-neutral-600 rounded"
                     >

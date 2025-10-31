@@ -8,7 +8,6 @@ import Link from "next/link";
 import { LogIn, House, LogOut,  Rocket, Bell } from "lucide-react";
 import { usePathname } from "next/navigation";
 import useUserContext from "../context/useUserContext";
-import { useHandleLogout } from "../utils/authUtils";
 
 
 export default function NavBarMobile() {
@@ -16,8 +15,6 @@ export default function NavBarMobile() {
   const pathname= usePathname();
   // Utilisation du contexte pour savoir si un utilisateur est connecté
   const { logged, logout } = useUserContext();
-  // Utilisation du hook custom handleLogout avec comme paramètres la fonction logout du user context
-  const handleLogout = useHandleLogout(logout);
 
   // Variables qui rassemblent les items de la navigation sous forme de liste
   // Propriété "always" : doit toujours apparaitre dans le mnu
@@ -46,7 +43,7 @@ export default function NavBarMobile() {
               return (
                 <li key={item.name}>
                   <button
-                    onClick={handleLogout}
+                    onClick={() => logout()}
                     className="flex flex-col items-center px-2 py-1 hover:bg-neutral-600 rounded w-full"
                   >
                     <item.Icon
