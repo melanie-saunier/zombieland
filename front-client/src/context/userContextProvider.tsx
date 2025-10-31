@@ -53,9 +53,11 @@ export default function UserContextProvider({ children }: Props) {
       try {
         const currentUser = await authApi.getCurrentUser();
         setUser(currentUser);
+        setLogged(true);
       } catch (err) {
         console.error("Erreur lors de la récupération du user :", err);
         setUser(null);
+        setLogged(false);
       }
     };
 

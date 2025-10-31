@@ -60,7 +60,7 @@ export const authController = {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,  // TODO: mettre à true en production: en HTTPS
-      sameSite: "strict",
+      sameSite: "strict", //protege des attaques CSRF, CORS, fuite de données intersites
       maxAge: 3 * 60 * 60 * 1000, // 3 heures
     }); 
 

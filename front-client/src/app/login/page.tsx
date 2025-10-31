@@ -10,12 +10,12 @@ import useUserContext from "../../context/useUserContext";
 
 export default function LoginPage() {
   // pour faire un focus sur le premier input(input email) lorsque l'on arrive sur la page
-  const inpuRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   // Router Next.js pour redirections après login
   const router = useRouter();
 
   // Récupération des fonctions du contexte utilisateur
-  const { login, setLogged } = useUserContext();
+  const { login } = useUserContext();
 
   // State pour gérer l'affichage des messages d'erreur et de succès
   const [error, setError] = useState<null | string>(null);
@@ -23,7 +23,7 @@ export default function LoginPage() {
   
   // Focus automatique sur le champ email au montage du composant
   useEffect(() => {
-    inpuRef.current?.focus();
+    inputRef.current?.focus();
   }, []);
 
   /**
@@ -32,9 +32,9 @@ export default function LoginPage() {
    * @param password - Mot de passe saisi par l'utilisateur
    */
   const checkCrendentials = async (email: string, password: string) => {
-		try {
+    try {
       // Appel à l'API login
-			const user = await authApi.login({email, password});
+      const user = await authApi.login({email, password});
       // Si aucun utilisateur retourné → identifiants incorrects
       if (!user) {
         setError("Email ou mot de passe incorrect");
@@ -43,7 +43,7 @@ export default function LoginPage() {
 
       // On met à jour le context user et le state logged
       login(user);
-      setLogged(true);
+
 
       // Message de succès
       setSuccess(`Bienvenue ${user.firstname} ! Tu vas être redirigé·e vers la page d'accueil.`);
@@ -54,12 +54,12 @@ export default function LoginPage() {
         router.push("/"); // redirection vers la home
       }, 2000);
 
-		} catch (e) {
-			// Gestion des erreurs (ex: 401 Unauthorized)
-			console.log("Erreur lors du login :", e);
-			setError("Email ou mot de passe incorrect");
-		}
-	};
+    } catch (e) {
+      // Gestion des erreurs (ex: 401 Unauthorized)
+      console.log("Erreur lors du login :", e);
+      setError("Email ou mot de passe incorrect");
+    }
+  };
 
   return(
     <div className="relative flex flex-col justify-center bg-[url('/images/background.png')] bg-no-repeat bg-cover bg-center min-h-[500px] md:min-h-screen p-4 md:p-8">
@@ -94,7 +94,7 @@ export default function LoginPage() {
           <div className="flex flex-col w-64 md:w-80" >
             <label htmlFor="email" className="font-bold">E-mail</label>
             <input
-              ref={inpuRef} 
+              ref={inputRef} 
               type="email" 
               name="email" 
               id="email" 

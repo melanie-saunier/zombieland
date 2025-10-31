@@ -9,7 +9,7 @@ Content-Type: application/json
 
 ### ME
 GET http://localhost:3000/api/auth/me
-Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjgsInJvbGUiOiJtZW1iZXIiLCJpYXQiOjE3NjE4MzEwMTgsImV4cCI6MTc2MTg0MTgxOH0.6y4l8fRN7GlqufG-DiDKN9SWc-loF0Uqgj6DE8-O73I
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjgsInJvbGUiOiJtZW1iZXIiLCJpYXQiOjE3NjE4OTk5MjksImV4cCI6MTc2MTkxMDcyOX0.tArSfCLUzcak7Zc29DTKqg7CkmEycfFANy8tbOiFDLY
 
 ### ME update user
 ## test en modifiant juste le nom OK
