@@ -1,6 +1,7 @@
 import { Response, Request } from "express";
 import { bookingSchema, updateBookingSchema, idSchema, updateBookingByUserSchema } from "../schemas";
 import { User, Booking, Price, BookingPrice, sequelize } from "../models/association";
+import { AuthRequest } from "../@types";
 
 export const bookingController = {
   
@@ -36,9 +37,13 @@ export const bookingController = {
    * @param req 
    * @param res 
    */
-  async getById(req: Request, res: Response) {
+  async getById(req: AuthRequest, res: Response) {
     // On récupère l'id dans les param de req et le valider avec le schéma
     const { id } = idSchema.parse(req.params);
+
+    // Vérifier sur l'user existe
+    const userExists = await User.findByPk(id);
+    if (!userExists) return res.status(404).json({ message: `No user found with id: ${id}` })
 
     // On récupère le booking correspondante à cet id
     const booking = await Booking.findByPk(id,{
@@ -57,6 +62,11 @@ export const bookingController = {
 
     // Si booking est vide, on retourne une erreur 404 avec un message d'erreur
     if(!booking) return res.status(404).json({ message:`No booking found with id: ${id}`});
+
+    // Vérification : l'utilisateur connecté peut seulement accéder à ses bookings ou est admin
+    if (req.user?.id !== booking.user_id && req.user?.role !== "admin") {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
 
     res.status(200).json(booking);
   },
@@ -144,12 +154,18 @@ export const bookingController = {
    * @param req 
    * @param res 
    */
-  async updateBookingForUser(req: Request, res: Response) {
+  async updateBookingForUser(req: AuthRequest, res: Response) {
     const { id } = idSchema.parse(req.params);
     const booking = await Booking.findByPk(id);
 
     if (!booking) {
       return res.status(404).json({ message: `No booking found with id: ${id}` });
+    }
+    
+    // Vérification d'autorisation :
+    // Seul le propriétaire ou un admin peut modifier la réservation
+    if (req.user?.id !== booking.user_id && req.user?.role !== 'admin') {
+      return res.status(403).json({ message: "Unauthorized" });
     }
 
     // Validation des données reçues avec Zod
@@ -190,13 +206,19 @@ export const bookingController = {
    * @param req 
    * @param res 
    */
-  async getAllBookingsForUser(req: Request, res: Response) {
+  async getAllBookingsForUser(req: AuthRequest, res: Response) {
     const { id } = idSchema.parse(req.params);
 
     // vérifier que l'utilisateur existe
     const userExists = await User.findByPk(id);
     
-    if(!userExists) return res.status(404).json({ message: `No user found with id: ${id}`})
+    if(!userExists) return res.status(404).json({ message: `No user found with id: ${id}`});
+
+    // Vérification d'autorisation :
+    // Seul le propriétaire ou un admin peut accéder aux réservations
+    if (req.user?.id !== id && req.user?.role !== 'admin') {
+      return res.status(403).json({ message: "Unauthorized" });
+    }
 
     // interroger la bdd pour récuperer l'utilisateur qui porte cet id
     const bookings = await Booking.findAll({
@@ -226,12 +248,18 @@ export const bookingController = {
    * @param req 
    * @param res 
    */
-  async cancelBooking(req: Request, res: Response) {
+  async cancelBooking(req: AuthRequest, res: Response) {
     const { id } = idSchema.parse(req.params);
 
     const booking = await Booking.findByPk(id);
     if (!booking) {
       return res.status(404).json({ message: `No booking found with id: ${id}` });
+    }
+
+    // Vérification d'autorisation :
+    // Seul le propriétaire ou un admin peut annuler la réservation
+    if (req.user?.id !== booking.user_id && req.user?.role !== 'admin') {
+      return res.status(403).json({ message: "Unauthorized" });
     }
     
     // Vérifier si la date de visite est déjà passée
