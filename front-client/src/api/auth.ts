@@ -1,7 +1,7 @@
 // src/api/auth.ts
 
 import axios from "axios";
-import type { IUser, ILoginInput, IRegisterInput } from "@/@types/user";
+import type { IUser, ILoginInput, IRegisterInput, IUpdateMeInput, IUpdatePasswordInput } from "@/@types/user";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -102,6 +102,54 @@ export const authApi = {
       await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
     } catch (err) {
       console.error("Erreur lors du logout :", err);
+    }
+  },
+  updateMe: async (data: IUpdateMeInput): Promise<IUser | null> => {
+    try {
+      const res = await axios.put(`${API_URL}/auth/me`, data, { withCredentials: true });
+      const userData = res.data;
+      if (!userData) return null;
+  
+      const user: IUser = {
+        id: userData.id,
+        firstname: userData.firstname,
+        lastname: userData.lastname,
+        email: userData.email,
+        role: userData.role?.name || "member",
+      };
+  
+      return user;
+  
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const message = err.response?.data?.error || "Erreur lors de la mise à jour du mot de passe";
+        throw new Error(message); // on remonte l'erreur pour le handle
+      }
+      throw new Error("Erreur inconnue");
+    }
+  },
+  updatePassword: async (data: IUpdatePasswordInput): Promise<IUser | null> => {
+    try {
+      const res = await axios.patch(`${API_URL}/auth/me/password`, data, { withCredentials: true });
+      const userData = res.data;
+      if (!userData) return null;
+  
+      const user: IUser = {
+        id: userData.id,
+        firstname: userData.firstname,
+        lastname: userData.lastname,
+        email: userData.email,
+        role: userData.role?.name || "member",
+      };
+  
+      return user;
+  
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const message = err.response?.data?.error || "Erreur lors de la mise à jour du mot de passe";
+        throw new Error(message); // on remonte l'erreur pour le handle
+      }
+      throw new Error("Erreur inconnue");
     }
   },
 };

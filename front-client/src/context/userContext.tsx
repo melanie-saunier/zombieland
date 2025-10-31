@@ -1,5 +1,5 @@
 import { IUser } from "@/@types/user";
-import { createContext } from "react";
+import { createContext, Dispatch, SetStateAction } from "react";
 
 /**
  * Interface IUserContext
@@ -11,6 +11,7 @@ import { createContext } from "react";
  */
 interface IUserContext {
   user: IUser | null;
+  setUser: Dispatch<SetStateAction<IUser | null>>;
   logged: boolean; // état connecté
   setLogged: (value: boolean) => void; // setter pour logged
   login: (userData: IUser) => void;

@@ -21,7 +21,7 @@ export default function useUserContext() {
   // Si le contexte est "undefined", cela veut dire qu’on essaye d’utiliser ce hook
   // en dehors du <UserContextProvider> → ce n’est pas autorisé.
   if (!context) {
-      // On lance une erreur explicite pour aider le développeur à comprendre la cause.
+    // On lance une erreur explicite pour aider le développeur à comprendre la cause.
     throw new Error("UserContext doit être utilisé à l'intérieur d'un UserContextProvider");
   }
   

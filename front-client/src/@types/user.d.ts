@@ -18,3 +18,15 @@ export interface IRegisterInput {
   password: string;
   confirmedPassword: string;
 }
+
+export interface IUpdateMeInput {
+  firstname: string;
+  lastname: string;
+  email: string;
+}
+
+export interface IUpdatePasswordInput {
+  oldPassword: string;
+  newPassword: string;
+  confirmedPassword: string;
+}
