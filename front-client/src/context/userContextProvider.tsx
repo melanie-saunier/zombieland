@@ -39,9 +39,17 @@ export default function UserContextProvider({ children }: Props) {
 
   // Fonction de logout : utilisée pour déconnecter l’utilisateur
   // Elle réinitialise le state à null.
-  const logout = () => {
-    setUser(null);
-    setLogged(false);
+  const logout = async () => {
+    try {
+      // Appel au backend pour supprimer le cookie
+      await authApi.logout();
+  
+      // Mise à jour du state React
+      setUser(null);
+      setLogged(false);
+    } catch (err) {
+      console.error("Erreur lors du logout :", err);
+    }
   };
 
   /**
@@ -53,7 +61,9 @@ export default function UserContextProvider({ children }: Props) {
       try {
         const currentUser = await authApi.getCurrentUser();
         setUser(currentUser);
-        setLogged(true);
+        // ici on met setLogged à true si l'utilisateur courant n'est pas null
+        setLogged(currentUser !== null);
+        
       } catch (err) {
         console.error("Erreur lors de la récupération du user :", err);
         setUser(null);

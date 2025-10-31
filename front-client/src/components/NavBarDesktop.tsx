@@ -132,10 +132,10 @@ export default function NavBarDesktop() {
                     </Link>
                   )}
                 </div>
-            );
-          }
-        })}
-    </div>
+              );
+            }
+          })}
+      </div>
     </nav>
   );
 

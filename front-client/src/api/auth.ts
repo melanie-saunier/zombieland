@@ -28,7 +28,15 @@ export const authApi = {
       return user;
 
     } catch (err) {
+    // si c'est une erreur axios avec un status 401 on return null car cela signifie qu'on est pas connecté
+      if (axios.isAxiosError(err)) {
+        
+        if(err.response?.status === 401) {
+          return null;
+        } 
+      }
       console.error("Erreur lors de la récupération du user :", err);
+
       return null;
     }
   },
