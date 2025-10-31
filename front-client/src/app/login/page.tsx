@@ -41,7 +41,7 @@ export default function LoginPage() {
         return;
       }
 
-      // On met à jour le context user et le state logged
+      // On met à jour le context user 
       login(user);
 
 
