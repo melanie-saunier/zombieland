@@ -64,8 +64,8 @@ bookingRouter.get("/", bookingController.getAll);
  * @tags Booking
  * @summary Returns all the bookings made by a user
  * @param {string} id.path.required - The ID of the user
- * @return {Booking[]} 200 - Successful response with the User object
- * @return {object} 404 - No booking found
+ * @return {Booking[]} 200 - Successful response with the Booking object
+ * @return {object} 404 - No bookings found
  * @return {object} 500 - Internal server error
  */
 bookingRouter.get("/user/:id", bookingController.getAllBookingsForUser);
@@ -87,7 +87,7 @@ bookingRouter.get("/:id", bookingController.getById);
  * @summary Creates a booking
  * @param {CreateBookingInput} request.body.required - Booking data
  * @return {Booking} 201 - Successful response with booking created
- * @return {object} 404 - No bookings found
+ * @return {object} 400 - Validation errors
  * @return {object} 500 - Internal server error
  */
 bookingRouter.post("/", bookingController.createOne);
@@ -99,7 +99,8 @@ bookingRouter.post("/", bookingController.createOne);
  * @param {string} id.path.required - The ID of the booking
  * @param {UpdateBookingInput} request.body.required - Updated booking data
  * @return {Booking} 200 - Successful response with booking updated
- * @return {object} 404 - No bookings found
+ * @return {object} 400 - Validation errors
+ * @return {object} 404 - No booking found
  * @return {object} 500 - Internal server error
  */
 bookingRouter.put("/:id", bookingController.updateOneById);
@@ -111,8 +112,8 @@ bookingRouter.put("/:id", bookingController.updateOneById);
  * @param {string} id.path.required - The ID of the booking
  * @param {UpdateBookingByUserInput} request.body.required - Fields allowed for update
  * @return {Booking} 200 - Successful response with booking updated
+ * @return {object} 400 - Validation errors
  * @return {object} 404 - No booking found
- * @return {object} 400 - Invalid fields
  * @return {object} 500 - Internal server error
  */
 bookingRouter.patch("/:id/user", bookingController.updateBookingForUser);
@@ -123,6 +124,7 @@ bookingRouter.patch("/:id/user", bookingController.updateBookingForUser);
  * @summary Cancels a booking (set status = false)
  * @param {string} id.path.required - The ID of the booking
  * @return {Booking} 200 - Successful response with booking updated
+ * @return {object} 400 - Validation errors
  * @return {object} 404 - No booking found
  * @return {object} 500 - Internal server error
  */

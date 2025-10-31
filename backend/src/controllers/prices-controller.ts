@@ -6,7 +6,7 @@ import { Price } from '../models/association';
 export const priceController = {
   
   /**
-   * Returns all categories
+   * Returns all prices
    * @param req 
    * @param res 
    */
@@ -46,7 +46,6 @@ export const priceController = {
    * @param req 
    * @param res 
    */
-   // Créer un nouveau prix
   async createOne(req: Request, res: Response) {
     // Validation des données reçues avec Zod
     const validation = priceSchema.safeParse(req.body);
@@ -64,12 +63,10 @@ export const priceController = {
   },
 
   /**
-   * Updates a price
+   * Updates a price by its id
    * @param req 
    * @param res 
    */
-
-   // Mettre à jour un price par son id
   async updateOneById(req: Request, res: Response) {
     // Validation des données reçues avec Zod
     const validation = updatePriceSchema.safeParse(req.body);
@@ -96,12 +93,10 @@ export const priceController = {
   },
 
   /**
-   * deletes a price
+   * Deletes a price by its id
    * @param req 
    * @param res 
    */
-
-  // Supprimer un price par son id
   async deleteOneById(req: Request, res: Response) {
     const { id } = idSchema.parse(req.params);
 
