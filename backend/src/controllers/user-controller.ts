@@ -1,7 +1,6 @@
 import { User } from "../models/association"
 import { Response, Request } from "express";
-import { idSchema } from "../schema";
-import { updateUserPasswordSchema, updateUserSchema, userSchema } from "../schema";
+import { idSchema, updateUserPasswordSchema, updateUserSchema, userSchema } from "../schemas";
 import argon2 from "argon2";
 import { Op } from "sequelize";
 

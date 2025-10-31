@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { loginSchema, registerSchema, updateMePasswordSchema, updateMeSchema } from "../schema/auth";
+import { loginSchema, registerSchema, updateMePasswordSchema, updateMeSchema } from "../schemas/";
 import { User } from "../models/association";
 import argon2 from "argon2";
 import { Role } from "../models/association";

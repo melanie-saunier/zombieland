@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
-import { priceSchema, updatePriceSchema, idSchema } from "../schemas/";
-import { Price } from '../models/association';
+import { priceSchema, updatePriceSchema, idSchema } from "../schemas";
+import { Price } from "../models/association";
 
 
 export const priceController = {

@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { bookingController } from "../controllers/bookings-controller";
+import { authenticateToken } from "../middlewares/authenticate-token";
+import { authorizeAdmin } from "../middlewares/authorize-admin";
 
 
 export const bookingRouter = Router();
@@ -52,94 +54,105 @@ export const bookingRouter = Router();
 /**
  * GET /bookings
  * @tags Booking
- * @summary Returns all bookings
+ * @summary Returns all bookings (admin only)
  * @return {Booking[]} 200 - Successful response with list of bookings
  * @return {object} 404 - No bookings found
+ * @return {object} 403 - Unauthorized
  * @return {object} 500 - Internal server error
  */
-bookingRouter.get("/", bookingController.getAll);
+// GET all bookings (admin only)
+bookingRouter.get("/", authenticateToken, authorizeAdmin, bookingController.getAll);
 
 /**
- * GET /booking/user/{id}
+ * GET /bookings/user/{id}
  * @tags Booking
- * @summary Returns all the bookings made by a user
+ * @summary Returns all the bookings made by a user (authenticated users)
  * @param {string} id.path.required - The ID of the user
  * @return {Booking[]} 200 - Successful response with the Booking object
+ * @return {object} 403 - Unauthorized
  * @return {object} 404 - No bookings found
  * @return {object} 500 - Internal server error
  */
-bookingRouter.get("/user/:id", bookingController.getAllBookingsForUser);
+// GET all bookings for a specific user
+bookingRouter.get("/user/:id", authenticateToken, bookingController.getAllBookingsForUser);
 
 /**
- * GET /booking/{id}
+ * GET /bookings/{id}
  * @tags Booking
  * @summary Returns a booking by its id
  * @param {string} id.path.required - The ID of the booking
  * @return {Booking} 200 - Successful response with the booking object
+ * @return {object} 403 - Unauthorized
  * @return {object} 404 - No booking found
  * @return {object} 500 - Internal server error
  */
-bookingRouter.get("/:id", bookingController.getById);
+// GET booking by ID
+bookingRouter.get("/:id", authenticateToken, bookingController.getById);
 
 /**
- * POST /booking
+ * POST /bookings 
  * @tags Booking
- * @summary Creates a booking
+ * @summary Creates a booking (authenticated users)
  * @param {CreateBookingInput} request.body.required - Booking data
  * @return {Booking} 201 - Successful response with booking created
  * @return {object} 400 - Validation errors
+ * @return {object} 403 - Unauthorized
  * @return {object} 500 - Internal server error
  */
-bookingRouter.post("/", bookingController.createOne);
+bookingRouter.post("/", authenticateToken, bookingController.createOne);
 
 /**
- * PUT /booking/{id}
+ * PUT /bookings/{id}
  * @tags Booking
- * @summary Updates a booking
+ * @summary Updates a booking (admin only)
  * @param {string} id.path.required - The ID of the booking
  * @param {UpdateBookingInput} request.body.required - Updated booking data
  * @return {Booking} 200 - Successful response with booking updated
  * @return {object} 400 - Validation errors
+ * @return {object} 403 - Unauthorized
  * @return {object} 404 - No booking found
  * @return {object} 500 - Internal server error
  */
-bookingRouter.put("/:id", bookingController.updateOneById);
+bookingRouter.put("/:id", authenticateToken, authorizeAdmin, bookingController.updateOneById);
 
 /**
- * PATCH /booking/:id/user
+ * PATCH /bookings/:id/user
  * @tags Booking
- * @summary Allows a user to update visit_date or nb_people only
+ * @summary Allows a user to update visit_date or nb_people only (authenticated users)
  * @param {string} id.path.required - The ID of the booking
  * @param {UpdateBookingByUserInput} request.body.required - Fields allowed for update
  * @return {Booking} 200 - Successful response with booking updated
  * @return {object} 400 - Validation errors
+ * @return {object} 403 - Unauthorized
  * @return {object} 404 - No booking found
  * @return {object} 500 - Internal server error
  */
-bookingRouter.patch("/:id/user", bookingController.updateBookingForUser);
+bookingRouter.patch("/:id/user", authenticateToken, bookingController.updateBookingForUser);
 
 /**
- * PATCH /booking/:id/cancel
+ * PATCH /bookings/:id/cancel
  * @tags Booking
- * @summary Cancels a booking (set status = false)
+ * @summary Cancels a booking (set status = false) (authenticated users)
  * @param {string} id.path.required - The ID of the booking
  * @return {Booking} 200 - Successful response with booking updated
  * @return {object} 400 - Validation errors
+ * @return {object} 403 - Unauthorized
  * @return {object} 404 - No booking found
  * @return {object} 500 - Internal server error
  */
-bookingRouter.patch("/:id/cancel", bookingController.cancelBooking);
+bookingRouter.patch("/:id/cancel", authenticateToken, bookingController.cancelBooking);
 
 /**
- * DELETE /booking/{id}
+ * DELETE /bookings/{id}
  * @tags Booking
- * @summary Deletes a booking
+ * @summary Deletes a booking (admin only)
  * @param {string} id.path.required - The ID of the booking
  * @return {object} 204 - Successful response with booking deleted
+ * @return {object} 403 - Unauthorized
  * @return {object} 404 - No bookings found
  * @return {object} 500 - Internal server error
  */
-bookingRouter.delete("/:id", bookingController.deleteOneById);
+bookingRouter.delete("/:id", authenticateToken, authorizeAdmin, bookingController.deleteOneById);
 
 
 

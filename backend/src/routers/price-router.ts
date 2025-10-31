@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { priceController } from "../controllers/prices-controller";
+import { authorizeAdmin } from "../middlewares/authorize-admin";
+import { authenticateToken } from "../middlewares/authenticate-token";
 
 
 export const priceRouter = Router();
@@ -39,9 +41,10 @@ priceRouter.get("/:id", priceController.getById);
  * @summary Creates a new price
  * @return {price} 201 - Successful response with price created
  * @return {object} 400 - Validation errors
+ * @return {object} 403 - Unauthorized
  * @return {object} 500 - Internal server error
  */ 
-priceRouter.post("/", priceController.createOne);
+priceRouter.post("/", authenticateToken, authorizeAdmin, priceController.createOne);
 
 /**
  * PUT  /price/{id}
@@ -49,11 +52,12 @@ priceRouter.post("/", priceController.createOne);
  * @summary Updates a price by its id
  * @param {number} id.path.required - The ID of the price
  * @return {price} 200 - Successful response with price updated
- * @return {object} 404 - No price found
  * @return {object} 400 - Validation errors
+ * @return {object} 403 - Unauthorized
+ * @return {object} 404 - No price found
  * @return {object} 500 - Internal server error
  */ 
-priceRouter.put("/:id", priceController.updateOneById);
+priceRouter.put("/:id", authenticateToken, authorizeAdmin, priceController.updateOneById);
 
 /**
  * DELETE  /price/{id}
@@ -61,10 +65,11 @@ priceRouter.put("/:id", priceController.updateOneById);
  * @summary Deletes a price by its id
  * @param {string} id.path.required - The ID of the price
  * @return {object} 204 - Successful response with price deleted
+ * @return {object} 403 - Unauthorized
  * @return {object} 404 - No price found
  * @return {object} 500 - Internal server error
  */ 
-priceRouter.delete("/:id", priceController.deleteOneById);
+priceRouter.delete("/:id", authenticateToken, authorizeAdmin, priceController.deleteOneById);
 
 
 
