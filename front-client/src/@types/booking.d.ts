@@ -6,11 +6,25 @@ export interface BookingData {
     total_price: number; // Prix total de la réservation
   }
   
-  /** Tarification d'un billet */
-  export interface TicketPricing {
+/** Tarification d'un billet */
+export interface TicketPricing {
     label: string; // Etiquette du billet (ex: "Tarif Unique")
     value: number; // Prix d'un billet
   }
   
-  /** Type accepté par le calendrier (date unique ou plage) */
-  export type ValueDate = Date | [Date | null, Date | null] | null;
+/** Type accepté par le calendrier (date unique ou plage) */
+export type ValueDate = Date | [Date | null, Date | null] | null;
+
+export interface IBooking {
+  visit_date: date;
+  nb_people: number;
+  status: boolean;
+  user_id: number;
+}
+
+export interface IBookingInput {
+  visit_date: date;
+  nb_people: number;
+  status: boolean;
+  user_id: number;
+}

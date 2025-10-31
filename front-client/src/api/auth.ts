@@ -146,7 +146,7 @@ export const authApi = {
   
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        const message = err.response?.data?.error || "Erreur lors de la mise à jour du mot de passe";
+        const message = err.response?.data?.error || "Erreur lors de la mise à jour du profil";
         throw new Error(message); // on remonte l'erreur pour le handle
       }
       throw new Error("Erreur inconnue");

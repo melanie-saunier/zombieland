@@ -11,6 +11,8 @@ import type { BookingData, TicketPricing, ValueDate } from "@/@types/booking";
 import { MAX_TICKETS_PER_BOOKING, formatLocalDate } from "@/utils/bookingUtils";
 import useUserContext from "@/context/useUserContext";
 import Link from "next/link";
+import { bookingApi } from "@/api/booking";
+import Loader from "@/components/Loader";
 
 /**
  * Composant principal : BookingPage
@@ -21,27 +23,7 @@ import Link from "next/link";
  *  - validation et soumission
  */
 export default function BookingPage() {
-  const { logged } = useUserContext(); // On récupère l'état de connexion
-
-  // Si l'utilisateur n'est pas connecté, on affiche un message et un bouton vers /login
-  if (!logged) {
-    return (
-      <section className="bg-radial from-[#961990] to-[#000000] min-h-screen flex items-center justify-center p-4 md:p-8">
-        <div className="bg-red-900/30 border-2 border-red-500 rounded-lg p-6 max-w-md text-center">
-          <h2 className="text-red-300 font-bold text-2xl mb-4">Les morts-vivants ne peuvent pas réserver 🧟</h2>
-          <p className="text-red-300 mb-6">
-             Oups ! Seuls les survivants connectés peuvent réserver des billets pour ZombieLand…
-          </p>
-          <Link
-            href="/login"
-            className="button_activity m-2 p-2 md:m-4 md:py-4 flex items-center w-fit text-neutral-50 width-inherit md:px-12 justify-center font-bold"
-          >
-            Rejoindre les survivants
-          </Link>
-        </div>
-      </section>
-    );
-  }
+  const { user } = useUserContext(); // On récupère l'état de connexion
 
   const today = new Date(); // Préparation d'une référence à la date du jour
   today.setHours(0, 0, 0, 0); // On met l'heure à 00:00 pour éviter le décalage horaire
@@ -65,7 +47,7 @@ export default function BookingPage() {
   const [pricing, setPricing] = useState<TicketPricing | null>(null);
   const [isLoadingPrice, setIsLoadingPrice] = useState(true); // État de chargement du prix
 
-    /**
+  /**
    * États d’interface (UI)
    * - selectedDate : date sélectionnée dans le calendrier (objet Date)
    * - errors : tableau de messages d’erreur à afficher à l’utilisateur
@@ -138,10 +120,10 @@ export default function BookingPage() {
       // Explication padStart : str.padStart(targetLength, padString)
       // - targetLength → la longueur finale de la chaîne souhaitée.
       // - padString → la chaîne utilisée pour compléter le début si nécessaire (par défaut " ").
-      const month = String(value.getMonth() + 1).padStart(2, '0');
+      const month = String(value.getMonth() + 1).padStart(2, "0");
       // On récupère le jour du mois (1 à 31)
       // Même logique : on convertit en string et on ajoute un zéro au besoin
-      const day = String(value.getDate()).padStart(2, '0');
+      const day = String(value.getDate()).padStart(2, "0");
       // On combine les trois parties (année, mois, jour) pour former une chaîne "YYYY-MM-DD"
       // C’est le format standard ISO, pratique pour stocker et échanger des dates
       const formattedDate = `${year}-${month}-${day}`;
@@ -197,7 +179,7 @@ export default function BookingPage() {
     if (!bookingData.visit_date) {
       newErrors.push("Veuillez sélectionner une date de visite");
     } else {
-      const [year, month, day] = bookingData.visit_date.split('-').map(Number); // On sépare l'année, le mois et le jour
+      const [year, month, day] = bookingData.visit_date.split("-").map(Number); // On sépare l'année, le mois et le jour
       const selectedDateObj = new Date(year, month - 1, day); // On crée un objet Date avec la date sélectionnée
       selectedDateObj.setHours(0, 0, 0, 0); // On met l'heure à 00:00 pour éviter le décalage horaire
       if (selectedDateObj < today) {
@@ -223,19 +205,14 @@ export default function BookingPage() {
     setIsSubmitting(true);
     setErrors([]);
 
-    try {
-      // On met à jour le status à true avant d'envoyer la réservation
-      const bookingToSend = {
-        ...bookingData,
-        status: true, // réservation confirmée
-        total_price: undefined, // retirer total_price avant appel à l'API car pas besoin dans le back
-        user_id: 1 // ajout du used_id
-        //TODO: MAJ l'id de l'utilisateur
-      };
-
-      //TODO : mettre à jour la requête de réservation vers l'API avec la variable bookingToSend en body
-      await new Promise(resolve => setTimeout(resolve, 1000)); // simulation d'API
-
+    try {   
+      await bookingApi.createBooking({
+        visit_date: bookingData.visit_date, 
+        nb_people: bookingData.nb_people,
+        status: true,
+        user_id: user.id,
+      });
+      
       console.log("Réservation créée:", bookingData);
 
       // Message de succès formaté avec les infos de réservation
@@ -277,6 +254,7 @@ export default function BookingPage() {
       </section>
     );
   }
+
 
   return (
     <section className="bg-radial from-[#961990] to-[#000000] min-h-screen p-4 md:p-8">
@@ -327,7 +305,7 @@ export default function BookingPage() {
                   className="booking-calendar mx-auto md:mx-0"
                   aria-label="Sélectionner une date de visite"
                 />
-                 {bookingData.visit_date && (
+                {bookingData.visit_date && (
                   <p className="text-sm text-secondary-200 font-semibold mt-2 text-center md:text-left">
                     📅 {formatLocalDate(bookingData.visit_date, {
                       weekday: "long",
