@@ -8,7 +8,7 @@ export interface User {
     email: string;
   }
   
-  /**
+/**
    * Structure d'état pour la gestion du changement de mot de passe
    */
 export interface PasswordState {

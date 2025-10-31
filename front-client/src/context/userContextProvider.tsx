@@ -82,7 +82,7 @@ export default function UserContextProvider({ children }: Props) {
    *  - logout : fonction pour se déconnecter
    */
   return (
-    <UserContext.Provider value={{ user, logged, setLogged, login, logout }}>
+    <UserContext.Provider value={{ user, setUser, logged, setLogged, login, logout }}>
       {children}
     </UserContext.Provider>
   );

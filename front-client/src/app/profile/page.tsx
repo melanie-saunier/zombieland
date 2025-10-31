@@ -6,7 +6,11 @@ import Image from "next/image";
 import { Eye, EyeOff, X } from "lucide-react"; 
 
 // Import des types TypeScript pour la sécurité des données (structure attendue)
-import type { User, PasswordState } from "@/@types/profile.d.ts";
+import type { PasswordState } from "@/@types/profile.d.ts";
+import useUserContext from "@/context/useUserContext";
+import { authApi } from "@/api/auth";
+import { IUser } from "@/@types/user";
+import Loader from "@/components/Loader";
 
 /**
  * Composant principal : ProfilePage
@@ -17,12 +21,19 @@ import type { User, PasswordState } from "@/@types/profile.d.ts";
  *  - Les messages d’erreur et de succès
  */
 export default function ProfilePage() {
-  // State qui contient les informations de l'utilisateur (nom, prénom, email). Null par défaut.
-  const [userData, setUserData] = useState<User | null>(null);
+  const { user, setUser } = useUserContext();
+  // state pour stocker les données éditées temporairement
+  const [editedUser, setEditedUser] = useState<IUser>({
+    id: 0,
+    firstname: "",
+    lastname: "",
+    email: "",
+    role: "member",
+  });
+
   // State qui définit si l'utilisateur est en mode "modification du profil". False = lecture seule.
   const [isEditing, setIsEditing] = useState(false);
-  // State qui indique si la page est en cours de chargement. True au départ, passe à false quand les données sont prêtes.
-  const [isLoading, setIsLoading] = useState(true);
+
   // State qui contient un éventuel message d'erreur à afficher à l'utilisateur.
   const [error, setError] = useState<string | null>(null);
   // State qui contient un message de succès temporaire (ex: "Profil mis à jour !").
@@ -38,57 +49,36 @@ export default function ProfilePage() {
     errors: [], // Liste d'erreurs liées au formulaire mot de passe
   });
 
-  // Au montage, on simule la récupération du profil utilisateur
+  // Quand le user du contexte change (login, refresh, etc.), on met à jour le local
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        setIsLoading(true); // On indique que la page est en cours de chargement
-        setError(null); // On réinitialise les erreurs
-
-        //TODO: faire le fetch directement à l'API. En attendant, on créé une variable provisoire 
-        const data = {
-          id: "1",
-          firstName: "Max",
-          lastName: "Dupont",
-          email: "max.dupont@zombieland.fr",
-        };
-
-        // On met à jour l’état avec les données reçues
-        setUserData(data); 
-      } catch (err) {
-        // En cas d’erreur, on affiche un message d’erreur utilisateur
-        setError(err instanceof Error ? err.message : "Erreur de chargement");
-      } finally {
-        // Qu’il y ait erreur ou non, on arrête l’état "chargement"
-        setIsLoading(false);
-      }
-    };
-    
-    fetchUser(); // Appel effectif de la fonction de récupération
-  }, []); 
+    if (user) {
+      setEditedUser(user);
+    }
+  }, [user]);
 
   // Fonction appelée quand l'utilisateur clique sur "Sauvegarder" pour sauvegarder les modifications de son profil (hors password)
   const handleUpdateSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // empêche le rechargement de la page
 
     // Vérifie que tous les champs obligatoires sont remplis
-    if (!userData?.firstName || !userData?.lastName || !userData?.email) {
+    if (!editedUser?.firstname || !editedUser?.lastname || !editedUser?.email) {
       setError("Tous les champs sont requis");
       return;
     }
 
     // Vérifie que l'email est au bon format via une expression régulière
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
-    if (!emailRegex.test(userData.email)) {
+    if (!emailRegex.test(editedUser.email)) {
       setError("Email invalide");
       return;
     }
 
     try {
       setError(null); // Réinitialise les erreurs
-
-      // TODO: Appel API à venir (updateUserData(userData))
-      
+      // fetch vers l'API pour modifier les infos utilisateur
+      const user = await authApi.updateMe({firstname: editedUser.firstname, lastname: editedUser.lastname, email: editedUser.email});
+      // on met à jour le context
+      setUser(user);
       setSuccessMessage("Profil mis à jour !");
       setIsEditing(false); // Sort du mode édition
 
@@ -137,10 +127,11 @@ export default function ProfilePage() {
     }
 
     try {
-      // TODO: Appel API à venir (updateUserData(userData))
-      
+      // fetch vers l'api pour modifier le mot de passe
+      await authApi.updatePassword({oldPassword: passwordState.oldPassword, newPassword: passwordState.newPassword, confirmedPassword: passwordState.confirmedPassword});
       // Si tout se passe bien :
       setSuccessMessage("Ton mot de passe a bien été mis à jour !");
+      // remet le state password à zero
       setPasswordState({
         isOpen: false, // Ferme le modal
         oldPassword: "",
@@ -154,34 +145,16 @@ export default function ProfilePage() {
       // Si une erreur survient (ex: mot de passe actuel incorrect)
       setPasswordState((p) => ({
         ...p,
-        errors: [err instanceof Error ? err.message : "Erreur"],
+        errors: [err instanceof Error ? err.message : "Erreur inconnue"],
       }));
     }
   };
 
-  // TODO : mettre à jour avec le Loader existant
-   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-4 border-primary-300 border-t-transparent mx-auto mb-4" />
-          <p className="text-neutral-300">Chargement du profil...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error && !userData) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="bg-red-900/30 border border-red-500 rounded-lg p-6 max-w-md">
-          <p className="text-red-300">{error}</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!userData) return null; // Si aucune donnée d'utilisateur n'est trouvée, on ne rend rien //
+ 
+  if (!user) return (
+    <div className="h-100 flex flex-col justify-center items-center m-4">
+      <Loader /> 
+    </div> ); // chargement des données utilisateur
 
   return (
     // SECTION PRINCIPALE — englobe toute la page profil
@@ -189,27 +162,12 @@ export default function ProfilePage() {
       <div className="max-w-4xl mx-auto space-y-8">
         <h1 className="text-4xl md:text-5xl font-bold text-center mb-8">Mon Profil</h1>
 
-        {/* Messages de feedback */}
-        {/* Message de succès après une mise à jour réussie (par ex. infos modifiées ou mot de passe changé) */}
-        {successMessage && (
-          <div className="p-4 bg-green-900/30 border border-green-500 rounded-lg text-green-300 text-center">
-            {successMessage}
-          </div>
-        )}
-        
-        {/* Message d’erreur si une action échoue (erreur serveur, validation, etc.) */}
-        {error && (
-          <div className="p-4 bg-red-900/30 border border-red-500 rounded-lg text-red-300 text-center">
-            {error}
-          </div>
-        )}
-
         {/* Avatar */}
         <div className="flex flex-col items-center gap-4 p-6 bg-neutral-700 rounded-lg border border-primary-300 shadow-[0_0_12px_rgba(180,130,255,0.3)]">
           <div className="relative w-48 h-48 rounded-full overflow-hidden border-4 border-primary-300 shadow-[0_0_20px_rgba(180,130,255,0.5)]">
             <Image
               src="/images/zombie-avatar.png"
-              alt={`Avatar de ${userData.firstName} ${userData.lastName}`} // On affiche le prénom et le nom de l'utilisateur connecté
+              alt={`Avatar de ${user.firstname} ${user.lastname}`} // On affiche le prénom et le nom de l'utilisateur connecté
               fill
               sizes="192px"
               className="object-cover"
@@ -218,7 +176,7 @@ export default function ProfilePage() {
           </div>
           {/* Nom complet de l’utilisateur connecté */}
           <h2 className="text-2xl font-bold text-neutral-50">
-            {userData.firstName} {userData.lastName}
+            {user.firstname} {user.lastname}
           </h2>
         </div>
 
@@ -230,33 +188,33 @@ export default function ProfilePage() {
 
           {/* FORMULAIRE D’EDITION DES INFOS (prénom, nom, email) */}
           <form onSubmit={handleUpdateSubmit} className="space-y-4">
-            {/* Boucle sur les champs à afficher */}
-            {(["firstName", "lastName", "email"] as const).map((key) => (
+            {/* Boucle sur les champs à afficher appelé key dans le map */}
+            {(["firstname", "lastname", "email"] as const).map((key) => (
               <div key={key} className="flex flex-col gap-1">
                 {/* Label descriptif du champ */}
                 <label htmlFor={key} className="text-sm text-primary-200 font-semibold">
-                  {key === "firstName" ? "Prénom" : key === "lastName" ? "Nom" : "Email"}
+                  {key === "firstname" ? "Prénom" : key === "lastname" ? "Nom" : "Email"}
                 </label>
                 {/* Si le mode édition est actif → input modifiable */}
                 {isEditing ? (
                   <input
                     id={key}
                     type={key === "email" ? "email" : "text"}
-                    value={userData[key]}
-                    onChange={(e) => setUserData({ ...userData, [key]: e.target.value })}
+                    value={editedUser[key]}
+                    onChange={(e) => setEditedUser({ ...editedUser, [key]: e.target.value })}
                     className="p-3 bg-neutral-700/50 rounded border border-primary-500 text-neutral-50 focus:outline-none focus:border-primary-300 focus:ring-1 focus:ring-primary-300 transition-all"
                     required
                   />
                 ) : (
                   // Sinon, simple affichage non modifiable
                   <div className="p-3 bg-neutral-700/50 rounded border border-primary-500 text-neutral-50">
-                    {userData[key]}
+                    {user[key]}
                   </div>
                 )}
               </div>
             ))}
           
-             {/* --- BOUTONS D’ACTION --- */}
+            {/* --- BOUTONS D’ACTION --- */}
             <div className="mt-6 flex flex-col sm:flex-row justify-end gap-3">
               {isEditing ? (
                 // Boutons visibles quand on édite les infos
@@ -295,12 +253,24 @@ export default function ProfilePage() {
             </div>
           </form>
         </div>
+        {/* Messages de feedback */}
+        {/* Message de succès après une mise à jour réussie (par ex. infos modifiées ou mot de passe changé) */}
+        {successMessage && (
+          <div className="m-2 p-4 bg-green-900/30 border border-green-500 rounded-lg text-green-300 text-center">
+            {successMessage}
+          </div>
+        )}
+        {error && (
+          <div className="m-2 p-4 bg-red-900/30 border border-red-500 rounded-lg text-red-300 text-center">
+            {error}
+          </div>
+        )}
       </div>
 
       {/* Modal pour modifier le mot de passe */}
       {passwordState.isOpen && (
         <div 
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
+          className="fixed inset-0 z-100 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm"
           role="dialog"
           aria-modal="true"
           aria-labelledby="password-modal-title"
@@ -339,8 +309,8 @@ export default function ProfilePage() {
                       onChange={(e) => setPasswordState({ ...passwordState, [field]: e.target.value })}
                       placeholder={
                         field === "oldPassword" ? "Entrez votre mot de passe actuel" :
-                        field === "newPassword" ? "Entrez votre nouveau mot de passe" :
-                        "Confirmez votre nouveau mot de passe"
+                          field === "newPassword" ? "Entrez votre nouveau mot de passe" :
+                            "Confirmez votre nouveau mot de passe"
                       }
                       className="w-full p-3 pr-12 bg-neutral-700/50 rounded border border-primary-500 text-neutral-50 focus:outline-none focus:border-primary-300 focus:ring-1 focus:ring-primary-300"
                       required
