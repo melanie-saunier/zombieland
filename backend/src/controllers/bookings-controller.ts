@@ -1,8 +1,6 @@
 import { Response, Request } from "express";
-import { bookingSchema, updateBookingSchema, idSchema } from "../schemas/index.js";
-import { User } from "../models/association";
-import { Booking } from './../models/association';
-
+import { bookingSchema, updateBookingSchema, idSchema, updateBookingByUserSchema } from "../schemas/";
+import { User, Booking, Price, BookingPrice, sequelize } from "../models/association";
 
 export const bookingController = {
   
@@ -15,17 +13,17 @@ export const bookingController = {
     // On récupère toutes les bookings dans l'ordre de la date de visite
     const bookings = await Booking.findAll({
       include: [{ 
-              association: "bookingPrices",
-              attributes: ["applied_price"],
-              include: [{
-                    association: "price",
-                    attributes: ["label", "value"]
-                  },]              
-               }],
+        association: "bookingPrices",
+        attributes: ["applied_price"],
+        include: [{
+          association: "price",
+          attributes: ["label", "value"]
+        },]              
+      }],
       order: [
         ["visit_date", "ASC"]
       ],  
-  });
+    });
     
     // Si booking est vide, on retourne une erreur 404 avec un message d'erreur
     if (!bookings || bookings.length === 0) return res.status(404).json({ message:"No bookings stored in the database"});
@@ -45,36 +43,69 @@ export const bookingController = {
     // On récupère le booking correspondante à cet id
     const booking = await Booking.findByPk(id,{
       include: [{ 
-              association: "bookingPrices",
-              attributes: ["applied_price"],
-              include: [{
-                    association: "price",
-                    attributes: ["label", "value"]
-                  },]              
-               }],
+        association: "bookingPrices",
+        attributes: ["applied_price"],
+        include: [{
+          association: "price",
+          attributes: ["label", "value"]
+        },]              
+      }],
       order: [
         ["visit_date", "ASC"]
       ],  
-  })
+    });
+
     // Si booking est vide, on retourne une erreur 404 avec un message d'erreur
     if(!booking) return res.status(404).json({ message:`No booking found with id: ${id}`});
 
     res.status(200).json(booking);
   },
+
   /**
    * Creates a new booking
    * @param req 
    * @param res 
    */
-   // Créer une nouvelle Booking
   async createOne(req: Request, res: Response) {
+    // Validation des données reçues avec Zod
+    const validation = bookingSchema.safeParse(req.body);
 
-    // On récupère les informations du body
-    const data = bookingSchema.parse(req.body);
+    // Si la validation échoue, on renvoie les erreurs
+    if (!validation.success) return res.status(400).json({ errors: validation.error.issues.map(e => e.message) });
 
-     // On crée un nouveau booking
-    const booking = await Booking.create(data);
+    // Si la validation réussit, on récupère les données validées et typées
+    const data = validation.data;
     
+    // Transaction pour garantir la cohérence
+    const booking = await sequelize.transaction(async (t) => {
+
+      // On crée un nouveau booking
+      const newBooking  = await Booking.create(data, { transaction: t });    
+
+      // Recherche du tarif "Tarif unique"
+      const price = await Price.findOne({
+        where: { label: "Tarif unique" },
+        transaction: t,
+      });
+
+      if (!price) return res.status(400).json({ message:"No price found with label: Tarif unique"});
+
+      // Création de la ligne dans la table de liaison
+      await BookingPrice.create(
+        {
+          price_id: price.id,
+          booking_id: newBooking.id,
+          applied_price: price.value,
+        },
+        { transaction: t }
+      );
+
+      // On retourne la réservation pour la réponse
+      return newBooking ;
+    });
+    
+    // La transaction est automatiquement commit si tout s’est bien passé
+    // (et rollback automatique en cas d’erreur)
     res.status(201).json(booking);
   },
 
@@ -83,12 +114,15 @@ export const bookingController = {
    * @param req 
    * @param res 
    */
-
-   // Mettre à jour un booking par son id
   async updateOneById(req: Request, res: Response) {
-    
-    // on récupère les informations à mettre à jour du body
-    const data = updateBookingSchema.parse(req.body);
+    // Validation des données reçues avec Zod
+    const validation = updateBookingSchema.safeParse(req.body);
+
+    // Si la validation échoue, on renvoie les erreurs
+    if (!validation.success) return res.status(400).json({ errors: validation.error.issues.map(e => e.message) });
+
+    // Si la validation réussit, on récupère les données validées et typées
+    const data = validation.data;
 
     // on récupère le id du booking à mettre à jour 
     const { id } = idSchema.parse(req.params);
@@ -106,12 +140,37 @@ export const bookingController = {
   },
 
   /**
-   * deletes a booking
+   * Allows a user to update visit_date or nb_people only
    * @param req 
    * @param res 
    */
+  async updateBookingForUser(req: Request, res: Response) {
+    const { id } = idSchema.parse(req.params);
+    const booking = await Booking.findByPk(id);
 
-  // Supprimer un booking par son id
+    if (!booking) {
+      return res.status(404).json({ message: `No booking found with id: ${id}` });
+    }
+
+    // Validation des données reçues avec Zod
+    const validation = updateBookingByUserSchema.safeParse(req.body);
+
+    // Si la validation échoue, on renvoie les erreurs
+    if (!validation.success) return res.status(400).json({ errors: validation.error.issues.map(e => e.message) });
+
+    // Si la validation réussit, on récupère les données validées et typées
+    const data = validation.data;
+
+    await booking.update({ visit_date: data.visit_date, nb_people: data.nb_people });
+
+    return res.status(200).json(booking);
+  },
+
+  /**
+   * Deletes a booking
+   * @param req 
+   * @param res 
+   */
   async deleteOneById(req: Request, res: Response) {
     const { id } = idSchema.parse(req.params);
 
@@ -127,15 +186,11 @@ export const bookingController = {
   },
 
   /**
-   * returns all the bookings made by a user
+   * Returns all the bookings made by a user
    * @param req 
    * @param res 
    */
-
-  // Récuperer toutes les bookings d'un utilisateur
   async getAllBookingsForUser(req: Request, res: Response) {
-
-    // récuperer ET valider l'id de l'utilisateur'
     const { id } = idSchema.parse(req.params);
 
     // vérifier que l'utilisateur existe
@@ -147,22 +202,57 @@ export const bookingController = {
     const bookings = await Booking.findAll({
       where: { user_id: id }, // filtrer par l'id de la liste
       include: [{ 
-              association: "bookingPrices",
-              attributes: ["applied_price"],
-              include: [{
-                    association: "price",
-                    attributes: ["label", "value"]
-                  },]              
-               }],
+        association: "bookingPrices",
+        attributes: ["applied_price"],
+        include: [{
+          association: "price",
+          attributes: ["label", "value"]
+        },]              
+      }],
       order: [
         ["visit_date", "ASC"]
       ],  
-  });
+    });
 
     // existe t'il des bookings pour cette utilisateur ?
     if(!bookings) return res.status(404).json({ message: `The user with the id: ${id} has no bookings`});
 
     // retourner la liste
     return res.status(200).json(bookings);
+  }, 
+
+  /**
+   * Cancels a booking (set status = false)
+   * @param req 
+   * @param res 
+   */
+  async cancelBooking(req: Request, res: Response) {
+    const { id } = idSchema.parse(req.params);
+
+    const booking = await Booking.findByPk(id);
+    if (!booking) {
+      return res.status(404).json({ message: `No booking found with id: ${id}` });
+    }
+    
+    // Vérifier si la date de visite est déjà passée
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // ignorer l'heure pour comparer seulement le jour
+    const visitDate = new Date(booking.visit_date);
+    visitDate.setHours(0, 0, 0, 0);
+
+    if (visitDate < today) {
+      return res.status(400).json({ message: "Cannot cancel a booking for a past visit date." });
+    }
+
+    // Si le statut est déjà false, inutile d'annuler à nouveau
+    if (booking.status === false) {
+      return res.status(400).json({ message: "Booking already cancelled" });
+    }
+
+    // Mettre à jour le statut
+    await booking.update({ status: false });
+
+    // le booking updated
+    return res.status(200).json(booking);
   }
 }
