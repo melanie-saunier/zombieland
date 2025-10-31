@@ -5,6 +5,18 @@ import { bookingController } from "../controllers/bookings-controller";
 export const bookingRouter = Router();
 
 /**
+ * @typedef {object} PriceLabel
+ * @property {string} label - Label du prix
+ * @property {string} value - Valeur du prix
+ */
+
+/**
+ * @typedef {object} BookingPrice
+ * @property {string} applied_price - Prix appliqué pour la réservation
+ * @property {PriceLabel} price - Objet Price associé
+ */
+
+/**
  * @typedef {object} Booking
  * @property {number} id - booking unique id 
  * @property {string} visit_date - visit date
@@ -13,12 +25,14 @@ export const bookingRouter = Router();
  * @property {string} user_id - user who has made the booking
  * @property {string} created_at - booking creation TS
  * @property {string} updated_at - booking latest update TS
+ * @property {BookingPrice[]} bookingPrices - liste des tarifs appliqués à la réservation
 */
 
 /**
  * @typedef {object} CreateBookingInput
  * @property {string} visit_date.required - Visit date (ISO format)
  * @property {number} nb_people.required - Number of people in the booking
+ * @property {boolean} status - booking status
  * @property {number} user_id.required - ID of the user who made the booking
  */
 
@@ -48,7 +62,7 @@ bookingRouter.get("/", bookingController.getAll);
 /**
  * GET /booking/user/{id}
  * @tags Booking
- * @summary Returns bookings by user_id
+ * @summary Returns all the bookings made by a user
  * @param {string} id.path.required - The ID of the user
  * @return {Booking[]} 200 - Successful response with the User object
  * @return {object} 404 - No booking found
