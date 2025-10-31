@@ -13,7 +13,7 @@ import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { useEffect, useState } from "react";
-import IActivity from "@/@types/activity";
+import { IActivity }from "@/@types/activity";
 import fetchMostScaryActivities from "@/api/activities";
 import Loader from "@/components/Loader";
 
@@ -126,7 +126,7 @@ export default function Home() {
               })}
             </Swiper>
           }
-         </div>
+        </div>
       </section>
       <section>
         {/* section informations utiles du parc */}
