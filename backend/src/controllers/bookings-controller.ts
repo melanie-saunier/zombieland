@@ -37,7 +37,7 @@ export const bookingController = {
    * @param res 
    */
   async getById(req: Request, res: Response) {
-    // On récupère l'id dans les param de req et le parseInt
+    // On récupère l'id dans les param de req et le valider avec le schéma
     const { id } = idSchema.parse(req.params);
 
     // On récupère le booking correspondante à cet id

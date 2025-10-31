@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
-import { priceSchema, updatePriceSchema, idSchema } from "../schemas/index.js";
-import { Price } from '../models/association.js';
+import { priceSchema, updatePriceSchema, idSchema } from "../schemas/";
+import { Price } from '../models/association';
 
 
 export const priceController = {
@@ -11,10 +11,10 @@ export const priceController = {
    * @param res 
    */
   async getAll(req: Request, res: Response) {
-    // On récupère toutes les prices dans l'ordre d'id'
+    // On récupère toutes les prices dans l'ordre alphabétique des labels
     const prices = await Price.findAll({
       order: [
-        ["id", "ASC"]
+        ["label", "ASC"]
       ],  
   });
     
@@ -30,7 +30,7 @@ export const priceController = {
    * @param res 
    */
   async getById(req: Request, res: Response) {
-    // On récupère l'id dans les param de req et le parseInt
+    // On récupère l'id dans les param de req et le valider avec le schéma
     const { id } = idSchema.parse(req.params);
 
     // On récupère le price correspondante à cet id
@@ -48,11 +48,16 @@ export const priceController = {
    */
    // Créer un nouveau prix
   async createOne(req: Request, res: Response) {
+    // Validation des données reçues avec Zod
+    const validation = priceSchema.safeParse(req.body);
 
-    // On récupère les informations du body
-    const data = priceSchema.parse(req.body);
+    // Si la validation échoue, on renvoie les erreurs
+    if (!validation.success) return res.status(400).json({ errors: validation.error.issues.map(e => e.message) });
 
-     // On crée un nouveau prix
+    // Si la validation réussit, on récupère les données validées et typées
+    const data = validation.data;
+
+    // On crée un nouveau prix
     const price = await Price.create(data);
     
     res.status(201).json(price);
@@ -66,9 +71,14 @@ export const priceController = {
 
    // Mettre à jour un price par son id
   async updateOneById(req: Request, res: Response) {
-    
-    // on récupère les informations à mettre à jour du body
-    const data = updatePriceSchema.parse(req.body);
+    // Validation des données reçues avec Zod
+    const validation = updatePriceSchema.safeParse(req.body);
+
+    // Si la validation échoue, on renvoie les erreurs
+    if (!validation.success) return res.status(400).json({ errors: validation.error.issues.map(e => e.message) });
+
+    // Si la validation réussit, on récupère les données validées et typées
+    const data = validation.data;
 
     // on récupère le id du prix à mettre à jour 
     const { id } = idSchema.parse(req.params);
@@ -76,7 +86,7 @@ export const priceController = {
     // on récupère le prix par son id
     const price = await Price.findByPk(id);
 
-      // Si le prix n'existe pas, on retourne une erreur 404 avec un message d'erreur
+    // Si le prix n'existe pas, on retourne une erreur 404 avec un message d'erreur
     if(!price) return res.status(404).json({ message:`No price found with id: ${id}`});
     
     // le prix est mise à jour

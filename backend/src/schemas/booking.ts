@@ -2,7 +2,7 @@ import { z } from "zod";
 
 // schema zod pour creer les bookings
 export const bookingSchema = z.object({
-  visit_date: z.coerce.date().refine(
+  visit_date: z.date().refine(
     // refine() permet d'ajouter une condition personnalisée à la validation :
     // ici, on interdit les réservations dans le passé.
     // On "nettoie" la date du jour (setHours(0,0,0,0)) pour ignorer l'heure
@@ -18,7 +18,7 @@ export const bookingSchema = z.object({
     .number()
     .int("Le nombre de personnes doit être un entier.")
     .positive("Le nombre de personnes doit être supérieur à 0."),
-  status: z.coerce.boolean(),
+  status: z.boolean(),
   user_id: z.coerce
     .number()
     .int("L'identifiant utilisateur doit être un entier.")
