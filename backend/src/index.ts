@@ -6,6 +6,7 @@ import corsParser from "./middlewares/cors-middleware";
 import { notFound, errorHandler } from "./middlewares/errors-middleware";
 import { setupSwagger } from "./utils/swagger";
 import cookieParser from "cookie-parser";
+import { bodySanitizerMiddleware } from "./middlewares/body-sanitizer";
 
 // Création d'une app Express
 const app = express();
@@ -20,7 +21,11 @@ app.use(corsParser);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+// Ajout du cookie parser
 app.use(cookieParser());
+
+// Ajout du body sanitizer
+app.use(bodySanitizerMiddleware);
 
 // On branche le routeur principal sur le préfixe /api : 
 // toutes les routes définies dans "router" seront accessibles via /api/...
