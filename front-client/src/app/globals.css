@@ -10,9 +10,9 @@
   --color-bg-team-card: #201041;
 
   /* Primaire (violet / rose néon) */
-  --color-primary-purple-200: #fa91e7;
-  --color-primary-purple-300: #f834fd;
-  --color-primary-purple-500: #851175;
+  --color-primary-200: #fa91e7;
+  --color-primary-300: #f834fd;
+  --color-primary-500: #851175;
 
   /* Secondaire (vert néon) */
   --color-secondary-200: #64cc29;
@@ -25,9 +25,9 @@
   --color-neutral-50: var(--color-neutral-50);
   --color-neutral-700: var(--color-neutral-700);
 
-  --color-primary-purple-200: var(--color-primary-purple-200);
-  --color-primary-purple-300: var(--color-primary-purple-300);
-  --color-primary-purple-500: var(--color-primary-purple-500);
+  --color-primary-200: var(--color-primary-200);
+  --color-primary-300: var(--color-primary-300);
+  --color-primary-500: var(--color-primary-500);
 
   --color-secondary-200: var(--color-secondary-200);
   --color-secondary-300: var(--color-secondary-300);
@@ -51,27 +51,27 @@ li {
 }
 
 .current_page_text {
-  text-shadow: 0 0 4px var(--color-primary-purple-200);;
+  text-shadow: 0 0 4px var(--color-primary-200);;
 }
 
 /* le drop shadow ne fonctionne pas :( */
 .current_page_icon {
-  fill: var(--color-primary-purple-300);
-  filter: drop-shadow(0 0 4px var(--color-primary-purple-200));
+  fill: var(--color-primary-300);
+  filter: drop-shadow(0 0 4px var(--color-primary-200));
 }
 
 .button_booking {
   border-radius: 5px;
   border: 1px solid var(--color-secondary-200);
-  background: var(--color-secondary-300, --color-secondary-500);
+  background: var(--color-secondary-300);
   box-shadow: 0 0 12px 0 rgba(139, 255, 132, 0.50);
   font-size: 16px;
 }
 
 .button_activity {
   border-radius: 5px;
-  border: 1px solid var(--color-primary-purple-200);
-  background: var(--color-primary-purple-300, --color-primary-purple-500);
+  border: 1px solid var(--color-primary-200);
+  background: var(--color-primary-300);
   box-shadow: 0 0 12px 0 rgba(180, 130, 255, 0.5);
   font-size: 16px;
 }
@@ -114,8 +114,8 @@ h5 {
   text-shadow:
     3px 3px 0 var(--color-secondary-300),
     6px 6px 0 var(--color-secondary-500),
-    0 0 20px var(--color-primary-purple-300),   
-    0 0 40px var(--color-primary-purple-500);   
+    0 0 20px var(--color-primary-300),   
+    0 0 40px var(--color-primary-500);   
   font-style: normal;
   font-weight: 700;
   letter-spacing: -1.92px;
@@ -140,8 +140,8 @@ h5 {
 @apply permet d'utiliser la syntaxe du tailwind css dans le fichier global */
 
 .input_style {
-  @apply  text-sm md:text-base bg-neutral-600 border-b-2 border-solid border-primary-purple-300 rounded-sm p-2
-          focus:border-primary-purple-500 focus:shadow-[0_0_25px_5px_rgba(168,85,247,0.8)]
+  @apply  text-sm md:text-base bg-neutral-600 border-b-2 border-solid border-primary-300 rounded-sm p-2
+          focus:border-primary-500 focus:shadow-[0_0_25px_5px_rgba(168,85,247,0.8)]
           focus:outline-none transition-all duration-300;
 } 
 
@@ -171,7 +171,7 @@ h5 {
 .loader {
   width: 48px;
   height: 48px;
-  background: var(--color-primary-purple-300);
+  background: var(--color-primary-300);
   display: block;
   margin: 20px auto;
   position: relative;
@@ -187,7 +187,7 @@ h5 {
   position: absolute;
   width: 48px;
   height: 48px;
-  background: var(--color-primary-purple-300);
+  background: var(--color-primary-300);
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
 }
 .loader::after {
@@ -209,5 +209,181 @@ h5 {
   }
   100% {
     transform: rotate(-360deg);
+  }
+}
+
+/* STYLES REACT-CALENDAR */
+
+.booking-calendar {
+  width: 100% !important;
+  max-width: 350px !important;
+  background: var(--color-neutral-700) !important;
+  border: 2px solid var(--color-primary-300) !important;
+  border-radius: 12px !important;
+  padding: 1.25rem !important;
+  font-family: var(--font-body) !important;
+  box-shadow: 0 0 20px 0 rgba(180, 130, 255, 0.4) !important;
+  transition: all 0.3s ease !important;
+}
+
+.booking-calendar:hover {
+  box-shadow: 0 0 30px 0 rgba(180, 130, 255, 0.6) !important;
+}
+
+/* Navigation (mois/année) */
+.booking-calendar .react-calendar__navigation {
+  display: flex !important;
+  height: 44px !important;
+  margin-bottom: 1rem !important;
+  border-bottom: 1px solid var(--color-primary-500) !important;
+  padding-bottom: 0.75rem !important;
+  background: transparent !important;
+}
+
+.booking-calendar .react-calendar__navigation button {
+  color: var(--color-primary-200) !important;
+  min-width: 44px !important;
+  background: transparent !important;
+  font-size: 1rem !important;
+  font-weight: 700 !important;
+  border: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.booking-calendar .react-calendar__navigation button:enabled:hover,
+.booking-calendar .react-calendar__navigation button:enabled:focus {
+  background-color: var(--color-primary-500) !important;
+  color: var(--color-neutral-50) !important;
+  border-radius: 6px !important;
+  transform: scale(1.05) !important;
+}
+
+.booking-calendar .react-calendar__navigation button:disabled {
+  opacity: 0.3 !important;
+  cursor: not-allowed !important;
+}
+
+.booking-calendar .react-calendar__navigation__label {
+  font-weight: 700 !important;
+  font-size: 1.1rem !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.5px !important;
+}
+
+/* Jours de la semaine */
+.booking-calendar .react-calendar__month-view__weekdays {
+  text-align: center !important;
+  text-transform: uppercase !important;
+  font-weight: 700 !important;
+  font-size: 0.75rem !important;
+  color: var(--color-primary-200) !important;
+  margin-bottom: 0.5rem !important;
+  background: transparent !important;
+}
+
+.booking-calendar .react-calendar__month-view__weekdays__weekday {
+  padding: 0.5rem !important;
+  background: transparent !important;
+}
+
+.booking-calendar .react-calendar__month-view__weekdays__weekday abbr {
+  text-decoration: none !important;
+  cursor: default !important;
+}
+
+/* Grille des jours */
+.booking-calendar .react-calendar__month-view__days {
+  display: grid !important;
+  grid-template-columns: repeat(7, 1fr) !important;
+  gap: 4px !important;
+}
+
+/* Tuiles des jours */
+.booking-calendar .react-calendar__tile {
+  max-width: 100% !important;
+  aspect-ratio: 1 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: var(--color-neutral-50) !important;
+  background: rgba(18, 16, 18, 0.5) !important;
+  border: 1px solid var(--color-primary-500) !important;
+  border-radius: 6px !important;
+  font-size: 0.9rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+}
+
+.booking-calendar .react-calendar__tile abbr {
+  text-decoration: none !important;
+}
+
+/* Hover des jours */
+.booking-calendar .react-calendar__tile:enabled:hover,
+.booking-calendar .react-calendar__tile:enabled:focus {
+  background-color: var(--color-primary-500) !important;
+  color: var(--color-neutral-50) !important;
+  border-color: var(--color-primary-300) !important;
+  transform: scale(1.1) !important;
+  box-shadow: 0 0 10px 0 rgba(248, 52, 253, 0.5) !important;
+  z-index: 1 !important;
+}
+
+/* Jour actif (sélectionné) */
+.booking-calendar .react-calendar__tile--active {
+  background: var(--color-secondary-300) !important;
+  color: var(--color-neutral-700) !important;
+  border-color: var(--color-secondary-200) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 0 15px 2px rgba(139, 255, 132, 0.7) !important;
+  transform: scale(1.05) !important;
+}
+
+.booking-calendar .react-calendar__tile--active:enabled:hover {
+  background: var(--color-secondary-200) !important;
+  box-shadow: 0 0 20px 3px rgba(139, 255, 132, 0.9) !important;
+}
+
+/* Aujourd'hui */
+.booking-calendar .react-calendar__tile--now {
+  background: rgba(133, 17, 117, 0.5) !important;
+  border: 2px solid var(--color-primary-300) !important;
+  font-weight: 700 !important;
+}
+
+.booking-calendar .react-calendar__tile--now:enabled:hover {
+  background: var(--color-primary-500) !important;
+}
+
+/* Jour actif ET aujourd'hui */
+.booking-calendar .react-calendar__tile--now.react-calendar__tile--active {
+  background: var(--color-secondary-300) !important;
+  border: 2px solid var(--color-secondary-200) !important;
+}
+
+/* Jours désactivés (passés) */
+.booking-calendar .react-calendar__tile:disabled {
+  background-color: rgba(18, 16, 18, 0.3) !important;
+  color: rgba(247, 248, 249, 0.2) !important;
+  border-color: rgba(133, 17, 117, 0.2) !important;
+  cursor: not-allowed !important;
+  opacity: 0.4 !important;
+}
+
+/* Jours du mois précédent/suivant */
+.booking-calendar .react-calendar__month-view__days__day--neighboringMonth {
+  color: rgba(247, 248, 249, 0.4) !important;
+}
+
+/* Weekend */
+.booking-calendar .react-calendar__month-view__days__day--weekend {
+  color: var(--color-primary-200) !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .booking-calendar {
+    max-width: 100% !important;
   }
 }

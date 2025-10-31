@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Découvrez toutes nos activités !",
 };
 
-export default function LoginLayout({
+export default function ActivitiesLayout({
   children,
 }: {
   children: React.ReactNode;

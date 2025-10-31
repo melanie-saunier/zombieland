@@ -13,14 +13,15 @@ import { Bell, CalendarCheck, House, Info, LogIn, LogOut, Rocket, SignpostBig, U
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
 import LinkButton from "./LinkButton";
+import useUserContext from "../context/useUserContext";
+
 
 export default function NavBarDesktop() {
   // Varible pour récupérer le chemin de la page actuelle, grâce au hook "usePathname" de React
   const pathname= usePathname();
-  // State provisoire pour gérer la connexion
-  const [isLogged, setIsLogged] = useState(false);
+  // Utilisation du contexte pour savoir si un utilisateur est connecté
+  const { logged, logout } = useUserContext();
   
   // Variables qui rassemblent les items de la navigation sous forme de liste
   // Propriété "always" : doit toujours apparaitre dans le mnu
@@ -40,7 +41,7 @@ export default function NavBarDesktop() {
 
   return (
     // Conteneur principal de la nav desktop
-    <nav className="hidden md:flex flex-col items-center bg-neutral-700 py-4 min-h-screen w-1/5 fixed top-0 left-0 border-solid border-r border-primary-purple-300">
+    <nav className="hidden md:flex flex-col items-center bg-neutral-700 py-4 min-h-screen w-1/5 fixed top-0 left-0 border-solid border-r border-primary-300">
       
       {/* Logo cliquable en haut */}
       <Link href="/" className="mx-4">
@@ -48,7 +49,7 @@ export default function NavBarDesktop() {
       </Link>
 
       {/* Bouton "Réserver" avec icône */}
-      <div className="border-b border-t border-solid border-primary-purple-300 flex justify-center w-full">
+      <div className="border-b border-t border-solid border-primary-300 flex justify-center w-full">
         <LinkButton path={"/booking"} text="Réserver" style="button_booking" Icon={Bell}/>
       </div>
 
@@ -58,7 +59,7 @@ export default function NavBarDesktop() {
         {navItems
           .filter(item => !item.isAction) // Exclut "Se connecter" et "Se déconnecter"
           .map((item) => {
-            if (item.always || (isLogged && item.logged)) {
+            if (item.always || (logged && item.logged)) {
               return (
                 <li key={item.path}>
                   {/*
@@ -79,7 +80,7 @@ export default function NavBarDesktop() {
                       - size : taille de l'icône
                     */}
                     <item.Icon
-                      color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                      color={pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}
                       className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
                       size={24}
                     />
@@ -97,22 +98,39 @@ export default function NavBarDesktop() {
         {navItems
           .filter(item => item.isAction)
           .map((item) => {
-            if ((!isLogged && item.onlyLoggedOut) || (isLogged && item.logged)) {
+            if ((!logged && item.onlyLoggedOut) || (logged && item.logged)) {
               return (
                 <div key={item.path} className="border-b border-t border-solid border-primary-purple-300 w-full">
-                  <Link
-                    href={item.path}
-                    className={`flex items-center gap-2 px-8 py-4 w-full
-                    ${pathname === item.path ? "current_page_text" : ""}
-                    hover:scale-110 transition-transform duration-200`}
-                  >
-                    <item.Icon
-                      color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
-                      className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
-                      size={24}
-                    />
-                    {item.name}
-                  </Link>
+                  {item.name === "Se déconnecter" ? (
+                    // Pour logout → utiliser un bouton et appeler handleLogout
+                    <button
+                      onClick={() => logout()}
+                      className={`flex items-center gap-2 px-8 py-4 w-full
+                      hover:scale-110 transition-transform duration-200 text-left`}
+                    >
+                      <item.Icon
+                        color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                        className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
+                        size={24}
+                      />
+                      {item.name}
+                    </button>
+                  ) : (
+                    // Sinon → lien classique pour "Se connecter"
+                    <Link
+                      href={item.path}
+                      className={`flex items-center gap-2 px-8 py-4 w-full
+                      ${pathname === item.path ? "current_page_text" : ""}
+                      hover:scale-110 transition-transform duration-200`}
+                    >
+                      <item.Icon
+                        color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                        className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
+                        size={24}
+                      />
+                      {item.name}
+                    </Link>
+                  )}
                 </div>
               );
             }

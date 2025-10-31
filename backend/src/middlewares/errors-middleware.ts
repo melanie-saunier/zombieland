@@ -9,8 +9,8 @@ interface AppError extends Error {
 
 // Fonction pour les erreurs 404
 function notFound(_req: Request, res: Response) {
-    const err = new Error("Ressource not found");
-    res.status(404).json({ error: err.message });
+  const err = new Error("Ressource not found");
+  res.status(404).json({ error: err.message });
 }
 
 // Fonction pour les erreurs 500

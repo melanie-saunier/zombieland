@@ -27,18 +27,18 @@ export default function VisitorInformationPage() {
           <div className="flex flex-col lg:flex-row gap-8 justify-center items-start mb-12">
             {/* Section Horaires d'ouverture */}
             <div className="w-full lg:w-auto">
-              <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-purple-300 pb-3 inline-block">
+              <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-300 pb-3 inline-block">
                 <Clock className="inline-block mr-2 mb-1" size={28} />
                 Horaires d’ouverture
               </h2>
-              <div className="border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300 max-w-2xl" style={{backgroundColor: "#201041"}}>
+              <div className="border border-primary-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300 max-w-2xl" style={{backgroundColor: "#201041"}}>
                 <ul className="px-2 space-y-3 text-neutral-50/80 list-disc marker:text-secondary-300">
                   <li>
-                    <span className="text-lg text-primary-purple-300">Haute saison</span> (Juin à Septembre) : 
+                    <span className="text-lg text-primary-300">Haute saison</span> (Juin à Septembre) : 
                     <span className="text-lg text-secondary-300 font-semibold"> 7j/7 de 10h à 23h</span>
                   </li>
                   <li>
-                    <span className="text-lg text-primary-purple-300">Basse saison</span> (Octobre à Mai) : 
+                    <span className="text-lg text-primary-300">Basse saison</span> (Octobre à Mai) : 
                     <span className="text-lg text-secondary-300 font-semibold"> 7j/7 de 10h à 20h</span>
                   </li>
                 </ul>
@@ -47,13 +47,13 @@ export default function VisitorInformationPage() {
 
             {/* Section Tarif */}
             <div className="w-full lg:w-auto">
-              <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-purple-300 pb-3 inline-block">
+              <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-300 pb-3 inline-block">
                 <Euro className="inline-block mr-2 mb-1" size={28} />
                 Tarif
               </h2>
-              <div className="border-2 border-primary-purple-300 rounded-lg p-8 shadow-[0_0_20px_rgba(248,52,253,0.3)] hover:shadow-[0_0_30px_rgba(248,52,253,0.5)] transition-all duration-300 max-w-lg" style={{backgroundColor: "#201041"}}>
+              <div className="border-2 border-primary-300 rounded-lg p-8 shadow-[0_0_20px_rgba(248,52,253,0.3)] hover:shadow-[0_0_30px_rgba(248,52,253,0.5)] transition-all duration-300 max-w-lg" style={{backgroundColor: "#201041"}}>
                 <div className="flex items-baseline justify-center gap-3 mb-3">
-                  <p className="text-3xl md:text-4xl font-bold text-primary-purple-300">45 €</p>
+                  <p className="text-3xl md:text-4xl font-bold text-primary-300">45 €</p>
                   <p className="text-lg text-neutral-50/80">/ personne</p>
                 </div>
                 <p className="text-neutral-50/70 mb-6 leading-relaxed text-center">
@@ -69,7 +69,7 @@ export default function VisitorInformationPage() {
 
       {/* Section Accès parking*/}
       <section 
-        className="py-12 w-full relative border-b-2 border-t-2 border-primary-purple-300"
+        className="py-12 w-full relative border-b-2 border-t-2 border-primary-300"
         style={{
           backgroundImage: "url(/images/info-background.png)",
           backgroundSize: "cover",
@@ -82,7 +82,7 @@ export default function VisitorInformationPage() {
         
         {/* Contenu centré */}
         <div className="relative z-10 max-w-6xl mx-auto px-4 md:px-8">
-          <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-purple-300 pb-3 inline-block">
+          <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-300 pb-3 inline-block">
             <MapPin className="inline-block mr-2 mb-1" size={28} />
             Accès & Parking
           </h2>
@@ -90,8 +90,8 @@ export default function VisitorInformationPage() {
             {/* Infos à gauche */}
             <div className="space-y-5">
               {/* Adresse */}
-              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: "#201041"}}>
-                <h3 className="text-lg font-bold text-primary-purple-300 mb-2 flex items-center gap-2">
+              <div className="bg-neutral-700/90 border border-primary-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: "#201041"}}>
+                <h3 className="text-lg font-bold text-primary-300 mb-2 flex items-center gap-2">
                   <MapPin size={20} />
                   Adresse
                 </h3>
@@ -103,8 +103,8 @@ export default function VisitorInformationPage() {
               </div>
 
               {/* Parking */}
-              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: "#201041"}}>
-                <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
+              <div className="bg-neutral-700/90 border border-primary-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: "#201041"}}>
+                <h3 className="text-lg font-bold text-primary-300 mb-3 flex items-center gap-2">
                   <Car size={20} />
                   Parking
                 </h3>
@@ -117,8 +117,8 @@ export default function VisitorInformationPage() {
               </div>
 
               {/* Transports */}
-              <div className="bg-neutral-700/90 border border-primary-purple-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: "#201041"}}>
-                <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
+              <div className="bg-neutral-700/90 border border-primary-300 rounded-lg p-5 hover:border-secondary-300 transition-colors duration-300 backdrop-blur-sm" style={{backgroundColor: "#201041"}}>
+                <h3 className="text-lg font-bold text-primary-300 mb-3 flex items-center gap-2">
                   <Bus size={20} />
                   Transports en commun
                 </h3>
@@ -132,7 +132,7 @@ export default function VisitorInformationPage() {
 
             {/* Map à droite - CENTRÉE VERTICALEMENT */}
             <div className="flex items-center">
-              <div className="relative w-full h-full overflow-hidden rounded-lg border-2 border-primary-purple-300 aspect-video shadow-[0_0_15px_rgba(248,52,253,0.2)]">
+              <div className="relative w-full h-full overflow-hidden rounded-lg border-2 border-primary-300 aspect-video shadow-[0_0_15px_rgba(248,52,253,0.2)]">
                 <iframe
                   title="Accès parking Zombieland"
                   className="w-full h-full"
@@ -148,14 +148,14 @@ export default function VisitorInformationPage() {
 
       {/* Section Contact - CENTRÉE */}
       <section className="bg-neutral-700 px-4 py-10 md:px-8 md:py-16 w-full mx-auto mb-8 flex flex-col justify-center items-center">
-        <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-purple-300 pb-3 inline-block">
+        <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-6 border-b-2 border-primary-300 pb-3 inline-block">
           <Phone className="inline-block mr-2 mb-1" size={28} />
             Contact
         </h2>
         <div className="flex flex-col md:flex-row justify-center gap-4 md:w-1/2">
           {/* Téléphone */}
-          <div className="md:w-1/2 bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: "#201041"}}>
-            <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
+          <div className="md:w-1/2 bg-neutral-700 border border-primary-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: "#201041"}}>
+            <h3 className="text-lg font-bold text-primary-300 mb-3 flex items-center gap-2">
               <Phone size={20} />
                 Téléphone
             </h3>
@@ -174,8 +174,8 @@ export default function VisitorInformationPage() {
           </div>
 
           {/* Email */}
-          <div className="md:w-1/2 bg-neutral-700 border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: "#201041"}}>
-            <h3 className="text-lg font-bold text-primary-purple-300 mb-3 flex items-center gap-2">
+          <div className="md:w-1/2 bg-neutral-700 border border-primary-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300" style={{backgroundColor: "#201041"}}>
+            <h3 className="text-lg font-bold text-primary-300 mb-3 flex items-center gap-2">
               <Mail size={20} />
                 Email
             </h3>

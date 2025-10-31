@@ -3,6 +3,10 @@ import { categoryRouter } from "./category-router";
 import { activityRouter } from "./activity-router";
 import { bookingRouter } from "./booking-router";
 import { priceRouter } from "./price-router"
+import { userRouter } from "./user-router";
+import { authRouter } from "./auth-router";
+import { authenticateToken } from "../middlewares/authenticate-token";
+import { authorizeAdmin } from "../middlewares/authorize-admin";
 
 // Création du router de Express
 export const router = Router();
@@ -24,5 +28,9 @@ router.use("/bookings", bookingRouter);
 // Router des prices
 router.use("/prices", priceRouter);
 
-// // Router des bookingPrices
-// router.use("/bookingPrices", bookingPriceRouter);
+// Router des users
+router.use("/users", authenticateToken, authorizeAdmin, userRouter);
+
+//Router auth
+router.use("/auth", authRouter);
+

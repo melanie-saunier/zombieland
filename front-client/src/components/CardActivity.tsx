@@ -27,7 +27,7 @@ type PropsCardActivity = {
 export default function CardActivity({activity} : PropsCardActivity) {
 
   return (
-    <article className="relative w-full max-w-sm aspect-600/500 flex flex-col border-solid border-2 border-primary-purple-300 rounded-xl drop-shadow-[0_0_4px_var(--color-primary-purple-200)]">
+    <article className="relative w-full max-w-sm aspect-600/500 flex flex-col border-solid border-2 border-primary-300 rounded-xl drop-shadow-[0_0_4px_var(--color-primary-200)]">
       {/* Image de l'activité */}
       <Link href={`/activities/${activity.id}`}>
         <Image 
