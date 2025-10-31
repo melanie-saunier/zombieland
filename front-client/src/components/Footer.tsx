@@ -7,10 +7,10 @@ import Link from "next/link";
 export default function Footer() {
   return (
     // Conteneur principal du pied de page
-    <footer className="bg-neutral-700 border-t-2 border-solid border-primary-purple-300 md:ml-[20%] md:w-[80%] pb-16 md:pb-0">
+    <footer className="bg-neutral-700 border-t-2 border-solid border-primary-300 md:ml-[20%] md:w-[80%] pb-16 md:pb-0">
 
       {/* Section principale : logo +  contact, infos légales, réseaux sociaux */}
-      <div className="flex flex-col md:flex-row md:justify-around md:items-start items-center mt-8 mx-4 py-2 border-solid border-y border-primary-purple-300">
+      <div className="flex flex-col md:flex-row md:justify-around md:items-start items-center mt-8 mx-4 py-2 border-solid border-y border-primary-300">
 
         {/* Logo du parc avec lien vers la page d'accueil */}
         <div className="md:self-center">
@@ -24,10 +24,10 @@ export default function Footer() {
           <h5>Contact</h5>
           <ul className="text-center md:text-left space-y-2">
             <li>
-              <a href="tel:+33666666666" className="hover:text-primary-purple-300 transition">06 66 66 66 66</a>
+              <a href="tel:+33666666666" className="hover:text-primary-300 transition">06 66 66 66 66</a>
             </li>
             <li>
-              <a href="mailto:contact@zombieland.fr" className="hover:text-primary-purple-300 transition">contact@zombieland.fr</a>
+              <a href="mailto:contact@zombieland.fr" className="hover:text-primary-300 transition">contact@zombieland.fr</a>
             </li>
             <li>Zombieland Park,<br/>66 rue du Cerveau enragé <br/>42190 Néonville, France</li>
             <li>Horaires: 7j/7 de 10h à 23h</li>
@@ -38,9 +38,9 @@ export default function Footer() {
         <div className="flex flex-col items-center md:items-start my-2">
           <h5>Informations légales</h5>
           <ul className="text-center md:text-left space-y-2">
-            <li className="hover:text-primary-purple-300 transition"><Link href="/legal-notice">Mentions légales</Link></li>
-            <li className="hover:text-primary-purple-300 transition"><Link href="/privacy-policy">Politique de confidentialité</Link></li>
-            <li className="hover:text-primary-purple-300 transition"><Link href="/terms-and-conditions">CGV</Link></li>
+            <li className="hover:text-primary-300 transition"><Link href="/legal-notice">Mentions légales</Link></li>
+            <li className="hover:text-primary-300 transition"><Link href="/privacy-policy">Politique de confidentialité</Link></li>
+            <li className="hover:text-primary-300 transition"><Link href="/terms-and-conditions">CGV</Link></li>
           </ul>
         </div>
 

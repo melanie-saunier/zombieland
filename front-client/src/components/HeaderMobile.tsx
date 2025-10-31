@@ -42,7 +42,7 @@ export default function HeaderMobile() {
   return (
     <>
       {/* Header mobile fixe en haut de l'écran */}
-      <header className="fixed top-0 z-50 w-full md:hidden bg-neutral-700 border-b-2 border-solid border-primary-purple-300 flex justify-between items-center">
+      <header className="fixed top-0 z-50 w-full md:hidden bg-neutral-700 border-b-2 border-solid border-primary-300 flex justify-between items-center">
         
         {/* Logo cliquable qui renvoie à l'accueil */}
         <Link href="/" className="mx-4">

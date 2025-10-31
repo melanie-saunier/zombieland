@@ -50,7 +50,7 @@ export default function AboutPage() {
 
         {/* Section Équipe */}
         <div className="mb-16">
-          <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-4 border-b-2 border-primary-purple-300 pb-3 inline-block">
+          <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-4 border-b-2 border-primary-300 pb-3 inline-block">
             L’ équipe qui fait vivre l’horreur
           </h2>
           <p className="text-neutral-50 md:text-lg mt-6 mb-10">
@@ -65,9 +65,9 @@ export default function AboutPage() {
             {teamMembers.map((member, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center text-center bg-[#201041] border border-primary-purple-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300"
+                className="flex flex-col items-center text-center bg-[#201041] border border-primary-300 rounded-lg p-6 hover:border-secondary-300 hover:shadow-[0_0_20px_rgba(100,204,41,0.4)] transition-all duration-300"
               >
-                <div className="relative w-32 h-32 mb-4 rounded-full overflow-hidden border-2 border-primary-purple-300">
+                <div className="relative w-32 h-32 mb-4 rounded-full overflow-hidden border-2 border-primary-300">
                   <Image 
                     src={member.image || "/images/Portrait-max.jpeg"}
                     alt={member.name} 
@@ -75,8 +75,8 @@ export default function AboutPage() {
                     className="object-cover" 
                   />
                 </div>
-                <h4 className="text-xl font-semibold mb-2 text-primary-purple-300">{member.name}</h4>
-                <p className="italic mb-2 text-primary-purple-200">{member.role}</p>
+                <h4 className="text-xl font-semibold mb-2 text-primary-300">{member.name}</h4>
+                <p className="italic mb-2 text-primary-200">{member.role}</p>
                 <p className="text-sm text-neutral-50/80 leading-relaxed">{member.description}</p>
               </div>
             ))}
@@ -103,16 +103,16 @@ export default function AboutPage() {
 
           <div className="space-y-4">
             <p>
-              <span className="text-primary-purple-300 font-semibold">Innovation :</span> Nous repoussons constamment les limites de l’horreur immersive avec des technologies de pointe et des scénarios originaux.
+              <span className="text-primary-300 font-semibold">Innovation :</span> Nous repoussons constamment les limites de l’horreur immersive avec des technologies de pointe et des scénarios originaux.
             </p>
             <p>
-              <span className="text-primary-purple-300 font-semibold">Sécurité :</span> Malgré l’intensité de nos attractions, la sécurité de nos visiteurs reste notre priorité absolue. Chaque expérience est conçue et supervisée par des professionnels qualifiés.
+              <span className="text-primary-300 font-semibold">Sécurité :</span> Malgré l’intensité de nos attractions, la sécurité de nos visiteurs reste notre priorité absolue. Chaque expérience est conçue et supervisée par des professionnels qualifiés.
             </p>
             <p>
-              <span className="text-primary-purple-300 font-semibold">Authenticité :</span> Nous créons des environnements et des scénarios réalistes qui plongent nos visiteurs dans un monde post-apocalyptique crédible et terrifiant.
+              <span className="text-primary-300 font-semibold">Authenticité :</span> Nous créons des environnements et des scénarios réalistes qui plongent nos visiteurs dans un monde post-apocalyptique crédible et terrifiant.
             </p>
             <p>
-              <span className="text-primary-purple-300 font-semibold">Passion :</span> Notre équipe est composée de passionnés d’horreur, de cinéma et d’effets spéciaux qui mettent tout leur cœur dans chaque détail de l’expérience.visiteurs dans un monde post-apocalyptique crédible et terrifiant.
+              <span className="text-primary-300 font-semibold">Passion :</span> Notre équipe est composée de passionnés d’horreur, de cinéma et d’effets spéciaux qui mettent tout leur cœur dans chaque détail de l’expérience.visiteurs dans un monde post-apocalyptique crédible et terrifiant.
             </p>
           </div>
 

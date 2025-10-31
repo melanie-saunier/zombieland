@@ -41,7 +41,7 @@ export default function NavBarDesktop() {
 
   return (
     // Conteneur principal de la nav desktop
-    <nav className="hidden md:flex flex-col items-center bg-neutral-700 py-4 min-h-screen w-1/5 fixed top-0 left-0 border-solid border-r border-primary-purple-300">
+    <nav className="hidden md:flex flex-col items-center bg-neutral-700 py-4 min-h-screen w-1/5 fixed top-0 left-0 border-solid border-r border-primary-300">
       
       {/* Logo cliquable en haut */}
       <Link href="/" className="mx-4">
@@ -49,7 +49,7 @@ export default function NavBarDesktop() {
       </Link>
 
       {/* Bouton "Réserver" avec icône */}
-      <div className="border-b border-t border-solid border-primary-purple-300 flex justify-center w-full">
+      <div className="border-b border-t border-solid border-primary-300 flex justify-center w-full">
         <LinkButton path={"/booking"} text="Réserver" style="button_booking" Icon={Bell}/>
       </div>
 
@@ -80,7 +80,7 @@ export default function NavBarDesktop() {
                       - size : taille de l'icône
                     */}
                     <item.Icon
-                      color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                      color={pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}
                       className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
                       size={24}
                     />
