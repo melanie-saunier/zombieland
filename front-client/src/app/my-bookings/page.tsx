@@ -6,7 +6,7 @@ import { X, AlertCircle } from "lucide-react";
 import MyBookingCard from "@/components/MyBookingsCard"; // Composant affichant une carte de réservation
 import { Booking, ReservationDisplay } from "@/@types/my-bookings";
 import { transformBookingToDisplay, formatDate } from "@/utils/mybookingsUtils";
-import { MAX_TICKETS_PER_BOOKING, formatLocalDate } from "@/utils/bookingUtils";
+import { MAX_TICKETS_PER_BOOKING } from "@/utils/bookingUtils";
 
 // Mock data aligné sur le backend
 // TODO: Remplacer par fetch /api/bookings

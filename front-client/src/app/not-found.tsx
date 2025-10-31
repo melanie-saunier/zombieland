@@ -1,5 +1,13 @@
+// src/app/not-found.tsx 
+
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Page introuvable | ZOMBIELAND",
+  description: "Cette page a été dévorée par des zombies... Elle n'existe plus ou a été déplacée.",
+};
 
 export default function NotFound() {
   return (
