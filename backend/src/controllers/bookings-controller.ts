@@ -1,5 +1,5 @@
 import { Response, Request } from "express";
-import { bookingSchema, updateBookingSchema, idSchema, updateBookingByUserSchema } from "../schemas/";
+import { bookingSchema, updateBookingSchema, idSchema, updateBookingByUserSchema } from "../schemas";
 import { User, Booking, Price, BookingPrice, sequelize } from "../models/association";
 
 export const bookingController = {

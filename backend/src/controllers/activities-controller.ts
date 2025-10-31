@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { sequelize, Activity } from "../models/association";
-import { idSchema } from "../schema";
+import { idSchema } from "../schemas";
 
 export const activityController = {
   

@@ -1,6 +1,6 @@
 import { Response, Request } from "express";
 import { Category } from "../models/association";
-import { idSchema } from "../schema";
+import { idSchema } from "../schemas";
 
 export const categoryController = {
   
