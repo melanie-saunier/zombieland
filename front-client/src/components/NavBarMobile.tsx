@@ -6,25 +6,27 @@
 
 import Link from "next/link";
 import { LogIn, House, LogOut,  Rocket, Bell } from "lucide-react";
-import { useState } from "react";
 import { usePathname } from "next/navigation";
+import useUserContext from "../context/useUserContext";
+
 
 export default function NavBarMobile() {
   // Varible pour récupérer le chemin de la page actuelle, grâce au hook "usePathname" de React
   const pathname= usePathname();
-  // State provisoire pour gérer la connexion
-  const [isLogged, setIsLogged] = useState(false);
+  // Utilisation du contexte pour savoir si un utilisateur est connecté
+  const { logged, logout } = useUserContext();
 
   // Variables qui rassemblent les items de la navigation sous forme de liste
   // Propriété "always" : doit toujours apparaitre dans le mnu
   // Propriété "logged" : doit apparaitre dans le menu si l'utilisateur est connecté
   // Propriété "onlyLoggedOut" : doit apparaitre dans le menu si l'utilisateur n'est pas connecté
+  // Propriété "isAction" : style spécifique pour les items Se connecter et Se déconnecter (bordure top et bottom rose)
   const navItems = [
     { name: "Accueil", path: "/", Icon: House, always: true },
     { name: "Activités", path: "/activities", Icon: Rocket, always: true },
     { name: "Réserver", path: "/booking", Icon: Bell, always: true },
-    { name: "Se connecter", path: "/login", Icon: LogIn, onlyLoggedOut: true },
-    { name: "Se déconnecter", path: "/logout", Icon: LogOut, logged: true },
+    { name: "Se connecter", path: "/login", Icon: LogIn, onlyLoggedOut: true, isAction: true },
+    { name: "Se déconnecter", path: "/logout", Icon: LogOut, logged: true, isAction: true },
   ];
   
   return (
@@ -33,60 +35,45 @@ export default function NavBarMobile() {
       <ul className="flex justify-between px-2 text-neutral-50">
         {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}
         {navItems.map((item) => {
-          // Toujours afficher
-          if (item.always) return (
-            <li key={item.path}>
-              {/* Lien cliquable vers la page de l'item */}
-              <Link
-                href={item.path}
-                className={ `${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"}`}
-              >
-                {/* Icône de l'item */}
-                <item.Icon
-                  color={ `${pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}`}
-                  className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                  size={24}
-                />
-                {/* Nom affiché de l'item sous l'icône */}
-                <p>{item.name}</p>
-              </Link>
-            </li>
-          );
+          // Filtrage selon état de connexion
+          if ((item.always) || (logged && item.logged) || (!logged && item.onlyLoggedOut)) {
 
-          // Afficher si connecté
-          if (isLogged && item.logged) return (
-            <li key={item.path}>
-              <Link
-                href={item.path}
-                className={ `${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"}`}
-              >
-                <item.Icon
-                  color={ `${pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}`}
-                  className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                  size={24}
-                />
-                {item.name}
-              </Link>
-            </li>
-          );
+            // Si l'item est une action (ex: logout)
+            if (item.isAction && item.name === "Se déconnecter") {
+              return (
+                <li key={item.name}>
+                  <button
+                    onClick={() => logout()}
+                    className="flex flex-col items-center px-2 py-1 hover:bg-neutral-600 rounded w-full"
+                  >
+                    <item.Icon
+                      color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                      className="mx-2"
+                      size={24}
+                    />
+                    <p>{item.name}</p>
+                  </button>
+                </li>
+              );
+            }
 
-          // Afficher si pas connecté
-          if (!isLogged && item.onlyLoggedOut) return (
-            <li key={item.path}>
-              <Link
-                href={item.path}
-                className={ `${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"}`}
-              >
-                <item.Icon
-                  color={ `${pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}`}
-                  className={ `${pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}`}
-                  size={24}
-                />
-                {item.name}
-              </Link>
-            </li>
-          );
-
+            // Item classique → navigation via Link
+            return (
+              <li key={item.name}>
+                <Link
+                  href={item.path || "/"}
+                  className={`${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"} px-2 py-1 hover:bg-neutral-600 rounded`}
+                >
+                  <item.Icon
+                    color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                    className="mx-2"
+                    size={24}
+                  />
+                  <p>{item.name}</p>
+                </Link>
+              </li>
+            );
+          }
         })}
       </ul>
     </nav>

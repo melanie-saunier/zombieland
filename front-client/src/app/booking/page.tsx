@@ -9,6 +9,8 @@ import "react-calendar/dist/Calendar.css";
 // Import des types et utils
 import type { BookingData, TicketPricing, ValueDate } from "@/@types/booking";
 import { MAX_TICKETS_PER_BOOKING, formatLocalDate } from "@/utils/bookingUtils";
+import useUserContext from "@/context/useUserContext";
+import Link from "next/link";
 
 /**
  * Composant principal : BookingPage
@@ -19,6 +21,28 @@ import { MAX_TICKETS_PER_BOOKING, formatLocalDate } from "@/utils/bookingUtils";
  *  - validation et soumission
  */
 export default function BookingPage() {
+  const { logged } = useUserContext(); // On récupère l'état de connexion
+
+  // Si l'utilisateur n'est pas connecté, on affiche un message et un bouton vers /login
+  if (!logged) {
+    return (
+      <section className="bg-radial from-[#961990] to-[#000000] min-h-screen flex items-center justify-center p-4 md:p-8">
+        <div className="bg-red-900/30 border-2 border-red-500 rounded-lg p-6 max-w-md text-center">
+          <h2 className="text-red-300 font-bold text-2xl mb-4">Les morts-vivants ne peuvent pas réserver 🧟</h2>
+          <p className="text-red-300 mb-6">
+             Oups ! Seuls les survivants connectés peuvent réserver des billets pour ZombieLand…
+          </p>
+          <Link
+            href="/login"
+            className="button_activity m-2 p-2 md:m-4 md:py-4 flex items-center w-fit text-neutral-50 width-inherit md:px-12 justify-center font-bold"
+          >
+            Rejoindre les survivants
+          </Link>
+        </div>
+      </section>
+    );
+  }
+
   const today = new Date(); // Préparation d'une référence à la date du jour
   today.setHours(0, 0, 0, 0); // On met l'heure à 00:00 pour éviter le décalage horaire
 

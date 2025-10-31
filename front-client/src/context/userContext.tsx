@@ -11,6 +11,8 @@ import { createContext } from "react";
  */
 interface IUserContext {
   user: IUser | null;
+  logged: boolean; // état connecté
+  setLogged: (value: boolean) => void; // setter pour logged
   login: (userData: IUser) => void;
   logout: () => void
 }

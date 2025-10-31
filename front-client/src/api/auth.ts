@@ -91,7 +91,7 @@ export const authApi = {
    */
   logout: async (): Promise<void> => {
     try {
-      await axios.post(`${API_URL}/auth/logout`, { withCredentials: true });
+      await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
     } catch (err) {
       console.error("Erreur lors du logout :", err);
     }

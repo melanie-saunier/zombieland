@@ -28,17 +28,20 @@ export default function UserContextProvider({ children }: Props) {
   // On crée un state "user" pour stocker les informations de l’utilisateur connecté.
   // Par défaut, il est null (aucun utilisateur connecté).
   const [user, setUser] = useState<IUser | null>(null);
+  const [logged, setLogged] = useState(false);
 
   // Fonction de login : appelée après un POST /login réussi
   // Elle enregistre les données de l’utilisateur dans le state global.
   const login = (userData: IUser) => {
     setUser(userData);
+    setLogged(true);
   };
 
   // Fonction de logout : utilisée pour déconnecter l’utilisateur
   // Elle réinitialise le state à null.
   const logout = () => {
     setUser(null);
+    setLogged(false);
   };
 
   /**
@@ -50,9 +53,11 @@ export default function UserContextProvider({ children }: Props) {
       try {
         const currentUser = await authApi.getCurrentUser();
         setUser(currentUser);
+        setLogged(true);
       } catch (err) {
         console.error("Erreur lors de la récupération du user :", err);
         setUser(null);
+        setLogged(false);
       }
     };
 
@@ -67,7 +72,7 @@ export default function UserContextProvider({ children }: Props) {
    *  - logout : fonction pour se déconnecter
    */
   return (
-    <UserContext.Provider value={{ user, login, logout }}>
+    <UserContext.Provider value={{ user, logged, setLogged, login, logout }}>
       {children}
     </UserContext.Provider>
   );
