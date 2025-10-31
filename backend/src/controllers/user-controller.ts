@@ -32,6 +32,7 @@ export const userController = {
     });
 
     res.status(200).json(safeUsers);
+
   },
   
   /**
