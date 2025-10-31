@@ -60,7 +60,7 @@ export const authController = {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,  // TODO: mettre à true en production: en HTTPS
-      sameSite: "strict", //protege des attaques CSRF, CORS, fuite de données intersites
+      sameSite: "lax", //protege des attaques CSRF, CORS, fuite de données intersites
       maxAge: 3 * 60 * 60 * 1000, // 3 heures
     }); 
 
@@ -114,7 +114,7 @@ export const authController = {
     res.cookie("token", token, {
       httpOnly: true,
       secure: false,  // TODO: mettre à true en production: en HTTPS
-      sameSite: "strict",
+      sameSite: "lax", // mettre strict si front et back sur meme domaine
       maxAge: 3 * 60 * 60 * 1000, // 3 heures
     }); 
 
@@ -242,7 +242,7 @@ export const authController = {
     res.clearCookie("token", {
       httpOnly: true,
       secure: false, // TODO: mettre true en prod en HTTPS
-      sameSite: "strict",
+      sameSite: "lax",
     });
     res.status(200).json({"message": "Logged out"});
   }
