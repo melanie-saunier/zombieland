@@ -15,7 +15,7 @@ import UserContext from "./userContext";
  */
 export default function useUserContext() {
   // On récupère la valeur actuelle du contexte.
-  // Elle contient : { user, login, logout } 
+  // Elle contient : { user, logged, setLogged, login, logout } 
   const context = useContext(UserContext);
 
   // Si le contexte est "undefined", cela veut dire qu’on essaye d’utiliser ce hook

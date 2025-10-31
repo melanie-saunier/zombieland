@@ -49,7 +49,7 @@ export default function LoginPage() {
       setSuccess(`Bienvenue ${user.firstname} ! Tu vas être redirigé·e vers la page d'accueil.`);
       setError(null);
 
-      // Redirection vers la page d'accueil après 3 secondes
+      // Redirection vers la page d'accueil après 2 secondes
       setTimeout(() => {
         router.push("/"); // redirection vers la home
       }, 2000);
