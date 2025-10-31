@@ -1,3 +1,4 @@
+import { error } from "console";
 import { NextFunction, Request, Response } from "express";
 import { ZodError } from "zod";
 
@@ -14,15 +15,14 @@ function notFound(_req: Request, res: Response) {
 
 // Fonction pour les erreurs 500
 function errorHandler(err: AppError, _req: Request, res: Response, _next: NextFunction) {
-  console.log(err);
-  const statusCode = err.statusCode || 500;
+    console.log(err);
 
-  if (err instanceof ZodError) {
-    res.status(400).json({ error: err.issues });
-    return;
-  }
+    if (err instanceof ZodError) {
+      return res.status(400).json({error: "Echec de la validation"});
+    }
 
-  res.status(statusCode).json({ status: statusCode.toString(), error: err.message });
+    const statusCode = err.statusCode || 500;
+    res.status(statusCode).render(statusCode.toString(), { error: err.message });
 }
 
 export { notFound, errorHandler }

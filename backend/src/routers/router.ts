@@ -1,6 +1,8 @@
 import { Router } from "express";
 import { categoryRouter } from "./category-router";
 import { activityRouter } from "./activity-router";
+import { bookingRouter } from "./booking-router";
+import { priceRouter } from "./price-router"
 import { userRouter } from "./user-router";
 import { authRouter } from "./auth-router";
 import { authenticateToken } from "../middlewares/authenticate-token";
@@ -19,6 +21,12 @@ router.use("/activities", activityRouter);
 
 // Router des categories
 router.use("/categories", categoryRouter);
+
+// Router des bookings
+router.use("/bookings", bookingRouter);
+
+// Router des prices
+router.use("/prices", priceRouter);
 
 // Router des users
 router.use("/users", authenticateToken, authorizeAdmin, userRouter);
