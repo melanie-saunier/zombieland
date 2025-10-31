@@ -1,7 +1,12 @@
 "use client";
-
 import Image from "next/image";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Erreur serveur | ZOMBIELAND",
+  description: "Le serveur a été infecté par des zombies ! Nos survivants tentent de rétablir la connexion...",
+};
 
 export default function Error500Page() {
   return (
