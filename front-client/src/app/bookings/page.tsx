@@ -1,12 +1,14 @@
-// src/app/my-bookings/page.tsx 
 
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { X, AlertCircle } from "lucide-react";
 import MyBookingCard from "@/components/MyBookingsCard"; // Composant affichant une carte de réservation
 import { Booking, ReservationDisplay } from "@/@types/my-bookings";
 import { transformBookingToDisplay, formatDate } from "@/utils/mybookingsUtils";
 import { MAX_TICKETS_PER_BOOKING } from "@/utils/bookingUtils";
+import { bookingApi } from "@/api/booking";
+import useUserContext from "@/context/useUserContext";
+import { IMyBookingWithTotalPrice } from "@/@types/booking";
 
 // Mock data aligné sur le backend
 // TODO: Remplacer par fetch /api/bookings
@@ -88,15 +90,16 @@ const mockBackendBookings: Booking[] = [
 const TICKET_PRICE = 30; // Aligné sur backend: data/seed-db.sql → price.value = 30.00
 
 export default function MyBookingsPage() {
+  const { user } = useUserContext();
   // État backend (structure BDD)
   // Cet état représente les données “brutes” venant du backend.
   // TODO: fetch API
-  const [backendBookings, setBackendBookings] = useState<Booking[]>(mockBackendBookings);
+  const [myBookings, setmyBookings] = useState<IMyBookingWithTotalPrice[]>([]);
   
   // Transformation pour affichage
   // On convertit chaque objet Booking (structure BDD) en un objet plus simple ReservationDisplay,
   // plus adapté à l’affichage (par exemple : formatage des dates, calcul du prix total, etc.)
-  const displayReservations = backendBookings.map(b => transformBookingToDisplay(b, TICKET_PRICE)); 
+  // const displayReservations = backendBookings.map(b => transformBookingToDisplay(b, TICKET_PRICE)); 
 
   // Réservation actuellement sélectionnée (pour modifier ou annuler)
   const [selected, setSelected] = useState<ReservationDisplay | null>(null);
@@ -104,6 +107,32 @@ export default function MyBookingsPage() {
   const [modalType, setModalType] = useState<"modify" | "cancel" | "confirm" | null>(null);
   // Contenu du formulaire utilisé pour la modification d'une réservation
   const [form, setForm] = useState({ visitDate: "", ticketCount: 1 });
+
+  useEffect(() => {
+    const fetchMyBookings = async () => {
+      if (!user?.id) return;
+      try {
+        // TODO: ajouter un loader/error des reservations
+        const myBookingsData = await bookingApi.getMyBooking(user?.id);
+        if (!myBookingsData) {
+          // TODO: gerer l'affichage quand pas de réservation
+          setmyBookings([]);
+          return;
+        }
+        const bookingsWithTotal = myBookingsData?.map(booking => ({
+          ...booking,
+          total_price: booking.nb_people * booking.bookingPrice,
+        }));
+        
+        setmyBookings(bookingsWithTotal);
+        console.log(myBookings);
+      } catch(error) {
+        console.error("Erreur lors du chargement des réservations :", error);
+        // ToDO: ajouter state error
+      }
+    };
+    fetchMyBookings();
+  }, []);
 
   // --- Fonctions d’ouverture des modales ---
   const openModify = (res: ReservationDisplay) => {
@@ -177,7 +206,7 @@ export default function MyBookingsPage() {
         </header>
 
         {/* Liste des réservations */}
-        {displayReservations.length === 0 ? (
+        {myBookings.length === 0 ? (
           // Cas où l’utilisateur n’a aucune réservation
           <div className="bg-neutral-700 border border-primary-300 rounded-lg p-8 text-center shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
             <p className="text-neutral-50 text-lg">Vous n'avez aucune réservation pour le moment.</p>
@@ -185,7 +214,7 @@ export default function MyBookingsPage() {
         ) : (
           // Cas normal : on affiche les cartes de réservation
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {displayReservations.map((res) => (
+            {myBookings.map((res) => (
               <MyBookingCard 
                 key={res.id} 
                 reservation={res} 

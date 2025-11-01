@@ -3,6 +3,7 @@
 import { Calendar, Users, Check } from "lucide-react";
 import { MyBookingCardProps, InfoItemProps } from "@/@types/my-bookings";
 import { formatDate } from "@/utils/mybookingsUtils";
+import { IMyBookingWithTotalPrice } from "@/@types/booking";
 
 const statusClasses = {
   confirmed: "bg-secondary-500/20 text-secondary-200 border-secondary-300",
@@ -20,9 +21,14 @@ const canCancel = (visitDate: string) => {
   const diffHrs = (new Date(visitDate).getTime() - Date.now()) / (1000 * 60 * 60);
   return diffHrs >= 48;
 };
+interface MBookingCardProps { // Props pour le composant MyBookingsCard
+  reservation: IMyBookingWithTotalPrice;
+  onModify: (reservation: IMyBookingWithTotalPrice) => void;
+  onCancel: (reservation: IMyBookingWithTotalPrice) => void;
+}
 
 /** Composant de carte de réservation */
-export default function MyBookingsCard({ reservation, onModify, onCancel }: MyBookingCardProps) {
+export default function MyBookingsCard({ reservation, onModify, onCancel }: MBookingCardProps) {
   return (
     <div className="bg-[#201041] border border-primary-300 rounded-lg p-6 shadow-[0_0_12px_0_rgba(180,130,255,0.3)] hover:shadow-[0_0_20px_0_rgba(180,130,255,0.5)] transition-all">
       <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
@@ -38,27 +44,27 @@ export default function MyBookingsCard({ reservation, onModify, onCancel }: MyBo
           </span>
 
           <div className="grid grid-cols-1 md:grid-cols-1 gap-4">
-            <InfoItem
+            {/* <InfoItem
               icon={<Calendar />}
               label="Date de réservation"
               value={formatDate(reservation.bookingDate)}
               color="text-primary-300"
-            />
+            /> */}
             <InfoItem
               icon={<Calendar />}
               label="Date de visite"
-              value={formatDate(reservation.visitDate)}
+              value={formatDate(reservation.visit_date)}
               color="text-secondary-200"
             />
             <InfoItem
               icon={<Users />}
               label="Nombre de personnes"
-              value={`${reservation.ticketCount} personne${reservation.ticketCount > 1 ? "s" : ""}`}
+              value={`${reservation.nb_people} personne${reservation.nb_people > 1 ? "s" : ""}`}
             />
             <InfoItem
               icon={<span>€</span>}
               label="Prix total"
-              value={`${reservation.totalPrice.toFixed(2)}€`}
+              value={`${reservation.total_price.toFixed(2)}€`}
               highlight
             />
           </div>
