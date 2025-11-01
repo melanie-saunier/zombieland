@@ -60,7 +60,6 @@ export default function MyBookingsPage() {
       }
     };
     fetchMyBookings();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
 
