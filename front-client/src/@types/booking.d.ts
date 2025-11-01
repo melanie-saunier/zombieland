@@ -52,6 +52,7 @@ export interface IMyBooking {
   status: boolean;
   user_id: number;
   bookingPrice: number;
+  created_at: date;
 }
 
 export interface IMyBookingWithTotalPrice {
@@ -61,5 +62,6 @@ export interface IMyBookingWithTotalPrice {
   status: boolean;
   user_id: number;
   bookingPrice: number;
+  created_at: date;
   total_price: number;
 }

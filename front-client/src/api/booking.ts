@@ -48,6 +48,7 @@ export const bookingApi = {
         status: booking.status,
         user_id: booking.user_id,
         bookingPrice: booking.bookingPrices[0].applied_price,
+        created_at: booking.created_at,
       }));
       
       return myBookings;

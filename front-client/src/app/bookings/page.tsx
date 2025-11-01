@@ -9,6 +9,7 @@ import { MAX_TICKETS_PER_BOOKING } from "@/utils/bookingUtils";
 import { bookingApi } from "@/api/booking";
 import useUserContext from "@/context/useUserContext";
 import { IMyBookingWithTotalPrice } from "@/@types/booking";
+import MyBookingsCard from "@/components/MyBookingCardV2";
 
 // Mock data aligné sur le backend
 // TODO: Remplacer par fetch /api/bookings
@@ -215,11 +216,9 @@ export default function MyBookingsPage() {
           // Cas normal : on affiche les cartes de réservation
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {myBookings.map((res) => (
-              <MyBookingCard 
-                key={res.id} 
-                reservation={res} 
-                onModify={openModify} 
-                onCancel={openCancel} 
+              <MyBookingsCard 
+                key={res.id}
+                reservation = {res} 
               />
             ))}
           </div>
