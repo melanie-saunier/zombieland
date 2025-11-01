@@ -67,5 +67,35 @@ export const bookingApi = {
       throw new Error("Erreur inconnue");
     }
   },
+  updateMyBooking: async (id:number, data: Omit<IBookingInput, "status" | "user_id">) => {
+    try {
+      const res = await axios.patch<IApiBooking>(`${API_URL}/bookings/${id}/user`, data, { withCredentials: true });
+      const myBookingDataUpdate = res.data;
+      
+      if (!myBookingDataUpdate) return null;
+      
+      const myBookingUpdate : IBooking = {
+        visit_date: myBookingDataUpdate.visit_date,
+        nb_people: myBookingDataUpdate.nb_people,
+        status: myBookingDataUpdate.status,
+        user_id: myBookingDataUpdate.user_id,
+      };;
+      
+      return myBookingUpdate;
+  
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        // const message = err.response?.data?.error || "Erreur lors de la création de la réservation";
+        // throw new Error(message); // on remonte l'erreur pour le handle
+        const message =
+          err.response?.data?.message ||
+          (Array.isArray(err.response?.data?.errors)
+            ? err.response.data.errors.join(", ")
+            : "Erreur lors de la création de toute les réservations");
+        throw new Error(message);
+      }
+      throw new Error("Erreur inconnue");
+    }
+  }
 
 };

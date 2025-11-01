@@ -26,8 +26,8 @@ export default function MyBookingsPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
 
-
   useEffect(() => {
+    // chargement des reservations du users au chargement de la page
     const fetchMyBookings = async () => {
       if (!user?.id) return;
       setIsLoadingMyBookings(true);
@@ -45,7 +45,7 @@ export default function MyBookingsPage() {
         }));
         
         setmyBookings(bookingsWithTotal);
-        console.log(myBookings);
+       
       } catch(error) {
         console.error("Erreur lors du chargement des réservations :", error);
         setError(
@@ -60,6 +60,41 @@ export default function MyBookingsPage() {
     fetchMyBookings();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
+
+
+  // fonction pour soumission du formulaire de modification de la reservation
+  async function handleUpdateBooking(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); // empêche le rechargement de la page
+    if (!selectedBooking) return;
+    // on récupère la saisie utilisateur
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+  
+    const visit_date = formData.get("visit_date") as string;
+    const nb_people = Number(formData.get("nb_people"));
+  
+    try {
+      await bookingApi.updateMyBooking(selectedBooking.id, {
+        visit_date: new Date(visit_date),
+        nb_people,
+      });
+  
+      // Mise à jour locale du state myBookings
+      setmyBookings((prev) =>
+        prev.map((booking) =>
+          booking.id === selectedBooking.id
+            ? { ...booking, visit_date: new Date(visit_date), nb_people }
+            : booking
+        )
+      );
+  
+      // Fermeture de la modale
+      setIsEditModalOpen(false);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour :", error);
+      alert("Erreur lors de la mise à jour de la réservation.");
+    }
+  }
 
   if (isLoadingMyBookings) {
     return (
@@ -117,48 +152,52 @@ export default function MyBookingsPage() {
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
           <div className="bg-[#1E1630] text-neutral-50 p-6 rounded-xl shadow-lg w-[90%] max-w-md relative">
             <h2 className="text-2xl font-bold mb-4">Modifier la réservation</h2>
-      
+
             <p className="text-sm text-primary-200 mb-6">
               Réservation du {new Date(selectedBooking.visit_date).toLocaleDateString()}
             </p>
-      
-            <div className="space-y-4">
+
+            
+            <form
+              onSubmit={handleUpdateBooking}
+              className="space-y-4"
+            >
               <label className="block">
                 <span className="text-sm">Nombre de personnes</span>
                 <input
+                  name="nb_people"
                   type="number"
                   defaultValue={selectedBooking.nb_people}
                   className="w-full mt-1 p-2 rounded bg-neutral-800 border border-primary-300"
                 />
               </label>
-      
+
               <label className="block">
                 <span className="text-sm">Date de visite</span>
                 <input
+                  name="visit_date"
                   type="date"
                   defaultValue={new Date(selectedBooking.visit_date).toISOString().split("T")[0]}
                   className="w-full mt-1 p-2 rounded bg-neutral-800 border border-primary-300"
                 />
               </label>
-            </div>
-      
-            <div className="flex justify-end gap-4 mt-6">
-              <button
-                onClick={() => setIsEditModalOpen(false)}
-                className="px-4 py-2 rounded bg-neutral-700 hover:bg-neutral-600 transition"
-              >
-                Annuler
-              </button>
-              <button
-                onClick={() => {
-                  // plus tard on fera le fetch ici
-                  setIsEditModalOpen(false);
-                }}
-                className="px-4 py-2 rounded bg-primary-500 hover:bg-primary-400 transition"
-              >
-                Enregistrer
-              </button>
-            </div>
+
+              <div className="flex justify-end gap-4 mt-6">
+                <button
+                  type="button"
+                  onClick={() => setIsEditModalOpen(false)}
+                  className="px-4 py-2 rounded bg-neutral-700 hover:bg-neutral-600 transition"
+                >
+            Annuler
+                </button>
+                <button
+                  type="submit"
+                  className="px-4 py-2 rounded bg-primary-500 hover:bg-primary-400 transition"
+                >
+            Enregistrer
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
