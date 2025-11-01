@@ -2,7 +2,6 @@ import { IMyBookingWithTotalPrice } from "@/@types/booking";
 
 interface EditBookingModalProps {
   selectedBooking: IMyBookingWithTotalPrice;
-  isEditModalOpen: boolean;
   onClose: () => void;
   handleUpdateBooking: (e: React.FormEvent<HTMLFormElement>) => void;
   errorForm?: string | null;
@@ -11,13 +10,12 @@ interface EditBookingModalProps {
 
 export default function EditBookingModal({
   selectedBooking,
-  isEditModalOpen,
   onClose,
   handleUpdateBooking,
   errorForm,
 }: EditBookingModalProps) {
 
-  if (!isEditModalOpen || !selectedBooking) return null;
+  
 
   return (
     <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
@@ -60,7 +58,7 @@ export default function EditBookingModal({
           <div className="flex justify-end gap-4 mt-6">
             <button
               type="button"
-              onClick={() => onClose}
+              onClick={onClose}
               className="px-4 py-2 rounded bg-neutral-700 hover:bg-neutral-600 transition"
             >
             Annuler
