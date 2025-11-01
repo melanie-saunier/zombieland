@@ -24,6 +24,8 @@ export default function MyBookingsPage() {
   //pour la modal de modification:
   const [selectedBooking, setSelectedBooking] = useState<IMyBookingWithTotalPrice | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  // pour la gestion d'erreur dans la modal de modification
+  const [errorForm, setErrorForm] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -72,10 +74,31 @@ export default function MyBookingsPage() {
   
     const visit_date = formData.get("visit_date") as string;
     const nb_people = Number(formData.get("nb_people"));
-  
+
+    // si la personne met moins de 1 ou plus de 15 billets on envoie une erreur
+    if (nb_people < 1 || nb_people > 15) {
+      setErrorForm("Le nombre de personnes doit être entre 1 et 15.");
+      return;
+    }
+    // validation de la date: ne peut pas être antérieur à today
+    const today = new Date;
+    today.setHours(0, 0, 0, 0);
+    //on utilise la fct setHours pour passer du format jour + heure à un format jour et heure à zero
+    // ce format "sans heure" sera donc comparable à notre visit_date
+
+    // on fait newDate sur visit_date car la saisie dans l'input est une string, donc on le converti en date
+    //on pourra donc le comparer à today et l'envoyer en format Date au back
+    const visitDateFormatted = new Date(visit_date);
+    if (visitDateFormatted <=  today) {
+      setErrorForm("La date de visite ne peut pas être antérieure à aujourd'hui.");
+      return;
+    }
+    // remise à zéro du state d'erreur:
+    setErrorForm(null);
+
     try {
       await bookingApi.updateMyBooking(selectedBooking.id, {
-        visit_date: new Date(visit_date),
+        visit_date: visitDateFormatted,
         nb_people,
       });
   
@@ -156,7 +179,9 @@ export default function MyBookingsPage() {
             <p className="text-sm text-primary-200 mb-6">
               Réservation du {new Date(selectedBooking.visit_date).toLocaleDateString()}
             </p>
-
+            {errorForm && (
+              <p className="text-red-500 text-sm">{errorForm}</p>
+            )}
             
             <form
               onSubmit={handleUpdateBooking}
@@ -167,12 +192,13 @@ export default function MyBookingsPage() {
                 <input
                   name="nb_people"
                   type="number"
-                  min={1} 
+                  min={1}
+                  max={15}
                   defaultValue={selectedBooking.nb_people}
                   className="w-full mt-1 p-2 rounded bg-neutral-800 border border-primary-300"
                 />
               </label>
-
+              
               <label className="block">
                 <span className="text-sm">Date de visite</span>
                 <input
