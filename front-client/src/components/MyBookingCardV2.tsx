@@ -6,10 +6,11 @@ import { Calendar, Users } from "lucide-react";
 interface MyBookingProps {
   reservation: IMyBookingWithTotalPrice;
   onEdit: () => void;
+  onCancel: () => void;
 }
 
 
-export default function MyBookingsCard({reservation, onEdit}: MyBookingProps) {
+export default function MyBookingsCard({reservation, onEdit, onCancel}: MyBookingProps) {
   const today = new Date();
   const visitDate = new Date(reservation.visit_date);
 
@@ -81,6 +82,7 @@ export default function MyBookingsCard({reservation, onEdit}: MyBookingProps) {
             </button>
             <button
               className={"w-full px-4 py-3 rounded-lg font-bold border transition-all"}
+              onClick={onCancel}
             >
                 Annuler
             </button>

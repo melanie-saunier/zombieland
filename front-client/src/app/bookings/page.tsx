@@ -1,11 +1,6 @@
-
 "use client";
+
 import { useEffect, useState } from "react";
-import { X, AlertCircle } from "lucide-react";
-import MyBookingCard from "@/components/MyBookingsCard"; // Composant affichant une carte de réservation
-import { Booking, ReservationDisplay } from "@/@types/my-bookings";
-import { transformBookingToDisplay, formatDate } from "@/utils/mybookingsUtils";
-import { MAX_TICKETS_PER_BOOKING } from "@/utils/bookingUtils";
 import { bookingApi } from "@/api/booking";
 import useUserContext from "@/context/useUserContext";
 import { IMyBookingWithTotalPrice } from "@/@types/booking";
@@ -26,6 +21,9 @@ export default function MyBookingsPage() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   // pour la gestion d'erreur dans la modal de modification
   const [errorForm, setErrorForm] = useState<string | null>(null);
+
+  // pour la modal d'annulation de réservation
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
 
   useEffect(() => {
@@ -97,25 +95,65 @@ export default function MyBookingsPage() {
     setErrorForm(null);
 
     try {
-      await bookingApi.updateMyBooking(selectedBooking.id, {
+      const updatedBooking = await bookingApi.updateMyBooking(selectedBooking.id, {
         visit_date: visitDateFormatted,
         nb_people,
       });
   
-      // Mise à jour locale du state myBookings
-      setmyBookings((prev) =>
-        prev.map((booking) =>
-          booking.id === selectedBooking.id
-            ? { ...booking, visit_date: new Date(visit_date), nb_people }
-            : booking
-        )
-      );
+      if (updatedBooking) {
+        setmyBookings((prev) =>
+          // on parcours booking(state) pour trouver le booking qui a été modifié et remplacé ces données par les données à jour de l'api
+          prev.map((booking) =>
+            booking.id === selectedBooking.id
+              ? { ...booking, 
+                visit_date: new Date(updatedBooking.visit_date), 
+                nb_people: updatedBooking.nb_people,
+                status: updatedBooking.status,
+                user_id: updatedBooking.user_id,
+                total_price: updatedBooking.nb_people * booking.bookingPrice,
+              }
+              : booking
+          )
+        );
+      }
   
       // Fermeture de la modale
       setIsEditModalOpen(false);
     } catch (error) {
       console.error("Erreur lors de la mise à jour :", error);
-      alert("Erreur lors de la mise à jour de la réservation.");
+      setErrorForm("Impossible de modifier la réservation.");
+    }
+  }
+  // fonction pour annuler une réservation
+  async function handleCancelBooking()  {
+    if (!selectedBooking) return;
+
+    try {
+    // Appel API pour annuler la réservation: passer le status à false
+      const cancelledBooking = await bookingApi.cancelMyBooking(selectedBooking.id);
+
+      if (cancelledBooking) {
+        // on met à jour le state myBookings avec les données recues de l'API apres annulation
+        setmyBookings((prev) =>
+          prev.map((booking) =>
+            booking.id === selectedBooking.id
+              ? { ...booking, 
+                visit_date: new Date(cancelledBooking.visit_date), 
+                nb_people: cancelledBooking.nb_people,
+                status: cancelledBooking.status, 
+                user_id: cancelledBooking.user_id 
+              }
+              : booking
+          )
+        );
+      }
+
+      // on ferme la modale
+      setIsCancelModalOpen(false);
+      
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour :", error);
+      setErrorForm("Impossible d'annuler la réservation.");
     }
   }
 
@@ -165,6 +203,12 @@ export default function MyBookingsPage() {
                   setSelectedBooking(res);
                   setIsEditModalOpen(true);
                 }}
+                onCancel= {
+                  () => {
+                    setSelectedBooking(res);
+                    setIsCancelModalOpen(true);
+                  }
+                }
               />
             ))}
           </div>
@@ -225,6 +269,41 @@ export default function MyBookingsPage() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+      {/* modal d'annulation de réservation */}
+      {isCancelModalOpen && selectedBooking && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+          <div className="bg-[#1E1630] text-neutral-50 p-6 rounded-xl shadow-lg w-[90%] max-w-md relative">
+            <h2 className="text-2xl font-bold mb-4">Annuler la réservation</h2>
+
+            <p className="text-sm text-primary-200 mb-6">
+        Êtes-vous sûr de vouloir annuler la réservation du{" "}
+              {new Date(selectedBooking.visit_date).toLocaleDateString()} pour{" "}
+              {selectedBooking.nb_people} personne(s) ?
+            </p>
+
+            {errorForm && (
+              <p className="text-red-500 text-sm mb-3">{errorForm}</p>
+            )}
+
+            <div className="flex justify-end gap-4 mt-6">
+              <button
+                type="button"
+                onClick={() => setIsCancelModalOpen(false)}
+                className="px-4 py-2 rounded bg-neutral-700 hover:bg-neutral-600 transition"
+              >
+          Annuler
+              </button>
+              <button
+                type="button"
+                onClick={handleCancelBooking}
+                className="px-4 py-2 rounded bg-red-500 hover:bg-red-400 transition"
+              >
+          Confirmer
+              </button>
+            </div>
           </div>
         </div>
       )}

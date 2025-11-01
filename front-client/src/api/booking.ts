@@ -61,7 +61,7 @@ export const bookingApi = {
           err.response?.data?.message ||
           (Array.isArray(err.response?.data?.errors)
             ? err.response.data.errors.join(", ")
-            : "Erreur lors de la création de toute les réservations");
+            : "Erreur lors de la création de toutes les réservations");
         throw new Error(message);
       }
       throw new Error("Erreur inconnue");
@@ -91,7 +91,37 @@ export const bookingApi = {
           err.response?.data?.message ||
           (Array.isArray(err.response?.data?.errors)
             ? err.response.data.errors.join(", ")
-            : "Erreur lors de la création de toute les réservations");
+            : "Erreur lors de la modification de la réservation");
+        throw new Error(message);
+      }
+      throw new Error("Erreur inconnue");
+    }
+  },
+  cancelMyBooking: async(id:number) => {
+    try {
+      const res = await axios.patch<IApiBooking>(`${API_URL}/bookings/${id}/cancel`, {}, { withCredentials: true });
+      const myBookingDataCancel = res.data;
+      
+      if (!myBookingDataCancel) return null;
+      
+      const myBookingCancel : IBooking = {
+        visit_date: myBookingDataCancel.visit_date,
+        nb_people: myBookingDataCancel.nb_people,
+        status: myBookingDataCancel.status,
+        user_id: myBookingDataCancel.user_id,
+      };;
+      
+      return myBookingCancel;
+  
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        // const message = err.response?.data?.error || "Erreur lors de la création de la réservation";
+        // throw new Error(message); // on remonte l'erreur pour le handle
+        const message =
+          err.response?.data?.message ||
+          (Array.isArray(err.response?.data?.errors)
+            ? err.response.data.errors.join(", ")
+            : "Erreur lors de l'annulation de la réservation");
         throw new Error(message);
       }
       throw new Error("Erreur inconnue");
