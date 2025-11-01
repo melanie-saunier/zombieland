@@ -5,10 +5,11 @@ import { Calendar, Users } from "lucide-react";
 
 interface MyBookingProps {
   reservation: IMyBookingWithTotalPrice;
+  onEdit: () => void;
 }
 
 
-export default function MyBookingsCard({reservation}: MyBookingProps) {
+export default function MyBookingsCard({reservation, onEdit}: MyBookingProps) {
   const today = new Date();
   const visitDate = new Date(reservation.visit_date);
 
@@ -73,6 +74,8 @@ export default function MyBookingsCard({reservation}: MyBookingProps) {
           <div className="flex flex-col gap-3 lg:w-48">
             <button
               className="w-full px-4 py-3 button_activity text-neutral-50 font-bold rounded-lg hover:scale-105 transition-all"
+              // quand on clique on passe l'affichage de la modal a true
+              onClick={onEdit}
             >
                 Modifier
             </button>
