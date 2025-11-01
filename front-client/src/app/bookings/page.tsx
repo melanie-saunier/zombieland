@@ -167,6 +167,7 @@ export default function MyBookingsPage() {
                 <input
                   name="nb_people"
                   type="number"
+                  min={1} 
                   defaultValue={selectedBooking.nb_people}
                   className="w-full mt-1 p-2 rounded bg-neutral-800 border border-primary-300"
                 />
