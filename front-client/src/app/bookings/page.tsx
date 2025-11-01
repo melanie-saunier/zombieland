@@ -61,47 +61,57 @@ export default function MyBookingsPage() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user?.id]);
 
+  if (isLoadingMyBookings) {
+    return (
+      <div className="bg-radial from-[#961990] to-[#000000] min-h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="bg-radial from-[#961990] to-[#000000] min-h-screen flex items-center justify-center">
+        <div className="bg-red-900/30 border-2 border-red-500 rounded-lg p-6 max-w-md text-center">
+          <h2 className="text-red-300 font-bold text-xl mb-2">Erreur de chargement</h2>
+          <p className="text-red-300">{error}</p>
+        </div>
+      </div>
+    );
+  }
 
 
   return (
     <div className="bg-radial from-[#961990] to-[#000000] p-12">
-      {isLoadingMyBookings ? (
-        <div className="flex justify-center items-center py-20">
-          <Loader />
-        </div>
-      ):
-      
-        <div className="max-w-6xl mx-auto space-y-8">
-          {/* Header */}
-          <header className="text-center">
-            <h1 className="title text-4xl md:text-5xl font-bold mb-2">Mes Réservations</h1>
-            <p className="text-lg text-neutral-50">Gérez mes réservations</p>
-          </header>
+      <div className="max-w-6xl mx-auto space-y-8">
+        {/* Header */}
+        <header className="text-center">
+          <h1 className="title text-4xl md:text-5xl font-bold mb-2">Mes Réservations</h1>
+          <p className="text-lg text-neutral-50">Gérez mes réservations</p>
+        </header>
 
-          {/* Liste des réservations */}
-          {myBookings.length === 0 ? (
+        {/* Liste des réservations */}
+        {myBookings.length === 0 ? (
           // Cas où l’utilisateur n’a aucune réservation
-            <div className="bg-neutral-700 border border-primary-300 rounded-lg p-8 text-center shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
-              <p className="text-neutral-50 text-lg">Vous n&apos;avez aucune réservation pour le moment.</p>
-            </div>
-          ) : (
+          <div className="bg-neutral-700 border border-primary-300 rounded-lg p-8 text-center shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
+            <p className="text-neutral-50 text-lg">Vous n&apos;avez aucune réservation pour le moment.</p>
+          </div>
+        ) : (
           // Cas normal : on affiche les cartes de réservation
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {myBookings.map((res) => (
-                <MyBookingsCard 
-                  key={res.id}
-                  reservation = {res}
-                  onEdit={() => {
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {myBookings.map((res) => (
+              <MyBookingsCard 
+                key={res.id}
+                reservation = {res}
+                onEdit={() => {
                   // on remplit le state avec la reservation de la carte et on passe le state de la modal à true pour l'afficher
-                    setSelectedBooking(res);
-                    setIsEditModalOpen(true);
-                  }}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-      }
+                  setSelectedBooking(res);
+                  setIsEditModalOpen(true);
+                }}
+              />
+            ))}
+          </div>
+        )}
+      </div>
       {/* // modal de modification */}
       {isEditModalOpen && selectedBooking && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
