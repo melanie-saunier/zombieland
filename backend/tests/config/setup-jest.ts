@@ -1,25 +1,31 @@
-// On importe le module 'fs' de Node pour pouvoir lire des fichiers
+// Import des modules nécessaires
 import fs from "fs";
-// On importe le module 'path' de Node pour gérer les chemins de fichiers de manière portable
 import path from "path";
-// On importe l'instance de Sequelize qui gère la connexion à la base de données
-import { sequelize } from "../../src/models/association";
+import { fileURLToPath } from "url";
+import dotenv from "dotenv";
+import { sequelize } from "../../src/models/association.js";
 
-// beforeAll est une fonction de Jest qui s'exécute avant tous les tests
-// Ici, on l'utilise pour "préparer" la base de données avant de lancer les tests
+// Ces deux lignes remplacent __dirname en ESM :
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Charger le .env.test (utile pour utiliser une base de données de test séparée)
+dotenv.config({ path: path.resolve(__dirname, "../../.env.test") });
+
+// Préparation avant tous les tests
 beforeAll(async () => {
-  // On construit le chemin vers le fichier SQL qui contient le seed pour la DB de test
-  const seedFile = path.join(__dirname, "../db/seed-db-test.sql");
-  // On lit le contenu du fichier SQL en UTF-8
+  // On lit le contenu du fichier SQL pour initialiser la base de test
+  const seedFile = path.join(__dirname, "../../data/seed-db-test.sql");
   const seedSQL = fs.readFileSync(seedFile, "utf8");
-  // On exécute le script SQL dans la base de données via Sequelize
-  // Cela va insérer toutes les données nécessaires pour les tests
+
+  // On exécute le script SQL avec Sequelize
   await sequelize.query(seedSQL);
 });
 
-// afterAll : s'exécute après tous les tests
-// Ici, on ferme proprement la connexion Sequelize pour éviter les warnings Jest
+// Nettoyage après tous les tests
 afterAll(async () => {
-  // fermeture de la connexion à la base de données
-  await sequelize.close(); 
+  // Fermeture propre de la connexion Sequelize
+  await sequelize.close();
+  // Forcer Jest à attendre la fin des timers ouverts (évite les handles ouverts)
+  await new Promise((resolve) => setTimeout(resolve, 500));
 });

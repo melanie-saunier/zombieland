@@ -169,6 +169,8 @@ SELECT CURRENT_DATE + INTERVAL '10 days', 3, false, u.id FROM "user" u WHERE u.e
 UNION ALL
 SELECT CURRENT_DATE - INTERVAL '5 days', 2, true, u.id FROM "user" u WHERE u.email = 'alfred.lechien@gmail.com'
 UNION ALL
+SELECT CURRENT_DATE + INTERVAL '5 days', 4, true, u.id FROM "user" u WHERE u.email = 'alfred.lechien@gmail.com'
+UNION ALL
 SELECT CURRENT_DATE + INTERVAL '7 days', 1, true, u.id FROM "user" u WHERE u.email = 'bunny.lelapin@gmail.com'
 UNION ALL
 SELECT CURRENT_DATE + INTERVAL '10 days', 2, false, u.id FROM "user" u WHERE u.email = 'bunny.lelapin@gmail.com'

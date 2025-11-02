@@ -77,6 +77,9 @@ export const bookingController = {
    * @param res 
    */
   async createOne(req: Request, res: Response) {
+    if (req.body.visit_date) {
+      req.body.visit_date = new Date(req.body.visit_date);
+    }
     // Validation des données reçues avec Zod
     const validation = bookingSchema.safeParse(req.body);
 
@@ -125,6 +128,9 @@ export const bookingController = {
    * @param res 
    */
   async updateOneById(req: Request, res: Response) {
+    if (req.body.visit_date) {
+      req.body.visit_date = new Date(req.body.visit_date);
+    }
     // Validation des données reçues avec Zod
     const validation = updateBookingSchema.safeParse(req.body);
 
@@ -155,6 +161,9 @@ export const bookingController = {
    * @param res 
    */
   async updateBookingForUser(req: AuthRequest, res: Response) {
+    if (req.body.visit_date) {
+      req.body.visit_date = new Date(req.body.visit_date);
+    }
     const { id } = idSchema.parse(req.params);
     const booking = await Booking.findByPk(id);
 
@@ -196,6 +205,10 @@ export const bookingController = {
     // Si le booking n'existe pas, on retourne une erreur 404 avec un message d'erreur
     if(!booking) return res.status(404).json({ message:`No booking found with id: ${id}`});
 
+    // Supprime toutes les données liées
+    await BookingPrice.destroy({ where: { booking_id: id } });
+
+    // Puis supprime le booking
     await booking.destroy();
 
     res.status(204).json();

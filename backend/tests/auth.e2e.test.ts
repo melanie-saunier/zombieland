@@ -1,6 +1,5 @@
-import fetch from "node-fetch";
-
-const API_URL = `http://localhost:${process.env.PORT || 3001}/api`;
+import request from "supertest";
+import { app } from "../src/index.js";
 
 describe("Auth routes e2e", () => {
   // Données de test pour l'utilisateur
@@ -30,84 +29,319 @@ describe("Auth routes e2e", () => {
   // -----------------------------
   // 1️⃣ Test REGISTER
   // -----------------------------
-  it("should register a new user", async () => {
-    // on envoie la requête POST pour créer un nouvel utilisateur
-    const res = await fetch(`${API_URL}/auth/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(testUser),
+  describe("POST /auth/register", () => {
+      it("should register a new user successfully", async () => {
+        const res = await request(app)
+          .post("/api/auth/register")
+          .send(testUser);
+
+        const data = res.body as AuthResponse;
+
+        expect(res.status).toBe(200);
+        expect(data.email).toBe(testUser.email);
+        expect(data).not.toHaveProperty("password");
+      });
+
+      it("should fail if email already exists", async () => {
+        const res = await request(app)
+          .post("/api/auth/register")
+          .send(testUser);
+
+        expect(res.status).toBe(400);
+        expect(res.body.error).toBe("An account with this email address already exists.");
+      });
+
+      it("should fail if validation fails (invalid email format)", async () => {
+        const res = await request(app)
+          .post("/api/auth/register")
+          .send({ ...testUser, email: "invalid-email" });
+
+        expect(res.status).toBe(400);
+        expect(res.body.errors).toBeDefined();
+      });
+
+      it("should fail if firstname is empty", async () => {
+        const res = await request(app)
+          .post("/api/auth/register")
+          .send({ ...testUser, firstname: "" });
+
+        expect(res.status).toBe(400);
+        expect(res.body.errors).toBeDefined();
+      });
+
+      it("should fail if lastname is empty", async () => {
+        const res = await request(app)
+          .post("/api/auth/register")
+          .send({ ...testUser, lastname: "" });
+
+        expect(res.status).toBe(400);
+        expect(res.body.errors).toBeDefined();
+      });
+
+      it("should fail if passwords do not match", async () => {
+        const res = await request(app)
+          .post("/api/auth/register")
+          .send({ ...testUser, confirmedPassword: "WrongPassword" });
+
+        expect(res.status).toBe(400);
+        expect(res.body.errors).toBeDefined();
+      });
+
+      it("should fail if password does not respect the rules", async () => {
+        const res = await request(app)
+          .post("/api/auth/register")
+          .send({ ...testUser, password: "1234" });
+
+        expect(res.status).toBe(400);
+        expect(res.body.errors).toBeDefined();
+      });
     });
-
-    // récupération des données JSON de la réponse
-    const data = (await res.json()) as AuthResponse;
-
-    // vérifications
-    expect(res.status).toBe(200); // succès
-    expect(data.email).toBe(testUser.email); // l'email renvoyé correspond
-    expect(data).not.toHaveProperty("password"); // le mot de passe n'est pas exposé
-  });
-
+    
   // -----------------------------
   // 2️⃣ Test LOGIN
   // -----------------------------
-  it("should login a user and set cookie", async () => {
-    // on envoie la requête POST pour se connecter
-    const res = await fetch(`${API_URL}/auth/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        email: testUser.email,
-        password: testUser.password
-      }),
+  describe("POST /auth/login", () => {
+    it("should login successfully and return cookie", async () => {
+      const res = await request(app)
+        .post("/api/auth/login")
+        .send({
+          email: testUser.email,
+          password: testUser.password
+        });
+
+      const data = res.body as AuthResponse;
+      const rawCookie = res.headers["set-cookie"]?.[0];
+
+      expect(res.status).toBe(200);
+      expect(data.email).toBe(testUser.email);
+      expect(rawCookie).toBeDefined();
+      expect(rawCookie).toMatch(/^token=/);
+
+      loginCookie = rawCookie!.split(";")[0];
     });
 
-    // récupération des données JSON de la réponse
-    const data = (await res.json()) as AuthResponse;
+    it("should fail with wrong password", async () => {
+      const res = await request(app)
+        .post("/api/auth/login")
+        .send({ email: testUser.email, password: "WrongPassword" });
 
-    // récupération du cookie dans les headers
-    const rawCookie = res.headers.get("set-cookie");
+      expect(res.status).toBe(400);
+      expect(res.body.error).toBe("Bad credentials");
+    });
 
-    // vérifications
-    expect(res.status).toBe(200); // la connexion a réussi
-    expect(data.email).toBe(testUser.email); // le JSON renvoyé contient bien le bon email
-    expect(rawCookie).toBeDefined(); // le cookie est présent
-    expect(rawCookie).toMatch(/^token=/); // vérifier que le cookie contient un token
+    it("should fail with unknown email", async () => {
+      const res = await request(app)
+        .post("/api/auth/login")
+        .send({ email: "unknown@example.com", password: "Password123!" });
 
-    // on stocke le cookie pour l'utiliser dans les requêtes suivantes
-    loginCookie = rawCookie!.split(";")[0];
+      expect(res.status).toBe(404);
+      expect(res.body.error).toBe("Bad credentials");
+    });
+
+    it("should fail if validation fails (invalid email format)", async () => {
+      const res = await request(app)
+        .post("/api/auth/login")
+        .send({ email: "invalid-email", password: "Password123!" });
+
+      expect(res.status).toBe(400);
+      expect(res.body.errors).toBeDefined();
+    });
   });
+
 
   // -----------------------------
   // 3️⃣ Test GET /auth/me
   // -----------------------------
-  it("should get the current logged-in user", async () => {
-    // on envoie la requête GET avec le cookie
-    const res = await fetch(`${API_URL}/auth/me`, {
-      method: "GET",
-      headers: { Cookie: loginCookie }
+  describe("GET /auth/me", () => {
+    it("should get current logged-in user", async () => {
+      const res = await request(app)
+        .get("/api/auth/me")
+        .set("Cookie", loginCookie);
+
+      const data = res.body as AuthResponse;
+
+      expect(res.status).toBe(200);
+      expect(data.email).toBe(testUser.email);
     });
 
-    const data = (await res.json()) as AuthResponse;
-    expect(res.status).toBe(200); // la requête a réussi
-    expect(data.email).toBe(testUser.email); // l'utilisateur renvoyé est bien le bon
+    it("should fail if not authenticated", async () => {
+      const res = await request(app).get("/api/auth/me");
+      expect(res.status).toBe(401);
+      expect(res.body.error).toBe("Access denied");
+    });
+
+    it("should fail if token is invalid", async () => {
+      const res = await request(app)
+        .get("/api/auth/me")
+        .set("Cookie", "token=invalidtoken");
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Invalid token");
+    });
   });
 
   // -----------------------------
   // 4️⃣ Test LOGOUT
   // -----------------------------
-  it("should logout the user", async () => {
-    // on envoie la requête POST pour se déconnecter avec le cookie
-    const res = await fetch(`${API_URL}/auth/logout`, {
-      method: "POST",
-      headers: { Cookie: loginCookie }
+  describe("POST /auth/logout", () => {
+    it("should logout successfully", async () => {
+      const res = await request(app)
+        .post("/api/auth/logout")
+        .set("Cookie", loginCookie);
+
+      const rawCookie = res.headers["set-cookie"]?.[0];
+
+      expect(res.status).toBe(200);
+      expect(rawCookie).toBeDefined();
+      expect(rawCookie).toMatch(/token=;/);
+      expect(rawCookie).toMatch(/Expires=/);
+      expect(res.body.message).toBe("Logged out");
     });
-    const rawCookie = res.headers.get("set-cookie");
-    const data = (await res.json()) as AuthResponse;
-    
-    expect(res.status).toBe(200); // la déconnexion a réussi
-    // Vérifie que le cookie "token" est présent mais vidé/expiré
-    expect(rawCookie).toBeDefined();
-    expect(rawCookie).toMatch(/token=;/); // token vidé
-    expect(rawCookie).toMatch(/Expires=/); // token expiré
+
+    it("should fail if not authenticated", async () => {
+      const res = await request(app).post("/api/auth/logout");
+      expect(res.status).toBe(401);
+      expect(res.body.error).toBe("Access denied");
+    });
   });
+
+  // -----------------------------
+  // 5️⃣ Test PUT /auth/me (update user info)
+  // -----------------------------
+  describe("PUT /auth/me", () => {
+    it("should update current user info successfully", async () => {
+      const res = await request(app)
+        .put("/api/auth/me")
+        .set("Cookie", loginCookie)
+        .send({
+          firstname: "UpdatedFirst",
+          lastname: "UpdatedLast",
+          email: "updated@example.com"
+        });
+
+      const data = res.body as AuthResponse;
+      expect(res.status).toBe(200);
+      expect(data.firstname).toBe("UpdatedFirst");
+      expect(data.lastname).toBe("UpdatedLast");
+      expect(data.email).toBe("updated@example.com");
+    });
+
+    it("should fail if email is already used", async () => {
+      // Crée un autre utilisateur pour tester le conflit
+      await request(app)
+        .post("/api/auth/register")
+        .send({
+          firstname: "Other",
+          lastname: "User",
+          email: "other@example.com",
+          password: "Password123!",
+          confirmedPassword: "Password123!"
+        });
+
+      const res = await request(app)
+        .put("/api/auth/me")
+        .set("Cookie", loginCookie)
+        .send({ firstname: "Test", lastname: "User", email: "other@example.com" });
+
+      expect(res.status).toBe(400);
+      expect(res.body.error).toBe("An account with this email address already exists.");
+    });
+
+    it("should fail if validation fails", async () => {
+      const res = await request(app)
+        .put("/api/auth/me")
+        .set("Cookie", loginCookie)
+        .send({ firstname: "", lastname: "", email: "invalid-email" });
+
+      expect(res.status).toBe(400);
+      expect(res.body.errors).toBeDefined();
+    });
+
+    it("should fail if not authenticated", async () => {
+      const res = await request(app)
+        .put("/api/auth/me")
+        .send({ firstname: "Test", lastname: "User", email: "new@example.com" });
+
+      expect(res.status).toBe(401);
+      expect(res.body.error).toBe("Access denied");
+    });
+  });
+
+  // -----------------------------
+  // 6️⃣ Test PATCH /auth/me/password
+  // -----------------------------
+  describe("PATCH /auth/me/password", () => {
+    it("should update password successfully", async () => {
+      const res = await request(app)
+        .patch("/api/auth/me/password")
+        .set("Cookie", loginCookie)
+        .send({
+          oldPassword: testUser.password,
+          newPassword: "NewPassword123!",
+          confirmedPassword: "NewPassword123!"
+        });
+
+      const data = res.body as AuthResponse;
+      expect(res.status).toBe(200);
+      expect(data).not.toHaveProperty("password");
+
+      // Mettre à jour testUser.password pour les prochains tests
+      testUser.password = "NewPassword123!";
+    });
+
+    it("should fail if old password is incorrect", async () => {
+      const res = await request(app)
+        .patch("/api/auth/me/password")
+        .set("Cookie", loginCookie)
+        .send({
+          oldPassword: "WrongPassword",
+          newPassword: "AnotherPassword123!",
+          confirmedPassword: "AnotherPassword123!"
+        });
+
+      expect(res.status).toBe(400);
+      expect(res.body.message).toBe("Bad credentials");
+    });
+
+    it("should fail if validation fails (password too short)", async () => {
+      const res = await request(app)
+        .patch("/api/auth/me/password")
+        .set("Cookie", loginCookie)
+        .send({
+          oldPassword: testUser.password,
+          newPassword: "123",
+          confirmedPassword: "123"
+        });
+
+      expect(res.status).toBe(400);
+      expect(res.body.errors).toBeDefined();
+    });
+
+    it("should fail if new password and confirmed password are different", async () => {
+      const res = await request(app)
+        .patch("/api/auth/me/password")
+        .set("Cookie", loginCookie)
+        .send({
+          oldPassword: testUser.password,
+          newPassword: "AnotherPassword123!",
+          confirmedPassword: "AnotherPassword123?"
+        });
+
+      expect(res.status).toBe(400);
+      expect(res.body.errors).toBeDefined();
+    });
+
+    it("should fail if not authenticated", async () => {
+      const res = await request(app)
+        .patch("/api/auth/me/password")
+        .send({
+          oldPassword: testUser.password,
+          newPassword: "12345678",
+          confirmedPassword: "12345678"
+        });
+
+      expect(res.status).toBe(401);
+      expect(res.body.error).toBe("Access denied");
+    });
+  });
+
 });

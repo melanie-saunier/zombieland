@@ -15,14 +15,20 @@ function notFound(_req: Request, res: Response) {
 
 // Fonction pour les erreurs 500
 function errorHandler(err: AppError, _req: Request, res: Response, _next: NextFunction) {
-    console.log(err);
+  console.log(err);
 
-    if (err instanceof ZodError) {
-      return res.status(400).json({error: "Echec de la validation"});
-    }
+  if (err instanceof ZodError) {
+    return res.status(400).json({error: "Echec de la validation"});
+  }
+  
+  const statusCode = err.statusCode || 500;
 
-    const statusCode = err.statusCode || 500;
-    res.status(statusCode).render(statusCode.toString(), { error: err.message });
+  // On renvoie seulement le message générique si 500 pour ne pas divulguer d'infos
+  if (statusCode === 500) {
+    return res.status(500).json({ error: "Internal server error" });
+  }
+
+  res.status(statusCode).json({ error: err.message });
 }
 
 export { notFound, errorHandler }
