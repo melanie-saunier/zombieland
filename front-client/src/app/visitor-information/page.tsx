@@ -2,13 +2,17 @@
 
 import { Bell, Clock, Euro, MapPin, Phone, Mail, Bus, Car } from "lucide-react";
 import LinkButton from "@/components/LinkButton";
+import { fetchTarifUniquePrices } from "@/api/prices";
 
 export const metadata = {
   title: "Informations utiles | ZOMBIELAND",
   description: "Horaires, tarifs, accès parking et contacts pour préparer votre visite à Zombieland.",
 };
 
-export default function VisitorInformationPage() {
+export default async function VisitorInformationPage() {
+  const prices = await fetchTarifUniquePrices();
+  const price = prices[0];
+
   return (
     <>
       <section className="px-4 py-10 md:px-8 md:py-16 bg-neutral-700">
@@ -53,7 +57,8 @@ export default function VisitorInformationPage() {
               </h2>
               <div className="border-2 border-primary-300 rounded-lg p-8 shadow-[0_0_20px_rgba(248,52,253,0.3)] hover:shadow-[0_0_30px_rgba(248,52,253,0.5)] transition-all duration-300 max-w-lg" style={{backgroundColor: "#201041"}}>
                 <div className="flex items-baseline justify-center gap-3 mb-3">
-                  <p className="text-3xl md:text-4xl font-bold text-primary-300">45 €</p>
+                  {/* dynamiser  */}
+                  <p className="text-3xl md:text-4xl font-bold text-primary-300">{price.value} €</p> 
                   <p className="text-lg text-neutral-50/80">/ personne</p>
                 </div>
                 <p className="text-neutral-50/70 mb-6 leading-relaxed text-center">
