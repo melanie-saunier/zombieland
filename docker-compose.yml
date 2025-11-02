@@ -1,0 +1,55 @@
+# On va définir des services (container qui seront démarrer)
+services:
+
+  # Service backend qui sera mon serveur backend
+  backend:
+    # build va me permettre d'indiquer où ce situe le Dockerfile
+    build: ./backend
+    # Les ports va me permettre de rendre accessible le service depuis l'extérieur
+    # ports:
+    #   - "3000:3000"
+    env_file:
+      # J'indique mon fichier d'environnement
+      - ./backend/.env
+    # depends_on:
+    #   postdb:
+    #     condition: service_healthy
+    #   post_redis:
+    #     condition: service_healthy
+    # Les volumes sont des stockages persistant pour le container (lorsque le container s'arrête, les données sont conservées dans les chemins définis)
+    volumes:
+      # Pour avoir le livereload et ne pas avoir à rebuild le projet à chaque modification
+      # Je fais correspondre le dossier du projet avec le dossier /app dans le conteneur
+      - ./backend:/app
+      # Je créer un volume anonyme qui contiendra les node_modules installer depuis le container
+      # Ça permet d'éviter les soucis de dépendances spécifique à certains OS (Windows / Mac / Linux)
+      - /app/node_modules
+    command: "pnpm run dev"
+
+
+
+  front-client:
+    # build va me permettre d'indiquer où ce situe le Dockerfile
+    build: ./front-client
+    # Les ports va me permettre de rendre accessible le service depuis l'extérieur
+    # ports:
+    #   - "3001:3000"
+    env_file:
+      # J'indique mon fichier d'environnement
+      - ./front-client/.env
+    depends_on:
+      userdb:
+        condition: service_healthy
+    # Les volumes sont des stockages persistant pour le container (lorsque le container s'arrête, les données sont conservées dans les chemins définis)
+    volumes:
+      # Pour avoir le livereload et ne pas avoir à rebuild le projet à chaque modification
+      # Je fais correspondre le dossier du projet avec le dossier /app dans le conteneur
+      - ./front-client:/app
+      # Je créer un volume anonyme qui contiendra les node_modules installer depuis le container
+      # Ça permet d'éviter les soucis de dépendances spécifique à certains OS (Windows / Mac / Linux)
+      - /app/node_modules
+    command: "pnpm run dev"
+
+volumes:
+ backend:
+ front-client:
