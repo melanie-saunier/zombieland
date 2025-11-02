@@ -91,7 +91,7 @@ describe("Booking routes e2e", () => {
 
     it("should return 403 if user is not owner or admin", async () => {
       const res = await request(app)
-        .get("/api/bookings/1") // booking id 4 => appartient à octave le chat
+        .get("/api/bookings/1") // booking id 1 => appartient à octave le chat
         .set("Cookie", memberCookie);
 
       expect(res.status).toBe(403);

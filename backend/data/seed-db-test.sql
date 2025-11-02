@@ -21,19 +21,19 @@ INSERT INTO role (name) VALUES
 
 -- USERS
 INSERT INTO "user" (email, lastname, firstname, password, role_id)
-SELECT 'manon.thez@oclock.school', 'Thez', 'Manon', '$argon2id$v=19$m=65536,t=3,p=4$I5rVdnB6QK68KfY8N8nFmA$ZsDa4jrvQek6ajtpaA88dhfQHsinVMsmt6ozSE9Do6A', r.id FROM role r WHERE r.name = 'admin'
+SELECT 'manon.thez@oclock.school', 'Thez', 'Manon', '$argon2id$v=19$m=65536,t=3,p=4$cW4SPfXgioTeYRaP+zN+pQ$odIuJQpaXB5SlE/lydlWBewr1d8lcBtfx1WoH9+Ym7U', r.id FROM role r WHERE r.name = 'admin'
 UNION ALL
-SELECT 'melanie.saunier@oclock.school', 'Saunier', 'Mélanie', '$argon2id$v=19$m=65536,t=3,p=4$I5rVdnB6QK68KfY8N8nFmA$ZsDa4jrvQek6ajtpaA88dhfQHsinVMsmt6ozSE9Do6A', r.id FROM role r WHERE r.name = 'admin'
+SELECT 'melanie.saunier@oclock.school', 'Saunier', 'Mélanie', '$argon2id$v=19$m=65536,t=3,p=4$cW4SPfXgioTeYRaP+zN+pQ$odIuJQpaXB5SlE/lydlWBewr1d8lcBtfx1WoH9+Ym7U', r.id FROM role r WHERE r.name = 'admin'
 UNION ALL
-SELECT 'kari.routier@oclock.school', 'Routier', 'Kari', '$argon2id$v=19$m=65536,t=3,p=4$I5rVdnB6QK68KfY8N8nFmA$ZsDa4jrvQek6ajtpaA88dhfQHsinVMsmt6ozSE9Do6A', r.id FROM role r WHERE r.name = 'admin'
+SELECT 'kari.routier@oclock.school', 'Routier', 'Kari', '$argon2id$v=19$m=65536,t=3,p=4$cW4SPfXgioTeYRaP+zN+pQ$odIuJQpaXB5SlE/lydlWBewr1d8lcBtfx1WoH9+Ym7U', r.id FROM role r WHERE r.name = 'admin'
 UNION ALL
-SELECT 'maximilien.berbudeau@oclock.school', 'Berbudeau', 'Maximilien', '$argon2id$v=19$m=65536,t=3,p=4$I5rVdnB6QK68KfY8N8nFmA$ZsDa4jrvQek6ajtpaA88dhfQHsinVMsmt6ozSE9Do6A', r.id FROM role r WHERE r.name = 'admin'
+SELECT 'maximilien.berbudeau@oclock.school', 'Berbudeau', 'Maximilien', '$argon2id$v=19$m=65536,t=3,p=4$cW4SPfXgioTeYRaP+zN+pQ$odIuJQpaXB5SlE/lydlWBewr1d8lcBtfx1WoH9+Ym7U', r.id FROM role r WHERE r.name = 'admin'
 UNION ALL
-SELECT 'octave.lechat@gmail.com', 'Lechat', 'Octave', '$argon2id$v=19$m=65536,t=3,p=4$I5rVdnB6QK68KfY8N8nFmA$ZsDa4jrvQek6ajtpaA88dhfQHsinVMsmt6ozSE9Do6A', r.id FROM role r WHERE r.name = 'member'
+SELECT 'octave.lechat@gmail.com', 'Lechat', 'Octave', '$argon2id$v=19$m=65536,t=3,p=4$cW4SPfXgioTeYRaP+zN+pQ$odIuJQpaXB5SlE/lydlWBewr1d8lcBtfx1WoH9+Ym7U', r.id FROM role r WHERE r.name = 'member'
 UNION ALL
-SELECT 'alfred.lechien@gmail.com', 'Lechien', 'Alfred', '$argon2id$v=19$m=65536,t=3,p=4$I5rVdnB6QK68KfY8N8nFmA$ZsDa4jrvQek6ajtpaA88dhfQHsinVMsmt6ozSE9Do6A', r.id FROM role r WHERE r.name = 'member'
+SELECT 'alfred.lechien@gmail.com', 'Lechien', 'Alfred', '$argon2id$v=19$m=65536,t=3,p=4$cW4SPfXgioTeYRaP+zN+pQ$odIuJQpaXB5SlE/lydlWBewr1d8lcBtfx1WoH9+Ym7U', r.id FROM role r WHERE r.name = 'member'
 UNION ALL
-SELECT 'bunny.lelapin@gmail.com', 'Lelapin', 'Bunny', '$argon2id$v=19$m=65536,t=3,p=4$I5rVdnB6QK68KfY8N8nFmA$ZsDa4jrvQek6ajtpaA88dhfQHsinVMsmt6ozSE9Do6A', r.id FROM role r WHERE r.name = 'member';
+SELECT 'bunny.lelapin@gmail.com', 'Lelapin', 'Bunny', '$argon2id$v=19$m=65536,t=3,p=4$cW4SPfXgioTeYRaP+zN+pQ$odIuJQpaXB5SlE/lydlWBewr1d8lcBtfx1WoH9+Ym7U', r.id FROM role r WHERE r.name = 'member';
 
 -- LEVELS
 INSERT INTO level (name, value) VALUES

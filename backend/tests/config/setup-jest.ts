@@ -14,12 +14,7 @@ dotenv.config({ path: path.resolve(__dirname, "../../.env.test") });
 
 // Préparation avant tous les tests
 beforeAll(async () => {
-  // On lit le contenu du fichier SQL pour initialiser la base de test
-  const seedFile = path.join(__dirname, "../../data/seed-db-test.sql");
-  const seedSQL = fs.readFileSync(seedFile, "utf8");
-
-  // On exécute le script SQL avec Sequelize
-  await sequelize.query(seedSQL);
+  await sequelize.authenticate();
 });
 
 // Nettoyage après tous les tests
