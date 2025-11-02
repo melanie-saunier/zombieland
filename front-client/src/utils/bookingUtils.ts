@@ -10,6 +10,7 @@ export const MAX_TICKETS_PER_BOOKING = 15;
  * - options : options de formatage (facultatif)
  * Retourne une date formatée en string
  */
+// utilisé dans la page booking
 export function formatLocalDate (dateString: string, options?: Intl.DateTimeFormatOptions) {
   // On découpe la date "YYYY-MM-DD" en trois parties (année, mois, jour)
   // puis on convertit chaque partie en nombre pour pouvoir créer un objet Date ensuite

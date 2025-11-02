@@ -1,10 +1,10 @@
-import { IApiBooking, IBooking, IBookingInput, IMyBooking } from "@/@types/booking";
+import { IApiBooking, IBooking, IMyBooking } from "@/@types/booking";
 import axios from "axios";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const bookingApi = {
-  createBooking: async (data: IBookingInput): Promise<IBooking | null> => {
+  createBooking: async (data: IBooking): Promise<IBooking | null> => {
     try {
       const res = await axios.post(`${API_URL}/bookings`, data, { withCredentials: true });
       const bookingData = res.data;
@@ -67,7 +67,7 @@ export const bookingApi = {
       throw new Error("Erreur inconnue");
     }
   },
-  updateMyBooking: async (id:number, data: Omit<IBookingInput, "status" | "user_id">) => {
+  updateMyBooking: async (id:number, data: Omit<IBooking, "status" | "user_id">) => {
     try {
       const res = await axios.patch<IApiBooking>(`${API_URL}/bookings/${id}/user`, data, { withCredentials: true });
       const myBookingDataUpdate = res.data;

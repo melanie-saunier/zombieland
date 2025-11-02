@@ -75,7 +75,8 @@ export default function MyBookingsCard({reservation, onEdit, onCancel}: MyBookin
           <div className="flex flex-col gap-3 lg:w-48">
             <button
               className="w-full px-4 py-3 button_activity text-neutral-50 font-bold rounded-lg hover:scale-105 transition-all"
-              // quand on clique on passe l'affichage de la modal a true
+              // quand on clique on passe l'affichage de la modal a true et on remplit le state selectedBooking avec les données de la reservation à modifié
+              
               onClick={onEdit}
             >
                 Modifier

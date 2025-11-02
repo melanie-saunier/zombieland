@@ -8,6 +8,7 @@ import MyBookingsCard from "@/components/MyBookingCardV2";
 import Loader from "@/components/Loader";
 import EditBookingModal from "@/components/EditBookingModal";
 import CancelBookingModal from "@/components/CancelBookingModal";
+import { MAX_TICKETS_PER_BOOKING } from "@/utils/bookingUtils";
 
 
 export default function MyBookingsPage() {
@@ -75,7 +76,7 @@ export default function MyBookingsPage() {
     const nb_people = Number(formData.get("nb_people"));
 
     // si la personne met moins de 1 ou plus de 15 billets on envoie une erreur
-    if (nb_people < 1 || nb_people > 15) {
+    if (nb_people < 1 || nb_people > MAX_TICKETS_PER_BOOKING) {
       setErrorForm("Le nombre de personnes doit être entre 1 et 15.");
       return;
     }
@@ -109,8 +110,6 @@ export default function MyBookingsPage() {
               ? { ...booking, 
                 visit_date: new Date(updatedBooking.visit_date), 
                 nb_people: updatedBooking.nb_people,
-                status: updatedBooking.status,
-                user_id: updatedBooking.user_id,
                 total_price: updatedBooking.nb_people * booking.bookingPrice,
               }
               : booking
@@ -139,10 +138,7 @@ export default function MyBookingsPage() {
           prev.map((booking) =>
             booking.id === selectedBooking.id
               ? { ...booking, 
-                visit_date: new Date(cancelledBooking.visit_date), 
-                nb_people: cancelledBooking.nb_people,
                 status: cancelledBooking.status, 
-                user_id: cancelledBooking.user_id 
               }
               : booking
           )
