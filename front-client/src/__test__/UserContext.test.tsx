@@ -3,7 +3,7 @@ import { authApi } from "@/api/auth";
 import { csrfApi } from "@/api/csrf";
 import UserContext, { IUserContext } from "@/context/userContext";
 import UserContextProvider from "@/context/userContextProvider";
-import { render, waitFor } from "@testing-library/react";
+import { act, render, waitFor } from "@testing-library/react";
 
 describe("UserContext", () => {
   // on vérifie que le context est initialisé correctement:
@@ -57,7 +57,10 @@ describe("UserContext", () => {
     expect(contextValue!.logged).toBe(false);
   
     // Appel de login
-    contextValue.login(mockUser);
+    // contextValue.login(mockUser);
+    await act(async () => {
+      contextValue.login(mockUser);
+    });
   
     // Vérifie que le contexte a été mis à jour , il faut await la mise à jour
     await waitFor(() => {
@@ -66,7 +69,11 @@ describe("UserContext", () => {
     });
 
     // simule le logout
-    await contextValue!.logout();
+    // await contextValue!.logout();
+    await act(async () => {
+      await contextValue!.logout();
+    });
+
     //on vérifie le retour du state à l'initial
     await waitFor(() => {
       expect(contextValue!.user).toBeNull();
@@ -131,3 +138,4 @@ describe("UserContext", () => {
     });
   });
 });
+
