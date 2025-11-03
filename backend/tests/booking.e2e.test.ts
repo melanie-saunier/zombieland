@@ -19,9 +19,10 @@ describe("Booking routes e2e", () => {
     password: "P@ssword123456"
   };
 
-  // Cookie pour authentification
+  // Cookie pour authentification et CSRF Token
   let adminCookie: string;
   let memberCookie: string;
+  let csrfToken: string;
 
   type BookingResponse = {
     id: number;
@@ -37,19 +38,27 @@ describe("Booking routes e2e", () => {
     }[];
   };
 
-  // -----------------------------
-  // LOGIN USERS
-  // -----------------------------
   beforeAll(async () => {
+    // Récupérer un CSRF token pour login admin
+    const csrfRes = await request(app).get("/api/csrf-token");
+    csrfToken = csrfRes.body.csrfToken;
+
     const adminRes = await request(app)
       .post("/api/auth/login")
+      .set("x-csrf-token", csrfToken)
       .send(adminUser);
     adminCookie = adminRes.headers["set-cookie"]?.[0];
 
     const memberRes = await request(app)
       .post("/api/auth/login")
+      .set("x-csrf-token", csrfToken)
       .send(memberUser);
     memberCookie = memberRes.headers["set-cookie"]?.[0];
+  });
+
+  beforeEach(async () => {
+    const csrfRes = await request(app).get("/api/csrf-token");
+    csrfToken = csrfRes.body.csrfToken;
   });
 
   // -----------------------------
@@ -145,6 +154,7 @@ describe("Booking routes e2e", () => {
       const res = await request(app)
         .post("/api/bookings")
         .set("Cookie", memberCookie)
+        .set("x-csrf-token", csrfToken)
         .send(newBooking);
 
       expect(res.status).toBe(201);
@@ -156,6 +166,7 @@ describe("Booking routes e2e", () => {
       const res = await request(app)
         .post("/api/bookings")
         .set("Cookie", memberCookie)
+        .set("x-csrf-token", csrfToken)
         .send({ visit_date: "invalid-date", nb_people: -1, status: true, user_id: 6 });
 
       expect(res.status).toBe(400);
@@ -171,6 +182,7 @@ describe("Booking routes e2e", () => {
       const res = await request(app)
         .put("/api/bookings/1")
         .set("Cookie", adminCookie)
+        .set("x-csrf-token", csrfToken)
         .send({ nb_people: 10 });
 
       expect(res.status).toBe(200);
@@ -181,6 +193,7 @@ describe("Booking routes e2e", () => {
       const res = await request(app)
         .put("/api/bookings/1")
         .set("Cookie", memberCookie)
+        .set("x-csrf-token", csrfToken)
         .send({ nb_people: 5 });
 
       expect(res.status).toBe(403);
@@ -196,6 +209,7 @@ describe("Booking routes e2e", () => {
       const res = await request(app)
         .patch("/api/bookings/2/user")
         .set("Cookie", memberCookie)
+        .set("x-csrf-token", csrfToken)
         .send({ visit_date: new Date("2025-11-30").toISOString().split("T")[0], nb_people: 3 });
 
       expect(res.status).toBe(200);
@@ -206,6 +220,7 @@ describe("Booking routes e2e", () => {
       const res = await request(app)
         .patch("/api/bookings/1/user")
         .set("Cookie", memberCookie)
+        .set("x-csrf-token", csrfToken)
         .send({ nb_people: 1 });
 
       expect(res.status).toBe(403);
@@ -215,6 +230,7 @@ describe("Booking routes e2e", () => {
       const res = await request(app)
         .patch("/api/bookings/2/user")
         .set("Cookie", memberCookie)
+        .set("x-csrf-token", csrfToken)
         .send({ nb_people: -5 });
 
       expect(res.status).toBe(400);
@@ -224,6 +240,7 @@ describe("Booking routes e2e", () => {
       const res = await request(app)
         .patch("/api/bookings/2/user")
         .set("Cookie", memberCookie)
+        .set("x-csrf-token", csrfToken)
         .send({ visit_date: new Date("2022-11-30").toISOString().split("T")[0] });
 
       expect(res.status).toBe(400);
@@ -237,6 +254,7 @@ describe("Booking routes e2e", () => {
     it("should cancel a future booking", async () => {
       const res = await request(app)
         .patch("/api/bookings/5/cancel")
+        .set("x-csrf-token", csrfToken)
         .set("Cookie", memberCookie);
 
       expect(res.status).toBe(200);
@@ -246,6 +264,7 @@ describe("Booking routes e2e", () => {
     it("should fail if already cancelled", async () => {
       const res = await request(app)
         .patch("/api/bookings/3/cancel")
+        .set("x-csrf-token", csrfToken)
         .set("Cookie", memberCookie);
 
       expect(res.status).toBe(400);
@@ -254,6 +273,7 @@ describe("Booking routes e2e", () => {
     it("should fail if past date", async () => {
       const res = await request(app)
         .patch("/api/bookings/4/cancel") // booking with past date
+        .set("x-csrf-token", csrfToken)
         .set("Cookie", memberCookie);
 
       expect(res.status).toBe(400);
