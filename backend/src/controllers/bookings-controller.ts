@@ -85,20 +85,15 @@ export const bookingController = {
 
     // Si la validation réussit, on récupère les données validées et typées
     const data = validation.data;
-    
+
+    // Vérifier que le prix "Tarif unique" existe
+    const price = await Price.findOne({ where: { label: "Tarif unique" } });
+    if (!price) return res.status(400).json({ message:"No price found with label: Tarif unique" });
+        
     // Transaction pour garantir la cohérence
     const booking = await sequelize.transaction(async (t) => {
-
       // On crée un nouveau booking
       const newBooking  = await Booking.create(data, { transaction: t });    
-
-      // Recherche du tarif "Tarif unique"
-      const price = await Price.findOne({
-        where: { label: "Tarif unique" },
-        transaction: t,
-      });
-
-      if (!price) return res.status(400).json({ message:"No price found with label: Tarif unique"});
 
       // Création de la ligne dans la table de liaison
       await BookingPrice.create(
@@ -196,6 +191,10 @@ export const bookingController = {
     // Si le booking n'existe pas, on retourne une erreur 404 avec un message d'erreur
     if(!booking) return res.status(404).json({ message:`No booking found with id: ${id}`});
 
+    // Supprime toutes les données liées
+    await BookingPrice.destroy({ where: { booking_id: id } });
+
+    // Puis supprime le booking
     await booking.destroy();
 
     res.status(204).json();

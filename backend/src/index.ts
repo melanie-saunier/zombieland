@@ -9,7 +9,7 @@ import cookieParser from "cookie-parser";
 import { bodySanitizerMiddleware } from "./middlewares/body-sanitizer";
 
 // Création d'une app Express
-const app = express();
+export const app = express();
 
 // Swagger est branché sur l'app 
 setupSwagger(app);

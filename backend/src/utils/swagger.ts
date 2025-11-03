@@ -1,5 +1,4 @@
-import { dirname, resolve } from "node:path";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
 import expressJSDocSwagger, { Options } from "express-jsdoc-swagger";
 import { Application } from "express";
 
@@ -25,8 +24,7 @@ export function setupSwagger(app: Application) {
       },
     ],
     // Définit le dossier racine à partir duquel express-jsdoc-swagger va analyser les fichiers
-    // "../.." remonte de deux niveaux à partir du fichier actuel (pour arriver dans /src)
-    baseDir: resolve(dirname(fileURLToPath(import.meta.url)), "../.."),
+    baseDir: resolve("src"),
 
     // Motif des fichiers à analyser pour extraire les commentaires JSDoc
     // Ici, tous les fichiers TypeScript du projet
