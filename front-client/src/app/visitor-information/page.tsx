@@ -1,17 +1,56 @@
 // src/app/visitor-information/page.tsx 
+"use client";
 
 import { Bell, Clock, Euro, MapPin, Phone, Mail, Bus, Car } from "lucide-react";
 import LinkButton from "@/components/LinkButton";
 import { fetchTarifUniquePrices } from "@/api/prices";
+import { useEffect, useState } from "react";
+import { IPrice } from "@/@types/prices";
 
-export const metadata = {
-  title: "Informations utiles | ZOMBIELAND",
-  description: "Horaires, tarifs, accès parking et contacts pour préparer votre visite à Zombieland.",
-};
+// export const metadata = {
+//   title: "Informations utiles | ZOMBIELAND",
+//   description: "Horaires, tarifs, accès parking et contacts pour préparer votre visite à Zombieland.",
+// };
 
-export default async function VisitorInformationPage() {
-  const prices = await fetchTarifUniquePrices();
-  const price = prices[0];
+export default function VisitorInformationPage() {
+  // État pour stocker le prix des billets récupéré depuis la BDD
+  // pricing : contient les infos tarifaires récupérées (prix unitaire, limite max)
+  // isLoadingPrice : gère l’état de chargement du prix
+  const [pricing, setPricing] = useState<IPrice | null>(null);
+  const [isLoadingPrice, setIsLoadingPrice] = useState(true); // État de chargement du prix
+  const [errors, setErrors] = useState<string | null>(null);
+  
+
+  useEffect(() => {
+    const fetchTicketPrice = async () => {
+      try {
+        setIsLoadingPrice(true); // on affiche le loader
+
+        const prices = await fetchTarifUniquePrices();
+        if (!prices) {
+          setErrors("Impossible de charger les tarifs. Veuillez réessayer.");
+          return;
+        }
+        // on veut le prix "Tarif unique"
+        const uniquePrice = prices.find((price) => price.label === "Tarif unique");
+
+        if (uniquePrice) {
+          // on sauvegarde le prix dans l'état
+          setPricing(uniquePrice);
+        
+        } else {
+          setErrors("Tarif unique introuvable.");
+          return;
+        }
+      } catch (error) {
+        console.error("Erreur de chargement du prix:", error);
+        setErrors("Impossible de charger les tarifs. Veuillez réessayer.");
+      } finally {
+        setIsLoadingPrice(false); // on masque le loader
+      }
+    };
+    fetchTicketPrice();
+  },[]);
 
   return (
     <>
@@ -58,7 +97,7 @@ export default async function VisitorInformationPage() {
               <div className="border-2 border-primary-300 rounded-lg p-8 shadow-[0_0_20px_rgba(248,52,253,0.3)] hover:shadow-[0_0_30px_rgba(248,52,253,0.5)] transition-all duration-300 max-w-lg" style={{backgroundColor: "#201041"}}>
                 <div className="flex items-baseline justify-center gap-3 mb-3">
                   {/* dynamiser  */}
-                  <p className="text-3xl md:text-4xl font-bold text-primary-300">{price.value} €</p> 
+                  <p className="text-3xl md:text-4xl font-bold text-primary-300">{pricing?.value} €</p> 
                   <p className="text-lg text-neutral-50/80">/ personne</p>
                 </div>
                 <p className="text-neutral-50/70 mb-6 leading-relaxed text-center">

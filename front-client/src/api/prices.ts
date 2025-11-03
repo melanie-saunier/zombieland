@@ -1,6 +1,6 @@
 // src/api/prices.ts
 
-import type IPrice from "@/@types/prices";
+import type { IPrice } from "@/@types/prices";
 import axios from "axios";
 // import { notFound } from "next/navigation";
 
@@ -11,8 +11,7 @@ export async function fetchTarifUniquePrices(): Promise<IPrice[]> {
   try {
     const res = await axios.get<IPrice[]>(`${API_URL}/prices`);
     const allPrices = res.data;
-    const uniquePrice = allPrices.filter((price) => typeof price.label === "string" && price.label.trim().toLocaleLowerCase() ==="tarif unique");
-    return uniquePrice;
+    return allPrices;
   } catch (err) {
     console.error("Erreur lors de la récupération des prix:", err);
     throw err;

@@ -1,4 +1,4 @@
-export default interface IPrice {
+export interface IPrice {
   id: number;
   label: string;
   value: number;
