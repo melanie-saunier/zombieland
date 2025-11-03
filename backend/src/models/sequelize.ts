@@ -8,7 +8,7 @@ const env = process.env.NODE_ENV || "development";
 
 // Charge le bon fichier .env (.env ou .env.test)
 dotenv.config({
-  path: path.resolve(__dirname, `../../.env${env === "test" ? ".test" : ""}`),
+  path: path.resolve(`backend/.env${env === "test" ? ".test" : ""}`),
 });
 
 // Récupère l’URL de connexion
