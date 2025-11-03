@@ -2,7 +2,7 @@ import { Router } from "express";
 import { bookingController } from "../controllers/bookings-controller";
 import { authenticateToken } from "../middlewares/authenticate-token";
 import { authorizeAdmin } from "../middlewares/authorize-admin";
-
+import { verifyCsrf } from "../middlewares/verify-csrf";
 
 export const bookingRouter = Router();
 
@@ -19,7 +19,7 @@ export const bookingRouter = Router();
  */
 
 /**
- * @typedef {object} Booking
+ * @typedef {object} Booking 
  * @property {number} id - booking unique id 
  * @property {string} visit_date - visit date
  * @property {number} nb_people - number of people in the booking
@@ -99,7 +99,7 @@ bookingRouter.get("/:id", authenticateToken, bookingController.getById);
  * @return {object} 403 - Unauthorized
  * @return {object} 500 - Internal server error
  */
-bookingRouter.post("/", authenticateToken, bookingController.createOne);
+bookingRouter.post("/", authenticateToken, verifyCsrf, bookingController.createOne);
 
 /**
  * PUT /bookings/{id}
@@ -127,7 +127,7 @@ bookingRouter.put("/:id", authenticateToken, authorizeAdmin, bookingController.u
  * @return {object} 404 - No booking found
  * @return {object} 500 - Internal server error
  */
-bookingRouter.patch("/:id/user", authenticateToken, bookingController.updateBookingForUser);
+bookingRouter.patch("/:id/user", authenticateToken, verifyCsrf, bookingController.updateBookingForUser);
 
 /**
  * PATCH /bookings/:id/cancel
@@ -140,7 +140,7 @@ bookingRouter.patch("/:id/user", authenticateToken, bookingController.updateBook
  * @return {object} 404 - No booking found
  * @return {object} 500 - Internal server error
  */
-bookingRouter.patch("/:id/cancel", authenticateToken, bookingController.cancelBooking);
+bookingRouter.patch("/:id/cancel", authenticateToken, verifyCsrf, bookingController.cancelBooking);
 
 /**
  * DELETE /bookings/{id}
