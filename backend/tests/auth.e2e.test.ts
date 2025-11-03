@@ -133,6 +133,37 @@ describe("Auth routes e2e", () => {
         expect(res.status).toBe(400);
         expect(res.body.errors).toBeDefined();
       });
+
+      it("should fail if invalid CSRF token", async () => {
+        const res = await request(app)
+          .post("/api/auth/register")
+          .set("x-csrf-token", "invalid-csrf-token")
+          .set("Cookie", withCookies())
+          .send(testUser);
+
+        expect(res.status).toBe(403);
+        expect(res.body.error).toBe("Invalid CSRF token");
+      });
+
+      it("should fail if missing CSRF token", async () => {
+        const res = await request(app)
+          .post("/api/auth/register")
+          .set("Cookie", csrfCookie) // Pas de x-csrf-token
+          .send(testUser);
+
+        expect(res.status).toBe(403);
+        expect(res.body.error).toBe("Missing CSRF token ");
+      });
+
+      it("should fail if missing CSRF secret", async () => {
+        const res = await request(app)
+          .post("/api/auth/register")
+          .set("x-csrf-token", csrfToken) // Pas de cookie
+          .send(testUser);
+
+        expect(res.status).toBe(403);
+        expect(res.body.error).toBe("Missing CSRF secret");
+      });
     });
     
   // -----------------------------
@@ -192,8 +223,39 @@ describe("Auth routes e2e", () => {
       expect(res.status).toBe(400);
       expect(res.body.errors).toBeDefined();
     });
-  });
 
+    it("should fail if invalid CSRF token", async () => {
+      const res = await request(app)
+        .post("/api/auth/login")
+        .set("x-csrf-token", "invalid-csrf-token")
+        .set("Cookie", withCookies())
+        .send({email: testUser.email, password: testUser.password });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Invalid CSRF token");
+    });
+
+    it("should fail if missing CSRF token", async () => {
+      const res = await request(app)
+        .post("/api/auth/login")
+        .set("Cookie", withCookies()) 
+        .send({email: testUser.email, password: testUser.password });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Missing CSRF token ");
+    });
+
+    it("should fail if missing CSRF secret", async () => {
+      const res = await request(app)
+        .post("/api/auth/login")
+        .set("x-csrf-token", csrfToken)
+        .set("Cookie", loginCookie)
+        .send({email: testUser.email, password: testUser.password });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Missing CSRF secret");
+    });
+  });
 
   // -----------------------------
   // 3️⃣ Test GET /auth/me
@@ -214,14 +276,6 @@ describe("Auth routes e2e", () => {
       const res = await request(app).get("/api/auth/me");
       expect(res.status).toBe(401);
       expect(res.body.error).toBe("Access denied");
-    });
-
-    it("should fail if token is invalid", async () => {
-      const res = await request(app)
-        .get("/api/auth/me")
-        .set("Cookie", "token=invalidtoken");
-      expect(res.status).toBe(403);
-      expect(res.body.error).toBe("Invalid token");
     });
   });
 
@@ -251,6 +305,35 @@ describe("Auth routes e2e", () => {
         .set("Cookie", csrfCookie);
       expect(res.status).toBe(401);
       expect(res.body.error).toBe("Access denied");
+    });
+    
+    it("should fail if invalid CSRF token", async () => {
+      const res = await request(app)
+        .post("/api/auth/logout")
+        .set("x-csrf-token", "invalid-csrf-token")
+        .set("Cookie", withCookies());
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Invalid CSRF token");
+    });
+
+    it("should fail if missing CSRF token", async () => {
+      const res = await request(app)
+        .post("/api/auth/logout")
+        .set("Cookie", withCookies());
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Missing CSRF token ");
+    });
+
+    it("should fail if missing CSRF secret", async () => {
+      const res = await request(app)
+        .post("/api/auth/logout")
+        .set("x-csrf-token", csrfToken)
+        .set("Cookie", loginCookie);
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Missing CSRF secret");
     });
   });
 
@@ -307,6 +390,50 @@ describe("Auth routes e2e", () => {
 
       expect(res.status).toBe(401);
       expect(res.body.error).toBe("Access denied");
+    });
+    
+    it("should fail if invalid CSRF token", async () => {
+      const res = await request(app)
+        .put("/api/auth/me")
+        .set("x-csrf-token", "invalid-csrf-token")
+        .set("Cookie", withCookies())
+        .send({
+          firstname: "UpdatedFirst",
+          lastname: "UpdatedLast",
+          email: "updated@example.com"
+        });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Invalid CSRF token");
+    });
+
+    it("should fail if missing CSRF token", async () => {
+      const res = await request(app)
+        .put("/api/auth/me")
+        .set("Cookie", withCookies())
+        .send({
+          firstname: "UpdatedFirst",
+          lastname: "UpdatedLast",
+          email: "updated@example.com"
+        });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Missing CSRF token ");
+    });
+
+    it("should fail if missing CSRF secret", async () => {
+      const res = await request(app)
+        .put("/api/auth/me")
+        .set("x-csrf-token", csrfToken)
+        .set("Cookie", loginCookie)
+        .send({
+          firstname: "UpdatedFirst",
+          lastname: "UpdatedLast",
+          email: "updated@example.com"
+        });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Missing CSRF secret");
     });
   });
 
@@ -391,6 +518,50 @@ describe("Auth routes e2e", () => {
 
       expect(res.status).toBe(401);
       expect(res.body.error).toBe("Access denied");
+    });
+
+    it("should fail if invalid CSRF token", async () => {
+      const res = await request(app)
+        .patch("/api/auth/me/password")
+        .set("x-csrf-token", "invalid-csrf-token")
+        .set("Cookie", withCookies())
+        .send({
+          oldPassword: testUser.password,
+          newPassword: "NewPassword123!",
+          confirmedPassword: "NewPassword123!"
+        });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Invalid CSRF token");
+    });
+
+    it("should fail if missing CSRF token", async () => {
+      const res = await request(app)
+        .patch("/api/auth/me/password")
+        .set("Cookie", withCookies())
+        .send({
+          oldPassword: testUser.password,
+          newPassword: "NewPassword123!",
+          confirmedPassword: "NewPassword123!"
+        });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Missing CSRF token ");
+    });
+
+    it("should fail if missing CSRF secret", async () => {
+      const res = await request(app)
+        .patch("/api/auth/me/password")
+        .set("x-csrf-token", csrfToken)
+        .set("Cookie", loginCookie)
+        .send({
+          oldPassword: testUser.password,
+          newPassword: "NewPassword123!",
+          confirmedPassword: "NewPassword123!"
+        });
+
+      expect(res.status).toBe(403);
+      expect(res.body.error).toBe("Missing CSRF secret");
     });
   });
 

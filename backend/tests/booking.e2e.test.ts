@@ -22,6 +22,7 @@ describe("Booking routes e2e", () => {
   // Cookie pour authentification et CSRF Token
   let adminCookie: string;
   let memberCookie: string;
+  let csrfCookie: string;
   let csrfToken: string;
 
   type BookingResponse = {
@@ -38,28 +39,67 @@ describe("Booking routes e2e", () => {
     }[];
   };
 
+// -----------------------------
+  // Récupération initiale du CSRF token + connexion admin et membre
+  // -----------------------------
   beforeAll(async () => {
-    // Récupérer un CSRF token pour login admin
-    const csrfRes = await request(app).get("/api/csrf-token");
-    csrfToken = csrfRes.body.csrfToken;
+    // 1️⃣ Récupérer un premier CSRF token
+    const res = await request(app).get("/api/csrf-token");
+    const setCookieHeader = res.headers["set-cookie"];
+    if (!setCookieHeader) throw new Error("No set-cookie header found");
 
+    const setCookieArray = Array.isArray(setCookieHeader) ? setCookieHeader : [setCookieHeader];
+    const rawCsrfCookie = setCookieArray.find((c) => c.startsWith("csrf-secret="));
+    if (!rawCsrfCookie) throw new Error("No csrf-secret cookie found");
+
+    csrfCookie = rawCsrfCookie.split(";")[0];
+    csrfToken = res.body.csrfToken;
+
+    // 2️⃣ Login admin
     const adminRes = await request(app)
       .post("/api/auth/login")
       .set("x-csrf-token", csrfToken)
+      .set("Cookie", csrfCookie)
       .send(adminUser);
-    adminCookie = adminRes.headers["set-cookie"]?.[0];
 
+    const adminRawCookie = adminRes.headers["set-cookie"]?.[0];
+    if (!adminRawCookie) throw new Error("No set-cookie header on admin login");
+    adminCookie = adminRawCookie.split(";")[0];
+
+    // 3️⃣ Login membre
     const memberRes = await request(app)
       .post("/api/auth/login")
       .set("x-csrf-token", csrfToken)
+      .set("Cookie", csrfCookie)
       .send(memberUser);
-    memberCookie = memberRes.headers["set-cookie"]?.[0];
+
+    const memberRawCookie = memberRes.headers["set-cookie"]?.[0];
+    if (!memberRawCookie)
+      throw new Error("No set-cookie header on member login");
+    memberCookie = memberRawCookie.split(";")[0];
   });
 
+  // -----------------------------
+  // Avant chaque test : récupérer un nouveau token CSRF
+  // -----------------------------
   beforeEach(async () => {
-    const csrfRes = await request(app).get("/api/csrf-token");
-    csrfToken = csrfRes.body.csrfToken;
+    const res = await request(app).get("/api/csrf-token");
+    const setCookieHeader = res.headers["set-cookie"];
+    if (!setCookieHeader) throw new Error("No set-cookie header found");
+
+    const setCookieArray = Array.isArray(setCookieHeader) ? setCookieHeader : [setCookieHeader];
+    const rawCsrfCookie = setCookieArray.find((c) => c.startsWith("csrf-secret="));
+    if (!rawCsrfCookie) throw new Error("No csrf-secret cookie found");
+
+    csrfCookie = rawCsrfCookie.split(";")[0];
+    csrfToken = res.body.csrfToken;
   });
+
+  // -----------------------------
+  // Fonction utilitaire pour envoyer les deux cookies
+  // -----------------------------
+  // On lui passe en paramètre soit le cookie admin, soit le cookie member
+    const withCookies = (authCookie: string) => [csrfCookie, authCookie].join("; ");
 
   // -----------------------------
   // GET ALL BOOKINGS (admin only)
@@ -68,7 +108,7 @@ describe("Booking routes e2e", () => {
     it("should return all bookings for admin", async () => {
       const res = await request(app)
         .get("/api/bookings")
-        .set("Cookie", adminCookie);
+        .set("Cookie", withCookies(adminCookie));
 
       const data = res.body as BookingResponse[];
       expect(res.status).toBe(200);
@@ -78,7 +118,7 @@ describe("Booking routes e2e", () => {
     it("should fail for non-admin", async () => {
       const res = await request(app)
         .get("/api/bookings")
-        .set("Cookie", memberCookie);
+        .set("Cookie", withCookies(memberCookie));
 
       expect(res.status).toBe(403);
       expect(res.body.error).toBe("Forbidden: Admins only");
@@ -92,7 +132,7 @@ describe("Booking routes e2e", () => {
     it("should return a booking for owner", async () => {
       const res = await request(app)
         .get("/api/bookings/2")
-        .set("Cookie", memberCookie);
+        .set("Cookie", withCookies(memberCookie));
 
       expect(res.status).toBe(200);
       expect(res.body.id).toBe(2);
@@ -101,7 +141,7 @@ describe("Booking routes e2e", () => {
     it("should return 403 if user is not owner or admin", async () => {
       const res = await request(app)
         .get("/api/bookings/1") // booking id 1 => appartient à octave le chat
-        .set("Cookie", memberCookie);
+        .set("Cookie", withCookies(memberCookie));
 
       expect(res.status).toBe(403);
       expect(res.body.message).toBe("Unauthorized");
@@ -110,7 +150,7 @@ describe("Booking routes e2e", () => {
     it("should return 404 if booking does not exist", async () => {
       const res = await request(app)
         .get("/api/bookings/999")
-        .set("Cookie", adminCookie);
+        .set("Cookie", withCookies(adminCookie));
 
       expect(res.status).toBe(404);
     });
@@ -123,7 +163,7 @@ describe("Booking routes e2e", () => {
     it("should return bookings for owner", async () => {
       const res = await request(app)
         .get("/api/bookings/user/6") // Alfred Lechien id
-        .set("Cookie", memberCookie);
+        .set("Cookie", withCookies(memberCookie));
 
       expect(res.status).toBe(200);
       expect(res.body[0].user_id).toBe(6);
@@ -132,7 +172,7 @@ describe("Booking routes e2e", () => {
     it("should fail if not owner or admin", async () => {
       const res = await request(app)
         .get("/api/bookings/user/5") // Octave Lechat id
-        .set("Cookie", memberCookie);
+        .set("Cookie", withCookies(memberCookie));
 
       expect(res.status).toBe(403);
       expect(res.body.message).toBe("Unauthorized");
@@ -144,7 +184,7 @@ describe("Booking routes e2e", () => {
   // -----------------------------
   describe("POST /bookings", () => {
     const newBooking = {
-      visit_date: new Date("2026-11-30"),
+      visit_date: "2026-11-30",
       nb_people: 2,
       status: true,
       user_id: 6
@@ -153,7 +193,7 @@ describe("Booking routes e2e", () => {
     it("should create a booking for authenticated user", async () => {
       const res = await request(app)
         .post("/api/bookings")
-        .set("Cookie", memberCookie)
+        .set("Cookie", withCookies(memberCookie))
         .set("x-csrf-token", csrfToken)
         .send(newBooking);
 
@@ -165,7 +205,7 @@ describe("Booking routes e2e", () => {
     it("should fail validation", async () => {
       const res = await request(app)
         .post("/api/bookings")
-        .set("Cookie", memberCookie)
+        .set("Cookie", withCookies(memberCookie))
         .set("x-csrf-token", csrfToken)
         .send({ visit_date: "invalid-date", nb_people: -1, status: true, user_id: 6 });
 
@@ -181,7 +221,7 @@ describe("Booking routes e2e", () => {
     it("should update a booking as admin", async () => {
       const res = await request(app)
         .put("/api/bookings/1")
-        .set("Cookie", adminCookie)
+        .set("Cookie", withCookies(adminCookie))
         .set("x-csrf-token", csrfToken)
         .send({ nb_people: 10 });
 
@@ -192,7 +232,7 @@ describe("Booking routes e2e", () => {
     it("should fail if not admin", async () => {
       const res = await request(app)
         .put("/api/bookings/1")
-        .set("Cookie", memberCookie)
+        .set("Cookie", withCookies(memberCookie))
         .set("x-csrf-token", csrfToken)
         .send({ nb_people: 5 });
 
@@ -208,7 +248,7 @@ describe("Booking routes e2e", () => {
     it("should allow user to update their own booking", async () => {
       const res = await request(app)
         .patch("/api/bookings/2/user")
-        .set("Cookie", memberCookie)
+        .set("Cookie", withCookies(memberCookie))
         .set("x-csrf-token", csrfToken)
         .send({ visit_date: new Date("2025-11-30").toISOString().split("T")[0], nb_people: 3 });
 
@@ -219,7 +259,7 @@ describe("Booking routes e2e", () => {
     it("should fail if updating someone else's booking", async () => {
       const res = await request(app)
         .patch("/api/bookings/1/user")
-        .set("Cookie", memberCookie)
+        .set("Cookie", withCookies(memberCookie))
         .set("x-csrf-token", csrfToken)
         .send({ nb_people: 1 });
 
@@ -229,7 +269,7 @@ describe("Booking routes e2e", () => {
     it("should fail validation", async () => {
       const res = await request(app)
         .patch("/api/bookings/2/user")
-        .set("Cookie", memberCookie)
+        .set("Cookie", withCookies(memberCookie))
         .set("x-csrf-token", csrfToken)
         .send({ nb_people: -5 });
 
@@ -239,7 +279,7 @@ describe("Booking routes e2e", () => {
     it("should fail if new booking data is in the past", async () => {
       const res = await request(app)
         .patch("/api/bookings/2/user")
-        .set("Cookie", memberCookie)
+        .set("Cookie", withCookies(memberCookie))
         .set("x-csrf-token", csrfToken)
         .send({ visit_date: new Date("2022-11-30").toISOString().split("T")[0] });
 
@@ -254,8 +294,8 @@ describe("Booking routes e2e", () => {
     it("should cancel a future booking", async () => {
       const res = await request(app)
         .patch("/api/bookings/5/cancel")
-        .set("x-csrf-token", csrfToken)
-        .set("Cookie", memberCookie);
+        .set("Cookie", withCookies(memberCookie))
+        .set("x-csrf-token", csrfToken);
 
       expect(res.status).toBe(200);
       expect(res.body.status).toBe(false);
@@ -264,8 +304,8 @@ describe("Booking routes e2e", () => {
     it("should fail if already cancelled", async () => {
       const res = await request(app)
         .patch("/api/bookings/3/cancel")
-        .set("x-csrf-token", csrfToken)
-        .set("Cookie", memberCookie);
+        .set("Cookie", withCookies(memberCookie))
+        .set("x-csrf-token", csrfToken);
 
       expect(res.status).toBe(400);
     });
@@ -273,8 +313,8 @@ describe("Booking routes e2e", () => {
     it("should fail if past date", async () => {
       const res = await request(app)
         .patch("/api/bookings/4/cancel") // booking with past date
-        .set("x-csrf-token", csrfToken)
-        .set("Cookie", memberCookie);
+        .set("Cookie", withCookies(memberCookie))
+        .set("x-csrf-token", csrfToken);
 
       expect(res.status).toBe(400);
       expect(res.body.message).toBe("Cannot cancel a booking for a past visit date.");
@@ -288,7 +328,8 @@ describe("Booking routes e2e", () => {
     it("should delete booking as admin", async () => {
       const res = await request(app)
         .delete("/api/bookings/1")
-        .set("Cookie", adminCookie);
+        .set("Cookie", withCookies(adminCookie))
+        .set("x-csrf-token", csrfToken);
 
       expect(res.status).toBe(204);
     });
@@ -296,7 +337,8 @@ describe("Booking routes e2e", () => {
     it("should fail if not admin", async () => {
       const res = await request(app)
         .delete("/api/bookings/7")
-        .set("Cookie", memberCookie);
+        .set("Cookie", withCookies(memberCookie))
+        .set("x-csrf-token", csrfToken);
 
       expect(res.status).toBe(403);
       expect(res.body.error).toBe("Forbidden: Admins only");
