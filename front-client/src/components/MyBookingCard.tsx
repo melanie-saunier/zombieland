@@ -1,5 +1,5 @@
-import { IMyBookingWithTotalPrice } from "@/@types/booking";
-import { InfoItemProps } from "@/@types/my-bookings";
+import { IMyBookingWithTotalPrice, InfoItemProps } from "@/@types/booking";
+
 import { formatDate } from "@/utils/mybookingsUtils";
 import { Calendar, Users } from "lucide-react";
 
