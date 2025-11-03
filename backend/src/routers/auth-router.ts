@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { authController } from "../controllers/auth-controller";
 import { authenticateToken } from "../middlewares/authenticate-token";
+import { verifyCsrf } from "../middlewares/verify-csrf";
 
 export const authRouter = Router();
 
@@ -48,7 +49,7 @@ export const authRouter = Router();
  * @return {object} 404 - Validation error or email already used
  * @return {object} 500 - Internal server error
  */
-authRouter.post("/register", authController.register);
+authRouter.post("/register", verifyCsrf, authController.register);
 
 /**
  * POST /auth/login
@@ -60,7 +61,7 @@ authRouter.post("/register", authController.register);
  * @return {object} 404 - User not found
  * @return {object} 500 - Internal server error
  */
-authRouter.post("/login", authController.login);
+authRouter.post("/login", verifyCsrf, authController.login);
 
 /**
  * GET /auth/me
@@ -83,7 +84,7 @@ authRouter.get("/me", authenticateToken, authController.getCurrentUser);
  * @return {object} 401 - Access denied (not logged in)
  * @return {object} 404 - User not found
  */
-authRouter.put("/me", authenticateToken, authController.updateMe);
+authRouter.put("/me", authenticateToken, verifyCsrf, authController.updateMe);
 
 /**
  * PATCH /auth/me/password
@@ -95,7 +96,7 @@ authRouter.put("/me", authenticateToken, authController.updateMe);
  * @return {object} 401 - Access denied (not logged in)
  * @return {object} 404 - User not found
  */
-authRouter.patch("/me/password", authenticateToken, authController.updatePassword);
+authRouter.patch("/me/password", authenticateToken, verifyCsrf, authController.updatePassword);
 
 /**
  * POST /auth/logout
@@ -104,4 +105,4 @@ authRouter.patch("/me/password", authenticateToken, authController.updatePasswor
  * @return {object} 200 - Logout successful
  */
 // c'est une route POST car on détruit quelque chose: on a un effet de bord (sur les routes get pas d'effet de bord)
-authRouter.post("/logout", authenticateToken, authController.logout);
+authRouter.post("/logout", authenticateToken, verifyCsrf, authController.logout);

@@ -7,3 +7,7 @@ export interface AuthRequest extends Request {
     role: string;
   };
 }
+//on étend request pour ajouter un cookie
+export interface RequestWithCookies extends Request {
+  cookies: { [key: string]: string };
+}

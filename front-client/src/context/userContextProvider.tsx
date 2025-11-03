@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import UserContext from "./userContext";
 import { IUser } from "@/@types/user";
 import { authApi } from "@/api/auth";
+import { csrfApi } from "@/api/csrf";
 
 // On définit les props attendues par le composant : ici, seulement les enfants
 // Ce composant enveloppera toute l’application.
@@ -29,6 +30,8 @@ export default function UserContextProvider({ children }: Props) {
   // Par défaut, il est null (aucun utilisateur connecté).
   const [user, setUser] = useState<IUser | null>(null);
   const [logged, setLogged] = useState(false);
+  // state pour récuperer le csrf token
+  const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
   // Fonction de login : appelée après un POST /login réussi
   // Elle enregistre les données de l’utilisateur dans le state global.
@@ -57,8 +60,12 @@ export default function UserContextProvider({ children }: Props) {
    * Son rôle : récupèrer l'utilisateur connecté au chargement
    */
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchInitialData = async () => {
       try {
+        // On recupère le token csrf de l'API
+        const csrfToken = await csrfApi.getCsrfToken();
+        setCsrfToken(csrfToken);
+        // On récupère l'utilisateur courrant (via la route GET)
         const currentUser = await authApi.getCurrentUser();
         setUser(currentUser);
         // ici on met setLogged à true si l'utilisateur courant n'est pas null
@@ -70,8 +77,7 @@ export default function UserContextProvider({ children }: Props) {
         setLogged(false);
       }
     };
-
-    fetchUser();
+    fetchInitialData();
   }, []);
 
   /**
@@ -82,7 +88,7 @@ export default function UserContextProvider({ children }: Props) {
    *  - logout : fonction pour se déconnecter
    */
   return (
-    <UserContext.Provider value={{ user, setUser, logged, setLogged, login, logout }}>
+    <UserContext.Provider value={{ user, setUser, logged, setLogged, login, logout, csrfToken }}>
       {children}
     </UserContext.Provider>
   );
