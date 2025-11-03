@@ -6,10 +6,16 @@ import path from "path";
 // Détermine l’environnement (test ou dev)
 const env = process.env.NODE_ENV || "development";
 
-// Charge le bon fichier .env (.env ou .env.test)
-dotenv.config({
-  path: path.resolve(`backend/.env${env === "test" ? ".test" : ""}`),
-});
+// Le dossier racine du projet
+const basePath = process.cwd();
+
+// Charger le bon fichier .env selon l'environnement
+const envPath =
+  env === "test"
+    ? path.resolve(process.cwd(), "./.env.test")
+    : path.resolve(process.cwd(), "backend/.env");
+
+dotenv.config({ path: envPath });
 
 // Récupère l’URL de connexion
 const dbUrl = process.env.PG_URL;
