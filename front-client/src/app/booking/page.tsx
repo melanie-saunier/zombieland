@@ -14,6 +14,7 @@ import { bookingApi } from "@/api/booking";
 import Loader from "@/components/Loader";
 import { pricesApi } from "@/api/prices";
 import { IPrice } from "@/@types/price";
+import { csrfApi } from "@/api/csrf";
 
 
 /**
@@ -25,7 +26,7 @@ import { IPrice } from "@/@types/price";
  *  - validation et soumission
  */
 export default function BookingPage() {
-  const { user } = useUserContext(); // On récupère l'état de connexion
+  const { user, csrfToken } = useUserContext(); // On récupère l'état de connexion
 
   const today = new Date(); // Préparation d'une référence à la date du jour
   today.setHours(0, 0, 0, 0); // On met l'heure à 00:00 pour éviter le décalage horaire
@@ -213,13 +214,15 @@ export default function BookingPage() {
     setIsSubmitting(true);
     setErrors([]);
 
-    try {   
+    try {
+      const token = csrfToken || await csrfApi.getCsrfToken();
+
       await bookingApi.createBooking({
         visit_date: bookingData.visit_date, 
         nb_people: bookingData.nb_people,
         status: true,
         user_id: user.id,
-      });
+      }, token!);
       
       console.log("Réservation créée:", bookingData);
 

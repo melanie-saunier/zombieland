@@ -9,10 +9,11 @@ import Loader from "@/components/Loader";
 import EditBookingModal from "@/components/EditBookingModal";
 import CancelBookingModal from "@/components/CancelBookingModal";
 import { MAX_TICKETS_PER_BOOKING } from "@/utils/bookingUtils";
+import { csrfApi } from "@/api/csrf";
 
 
 export default function MyBookingsPage() {
-  const { user } = useUserContext();
+  const { user, csrfToken } = useUserContext();
   // État backend (structure BDD)
   // Cet état représente les données “brutes” venant du backend.
   const [myBookings, setmyBookings] = useState<IMyBookingWithTotalPrice[]>([]);
@@ -97,10 +98,11 @@ export default function MyBookingsPage() {
     setErrorForm(null);
 
     try {
+      const token = csrfToken || await csrfApi.getCsrfToken();
       const updatedBooking = await bookingApi.updateMyBooking(selectedBooking.id, {
         visit_date: visitDateFormatted,
         nb_people,
-      });
+      }, token!);
   
       if (updatedBooking) {
         setmyBookings((prev) =>
@@ -129,8 +131,9 @@ export default function MyBookingsPage() {
     if (!selectedBooking) return;
 
     try {
-    // Appel API pour annuler la réservation: passer le status à false
-      const cancelledBooking = await bookingApi.cancelMyBooking(selectedBooking.id);
+      const token = csrfToken || await csrfApi.getCsrfToken();
+      // Appel API pour annuler la réservation: passer le status à false
+      const cancelledBooking = await bookingApi.cancelMyBooking(selectedBooking.id, token!);
 
       if (cancelledBooking) {
         // on met à jour le state myBookings avec les données recues de l'API apres annulation

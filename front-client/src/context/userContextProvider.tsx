@@ -44,8 +44,9 @@ export default function UserContextProvider({ children }: Props) {
   // Elle réinitialise le state à null.
   const logout = async () => {
     try {
+      const token = csrfToken || await csrfApi.getCsrfToken();
       // Appel au backend pour supprimer le cookie
-      await authApi.logout();
+      await authApi.logout(token!);
   
       // Mise à jour du state React
       setUser(null);
