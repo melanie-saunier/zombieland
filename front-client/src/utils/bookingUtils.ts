@@ -10,10 +10,11 @@ export const MAX_TICKETS_PER_BOOKING = 15;
  * - options : options de formatage (facultatif)
  * Retourne une date formatée en string
  */
+// utilisé dans la page booking
 export function formatLocalDate (dateString: string, options?: Intl.DateTimeFormatOptions) {
   // On découpe la date "YYYY-MM-DD" en trois parties (année, mois, jour)
   // puis on convertit chaque partie en nombre pour pouvoir créer un objet Date ensuite
-  const [year, month, day] = dateString.split('-').map(Number); 
+  const [year, month, day] = dateString.split("-").map(Number); 
   // En JavaScript, les mois sont indexés de 0 à 11 (janvier = 0, décembre = 11)
   // Donc on soustrait 1 pour que la date corresponde correctement
   const date = new Date(year, month - 1, day);

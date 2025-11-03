@@ -7,10 +7,14 @@ import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 
 // Import des types et utils
-import type { BookingData, TicketPricing, ValueDate } from "@/@types/booking";
+import type { BookingData, ValueDate } from "@/@types/booking";
 import { MAX_TICKETS_PER_BOOKING, formatLocalDate } from "@/utils/bookingUtils";
 import useUserContext from "@/context/useUserContext";
-import Link from "next/link";
+import { bookingApi } from "@/api/booking";
+import Loader from "@/components/Loader";
+import { pricesApi } from "@/api/prices";
+import { IPrice } from "@/@types/price";
+
 
 /**
  * Composant principal : BookingPage
@@ -21,27 +25,7 @@ import Link from "next/link";
  *  - validation et soumission
  */
 export default function BookingPage() {
-  const { logged } = useUserContext(); // On récupère l'état de connexion
-
-  // Si l'utilisateur n'est pas connecté, on affiche un message et un bouton vers /login
-  if (!logged) {
-    return (
-      <section className="bg-radial from-[#961990] to-[#000000] min-h-screen flex items-center justify-center p-4 md:p-8">
-        <div className="bg-red-900/30 border-2 border-red-500 rounded-lg p-6 max-w-md text-center">
-          <h2 className="text-red-300 font-bold text-2xl mb-4">Les morts-vivants ne peuvent pas réserver 🧟</h2>
-          <p className="text-red-300 mb-6">
-             Oups ! Seuls les survivants connectés peuvent réserver des billets pour ZombieLand…
-          </p>
-          <Link
-            href="/login"
-            className="button_activity m-2 p-2 md:m-4 md:py-4 flex items-center w-fit text-neutral-50 width-inherit md:px-12 justify-center font-bold"
-          >
-            Rejoindre les survivants
-          </Link>
-        </div>
-      </section>
-    );
-  }
+  const { user } = useUserContext(); // On récupère l'état de connexion
 
   const today = new Date(); // Préparation d'une référence à la date du jour
   today.setHours(0, 0, 0, 0); // On met l'heure à 00:00 pour éviter le décalage horaire
@@ -62,10 +46,10 @@ export default function BookingPage() {
   // État pour stocker le prix des billets récupéré depuis la BDD
   // pricing : contient les infos tarifaires récupérées (prix unitaire, limite max)
   // isLoadingPrice : gère l’état de chargement du prix
-  const [pricing, setPricing] = useState<TicketPricing | null>(null);
+  const [pricing, setPricing] = useState<IPrice | null>(null);
   const [isLoadingPrice, setIsLoadingPrice] = useState(true); // État de chargement du prix
 
-    /**
+  /**
    * États d’interface (UI)
    * - selectedDate : date sélectionnée dans le calendrier (objet Date)
    * - errors : tableau de messages d’erreur à afficher à l’utilisateur
@@ -89,25 +73,27 @@ export default function BookingPage() {
       try {
         setIsLoadingPrice(true); // on affiche le loader
 
-        // TODO: remplacer par appel réel à l'API
-        // const pricing = await getTicketPricing();
+        const prices = await pricesApi.getPrices();
 
-        // Simulation d'un appel API (ici on attend 500ms)
-        await new Promise(resolve => setTimeout(resolve, 500));
-        const pricing = {
-          label: "Tarif unique",
-          value: 45, // prix simulé
-        };
+        if(!prices) {
+          setErrors(["Impossible de charger les tarifs. Veuillez réessayer."]);
+          return;
+        }
+        // on veut le prix "Tarif unique"
+        const uniquePrice = prices.find((price) => price.label === "Tarif unique");
 
-        // on sauvegarde le prix dans l'état
-        setPricing(pricing);
-
-        // Calcul du prix total en fonction du nombre actuel de billets
-        setBookingData(prev => ({
-          ...prev,
-          total_price: prev.nb_people * pricing.value, 
-        }));
-
+        if(uniquePrice) {
+          // on sauvegarde le prix dans l'état
+          setPricing(uniquePrice);
+          // Calcul du prix total en fonction du nombre actuel de billets
+          setBookingData(prev => ({
+            ...prev,
+            total_price: prev.nb_people * uniquePrice.value, 
+          }));
+        } else {
+          setErrors(["Tarif unique introuvable."]);
+          return;
+        }
       } catch (error) {
         console.error("Erreur de chargement du prix:", error);
         setErrors(["Impossible de charger les tarifs. Veuillez réessayer."]);
@@ -138,10 +124,10 @@ export default function BookingPage() {
       // Explication padStart : str.padStart(targetLength, padString)
       // - targetLength → la longueur finale de la chaîne souhaitée.
       // - padString → la chaîne utilisée pour compléter le début si nécessaire (par défaut " ").
-      const month = String(value.getMonth() + 1).padStart(2, '0');
+      const month = String(value.getMonth() + 1).padStart(2, "0");
       // On récupère le jour du mois (1 à 31)
       // Même logique : on convertit en string et on ajoute un zéro au besoin
-      const day = String(value.getDate()).padStart(2, '0');
+      const day = String(value.getDate()).padStart(2, "0");
       // On combine les trois parties (année, mois, jour) pour former une chaîne "YYYY-MM-DD"
       // C’est le format standard ISO, pratique pour stocker et échanger des dates
       const formattedDate = `${year}-${month}-${day}`;
@@ -197,7 +183,7 @@ export default function BookingPage() {
     if (!bookingData.visit_date) {
       newErrors.push("Veuillez sélectionner une date de visite");
     } else {
-      const [year, month, day] = bookingData.visit_date.split('-').map(Number); // On sépare l'année, le mois et le jour
+      const [year, month, day] = bookingData.visit_date.split("-").map(Number); // On sépare l'année, le mois et le jour
       const selectedDateObj = new Date(year, month - 1, day); // On crée un objet Date avec la date sélectionnée
       selectedDateObj.setHours(0, 0, 0, 0); // On met l'heure à 00:00 pour éviter le décalage horaire
       if (selectedDateObj < today) {
@@ -218,24 +204,23 @@ export default function BookingPage() {
       setErrors(newErrors);
       return;
     }
-
+    // on vérifie si utilisateur connecté 
+    if (!user?.id) {
+      setErrors(["Utilisateur non connecté."]);
+      return;
+    }
     // Soumission simulée
     setIsSubmitting(true);
     setErrors([]);
 
-    try {
-      // On met à jour le status à true avant d'envoyer la réservation
-      const bookingToSend = {
-        ...bookingData,
-        status: true, // réservation confirmée
-        total_price: undefined, // retirer total_price avant appel à l'API car pas besoin dans le back
-        user_id: 1 // ajout du used_id
-        //TODO: MAJ l'id de l'utilisateur
-      };
-
-      //TODO : mettre à jour la requête de réservation vers l'API avec la variable bookingToSend en body
-      await new Promise(resolve => setTimeout(resolve, 1000)); // simulation d'API
-
+    try {   
+      await bookingApi.createBooking({
+        visit_date: bookingData.visit_date, 
+        nb_people: bookingData.nb_people,
+        status: true,
+        user_id: user.id,
+      });
+      
       console.log("Réservation créée:", bookingData);
 
       // Message de succès formaté avec les infos de réservation
@@ -266,8 +251,8 @@ export default function BookingPage() {
     }
   };
 
-  /** Erreur de chargement des prix */
-  if (!pricing) { // Si le prix n'est pas chargé, on affiche le message d'erreur dans un div avec les bonnes props
+  /** Erreur de chargement des prix: si apres le chargement le prix est absent on affiche une erreur */
+  if (!pricing && !isLoadingPrice) { // Si le prix n'est pas chargé, on affiche le message d'erreur dans un div avec les bonnes props
     return (
       <section className="min-h-screen p-4 md:p-8 flex items-center justify-center">
         <div className="bg-red-900/30 border-2 border-red-500 rounded-lg p-6 max-w-md">
@@ -277,6 +262,9 @@ export default function BookingPage() {
       </section>
     );
   }
+  //on doit rajouter return null si on a pas de prix pour que TS comprenne bien que pricing ne peut pas être null
+  if (!pricing) return null;
+
 
   return (
     <section className="bg-radial from-[#961990] to-[#000000] min-h-screen p-4 md:p-8">
@@ -301,128 +289,136 @@ export default function BookingPage() {
             </ul>
           </div>
         )}
+        {
+          isLoadingPrice ? (
+            <div className="h-100 flex flex-col justify-center items-center m-4">
+              <Loader /> 
+            </div>
+          ) :(
 
-        <form onSubmit={handleSubmit} className="space-y-8">
-          <div className="p-6 bg-neutral-700 rounded-lg border border-primary-300 shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
-            <h2 className="text-xl font-bold text-neutral-50 mb-6 pb-2 border-b border-primary-300 flex items-center gap-2">
-              <CalendarIcon size={24} className="text-primary-300" />
+            <form onSubmit={handleSubmit} className="space-y-8">
+              <div className="p-6 bg-neutral-700 rounded-lg border border-primary-300 shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
+                <h2 className="text-xl font-bold text-neutral-50 mb-6 pb-2 border-b border-primary-300 flex items-center gap-2">
+                  <CalendarIcon size={24} className="text-primary-300" />
               Détails de votre réservation
-            </h2>
+                </h2>
 
-            <div className="grid md:grid-cols-2 gap-6">
+                <div className="grid md:grid-cols-2 gap-6">
               
-              {/* Calendrier */}
-              <div className="flex flex-col gap-2">
-                <label 
-                  htmlFor="booking-calendar"
-                  className="text-lg text-primary-200 font-semibold"
-                >
+                  {/* Calendrier */}
+                  <div className="flex flex-col gap-2">
+                    <label 
+                      htmlFor="booking-calendar"
+                      className="text-lg text-primary-200 font-semibold"
+                    >
                   Date de visite
-                </label>
-                <Calendar
-                  onChange={handleCalendarChange}
-                  value={selectedDate}
-                  minDate={today}
-                  locale="fr-FR"
-                  className="booking-calendar mx-auto md:mx-0"
-                  aria-label="Sélectionner une date de visite"
-                />
-                 {bookingData.visit_date && (
-                  <p className="text-sm text-secondary-200 font-semibold mt-2 text-center md:text-left">
-                    📅 {formatLocalDate(bookingData.visit_date, {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </p>
-                )}
-              </div>
-
-              {/* Nombre de billets + Total */}
-              <div className="flex flex-col gap-6">
-                <div className="flex flex-col gap-3">
-                  <label 
-                    htmlFor="ticket-count"
-                    className="text-lg text-primary-200 font-semibold flex items-center gap-2"
-                  >
-                    <Users size={18} /> Nombre de billets
-                  </label>
-                  
-                  <div className="flex items-center justify-center gap-4">
-                    <button
-                      type="button"
-                      onClick={() => updateTickets(bookingData.nb_people - 1)} /* Appelle la fonction updateTickets pour diminuer le nombre de billets */
-                      disabled={bookingData.nb_people <= 1} /* Désactive le bouton si le nombre de billets est inférieur ou égal à 1 */
-                      aria-label="Diminuer le nombre de billets"
-                      className="w-12 h-12 flex items-center justify-center bg-primary-500 text-neutral-50 rounded-full hover:bg-primary-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
-                    >
-                      <Minus size={20} />
-                    </button>
-
-                    <input
-                      id="ticket-count"
-                      type="number"
-                      value={bookingData.nb_people}
-                      onChange={e => updateTickets(parseInt(e.target.value) || 1)} /* Appelle la fonction updateTickets pour mettre à jour le nombre de billets */
-                      min="1"
-                      max={MAX_TICKETS_PER_BOOKING} /* Définit le nombre maximum de billets */
-                      aria-label="Nombre de billets"
-                      className="w-24 text-center p-3 bg-neutral-700/50 rounded border border-primary-500 text-neutral-50 text-xl font-bold focus:outline-none focus:border-primary-300 focus:ring-2 focus:ring-primary-300"
+                    </label>
+                    <Calendar
+                      onChange={handleCalendarChange}
+                      value={selectedDate}
+                      minDate={today}
+                      locale="fr-FR"
+                      className="booking-calendar mx-auto md:mx-0"
+                      aria-label="Sélectionner une date de visite"
                     />
-
-                    <button
-                      type="button"
-                      onClick={() => updateTickets(bookingData.nb_people + 1)} /* Appelle la fonction updateTickets pour augmenter le nombre de billets */
-                      disabled={bookingData.nb_people >= MAX_TICKETS_PER_BOOKING} /* Désactive le bouton si le nombre de billets est supérieur ou égal au nombre maximum de billets */
-                      aria-label="Augmenter le nombre de billets"
-                      className="w-12 h-12 flex items-center justify-center bg-primary-500 text-neutral-50 rounded-full hover:bg-primary-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
-                    >
-                      <Plus size={20} />
-                    </button>
+                    {bookingData.visit_date && (
+                      <p className="text-sm text-secondary-200 font-semibold mt-2 text-center md:text-left">
+                    📅 {formatLocalDate(bookingData.visit_date, {
+                          weekday: "long",
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </p>
+                    )}
                   </div>
 
-                  <p className="text-center text-sm text-neutral-50">
+                  {/* Nombre de billets + Total */}
+                  <div className="flex flex-col gap-6">
+                    <div className="flex flex-col gap-3">
+                      <label 
+                        htmlFor="ticket-count"
+                        className="text-lg text-primary-200 font-semibold flex items-center gap-2"
+                      >
+                        <Users size={18} /> Nombre de billets
+                      </label>
+                  
+                      <div className="flex items-center justify-center gap-4">
+                        <button
+                          type="button"
+                          onClick={() => updateTickets(bookingData.nb_people - 1)} /* Appelle la fonction updateTickets pour diminuer le nombre de billets */
+                          disabled={bookingData.nb_people <= 1} /* Désactive le bouton si le nombre de billets est inférieur ou égal à 1 */
+                          aria-label="Diminuer le nombre de billets"
+                          className="w-12 h-12 flex items-center justify-center bg-primary-500 text-neutral-50 rounded-full hover:bg-primary-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
+                        >
+                          <Minus size={20} />
+                        </button>
+
+                        <input
+                          id="ticket-count"
+                          type="number"
+                          value={bookingData.nb_people}
+                          onChange={e => updateTickets(parseInt(e.target.value) || 1)} /* Appelle la fonction updateTickets pour mettre à jour le nombre de billets */
+                          min="1"
+                          max={MAX_TICKETS_PER_BOOKING} /* Définit le nombre maximum de billets */
+                          aria-label="Nombre de billets"
+                          className="w-24 text-center p-3 bg-neutral-700/50 rounded border border-primary-500 text-neutral-50 text-xl font-bold focus:outline-none focus:border-primary-300 focus:ring-2 focus:ring-primary-300"
+                        />
+
+                        <button
+                          type="button"
+                          onClick={() => updateTickets(bookingData.nb_people + 1)} /* Appelle la fonction updateTickets pour augmenter le nombre de billets */
+                          disabled={bookingData.nb_people >= MAX_TICKETS_PER_BOOKING} /* Désactive le bouton si le nombre de billets est supérieur ou égal au nombre maximum de billets */
+                          aria-label="Augmenter le nombre de billets"
+                          className="w-12 h-12 flex items-center justify-center bg-primary-500 text-neutral-50 rounded-full hover:bg-primary-300 disabled:opacity-50 disabled:cursor-not-allowed transition-all hover:scale-110 active:scale-95"
+                        >
+                          <Plus size={20} />
+                        </button>
+                      </div>
+
+                      <p className="text-center text-sm text-neutral-50">
                     Prix unitaire : <strong className="text-primary-200">{pricing.value}€</strong>
-                  </p>
-                </div>
+                      </p>
+                    </div>
 
-                {/* Prix total */}
-                <div 
-                  className="p-6 bg-secondary-500/20 rounded-lg border-2 border-secondary-300 shadow-[0_0_12px_0_rgba(139,255,132,0.5)] text-center"
-                  role="status"
-                  aria-live="polite"
-                >
-                  <span className="block text-lg font-bold text-neutral-50">
+                    {/* Prix total */}
+                    <div 
+                      className="p-6 bg-secondary-500/20 rounded-lg border-2 border-secondary-300 shadow-[0_0_12px_0_rgba(139,255,132,0.5)] text-center"
+                      role="status"
+                      aria-live="polite"
+                    >
+                      <span className="block text-lg font-bold text-neutral-50">
                     Prix total
-                  </span>
-                  <span className="text-5xl font-bold text-secondary-200">
-                    {bookingData.total_price}€
-                  </span>
-                  <p className="text-sm text-neutral-50/70 mt-1">
-                    {bookingData.nb_people} billet{bookingData.nb_people > 1 ? "s" : ""} × {pricing.value}€
-                  </p>
-                </div>
+                      </span>
+                      <span className="text-5xl font-bold text-secondary-200">
+                        {bookingData.total_price}€
+                      </span>
+                      <p className="text-sm text-neutral-50/70 mt-1">
+                        {bookingData.nb_people} billet{bookingData.nb_people > 1 ? "s" : ""} × {pricing.value}€
+                      </p>
+                    </div>
 
-                {/* Bouton de soumission */}
-                <button
-                  type="submit"
-                  disabled={!bookingData.visit_date || isSubmitting}
-                  className="w-full p-4 font-bold button_booking text-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed relative"
-                >
-                  {isSubmitting ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <span className="animate-spin rounded-full h-5 w-5 border-2 border-neutral-50 border-t-transparent" />
+                    {/* Bouton de soumission */}
+                    <button
+                      type="submit"
+                      disabled={!bookingData.visit_date || isSubmitting}
+                      className="w-full p-4 font-bold button_booking text-neutral-50 disabled:opacity-50 disabled:cursor-not-allowed relative"
+                    >
+                      {isSubmitting ? (
+                        <span className="flex items-center justify-center gap-2">
+                          <span className="animate-spin rounded-full h-5 w-5 border-2 border-neutral-50 border-t-transparent" />
                       Traitement en cours...
-                    </span>
-                  ) : (
-                    "Confirmer ma réservation"
-                  )}
-                </button>
+                        </span>
+                      ) : (
+                        "Confirmer ma réservation"
+                      )}
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </form>
+            </form>
+          )
+        }
 
         {/* Message de succès */}
         {successMessage && (

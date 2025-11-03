@@ -1,7 +1,7 @@
 // src/app/activity/id/page.tsx 
 
 "use client";
-import IActivity, { ICategory } from "@/@types/activity";
+import  { ICategory, IActivity } from "@/@types/activity";
 import { fetchAllActivities } from "@/api/activities";
 import fetchAllCategories from "@/api/categories";
 import CardActivity from "@/components/CardActivity";

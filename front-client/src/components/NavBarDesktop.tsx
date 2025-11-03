@@ -31,7 +31,7 @@ export default function NavBarDesktop() {
   const navItems = [
     { name: "Accueil", path: "/", Icon: House, always: true },
     { name: "Mon profil", path: "/profile", Icon: UserPen, logged: true },
-    { name: "Mes réservations", path: "/bookings", Icon: CalendarCheck, logged: true },
+    { name: "Mes réservations", path: "/my-bookings", Icon: CalendarCheck, logged: true },
     { name: "Activités", path: "/activities", Icon: Rocket, always: true },
     { name: "Informations", path: "/visitor-information", Icon: SignpostBig, always: true },
     { name: "À propos", path: "/about", Icon: Info, always: true },
