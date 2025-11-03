@@ -61,3 +61,11 @@ export interface IMyBookingWithTotalPrice {
   created_at: date;
   total_price: number;
 }
+
+export interface InfoItemProps { // Props pour le composant InfoItem du composant MyBookingsCard
+  icon: ReactNode;
+  label: string;
+  value: string;
+  color?: string;
+  highlight?: boolean;
+}

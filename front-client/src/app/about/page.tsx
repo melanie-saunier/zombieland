@@ -33,7 +33,7 @@ export default function AboutPage() {
     {
       name: "Kari Routier",
       role: "Gardienne de la vision et de l’expérience",
-      image: "/images/about/team4.jpg",
+      image: "/images/Portrait-Kari.jpg",
       description: "Toujours à l’écoute des visiteurs, Kari imagine les parcours et définit les grandes orientations du parc. Elle veille à ce que chaque nouvelle attraction reste fidèle à l’esprit de Zombieland : intense, surprenant et délicieusement effrayant."
     }
   ];
