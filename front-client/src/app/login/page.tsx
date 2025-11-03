@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { authApi } from "@/api/auth";
 
 import useUserContext from "../../context/useUserContext";
+import { csrfApi } from "@/api/csrf";
 
 export default function LoginPage() {
   // pour faire un focus sur le premier input(input email) lorsque l'on arrive sur la page
@@ -15,7 +16,7 @@ export default function LoginPage() {
   const router = useRouter();
 
   // Récupération des fonctions du contexte utilisateur
-  const { login } = useUserContext();
+  const { login, csrfToken } = useUserContext();
 
   // State pour gérer l'affichage des messages d'erreur et de succès
   const [error, setError] = useState<null | string>(null);
@@ -33,8 +34,9 @@ export default function LoginPage() {
    */
   const checkCrendentials = async (email: string, password: string) => {
     try {
+      const token = csrfToken || await csrfApi.getCsrfToken();
       // Appel à l'API login
-      const user = await authApi.login({email, password});
+      const user = await authApi.login({email, password}, token!);
       // Si aucun utilisateur retourné → identifiants incorrects
       if (!user) {
         setError("Email ou mot de passe incorrect");

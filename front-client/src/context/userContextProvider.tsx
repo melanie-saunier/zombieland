@@ -44,8 +44,9 @@ export default function UserContextProvider({ children }: Props) {
   // Elle réinitialise le state à null.
   const logout = async () => {
     try {
+      const token = csrfToken || await csrfApi.getCsrfToken();
       // Appel au backend pour supprimer le cookie
-      await authApi.logout();
+      await authApi.logout(token!);
   
       // Mise à jour du state React
       setUser(null);
@@ -64,13 +65,14 @@ export default function UserContextProvider({ children }: Props) {
       try {
         // On recupère le token csrf de l'API
         const csrfToken = await csrfApi.getCsrfToken();
+
         setCsrfToken(csrfToken);
         // On récupère l'utilisateur courrant (via la route GET)
         const currentUser = await authApi.getCurrentUser();
         setUser(currentUser);
         // ici on met setLogged à true si l'utilisateur courant n'est pas null
         setLogged(currentUser !== null);
-        
+        console.log(csrfToken);
       } catch (err) {
         console.error("Erreur lors de la récupération du user :", err);
         setUser(null);

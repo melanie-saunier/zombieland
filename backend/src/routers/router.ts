@@ -42,8 +42,9 @@ router.get("/csrf-token", (req, res) => {
   res.cookie("csrf-secret", secret, {
     httpOnly: true, // le cookie n'est pas accessible par JS dans le front, cela protège le secret
     sameSite: "lax", // empêche l'envoi du cookie depuis un autre site (mitigation CSRF)
-    secure: process.env.NODE_ENV === "production", // cookie sécurisé seulement en prod
-    maxAge: 15 * 60 * 1000 // durée du cookie de 15min
+    // secure: process.env.NODE_ENV === "production", // cookie sécurisé seulement en prod
+    maxAge: 15 * 60 * 1000, // durée du cookie de 15min
+    path: "/", 
   });
 
   // On transmet notre token sous forme de json pour le front

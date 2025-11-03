@@ -4,9 +4,15 @@ import axios from "axios";
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const bookingApi = {
-  createBooking: async (data: IBooking): Promise<IBooking | null> => {
+  createBooking: async (data: IBooking, csrfToken: string): Promise<IBooking | null> => {
     try {
-      const res = await axios.post(`${API_URL}/bookings`, data, { withCredentials: true });
+      const res = await axios.post(`${API_URL}/bookings`, data, { 
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+          "Content-Type": "application/json"
+        }
+      });
       const bookingData = res.data;
       
       if (!bookingData) return null;
@@ -36,7 +42,8 @@ export const bookingApi = {
   },
   getMyBooking: async (id: number): Promise<IMyBooking[] | null> => {
     try {
-      const res = await axios.get<IApiBooking[]>(`${API_URL}/bookings/user/${id}`);
+      const res = await axios.get<IApiBooking[]>(`${API_URL}/bookings/user/${id}`, { 
+        withCredentials: true });
       const myBookingsData = res.data;
       
       if (!myBookingsData) return null;
@@ -67,9 +74,15 @@ export const bookingApi = {
       throw new Error("Erreur inconnue");
     }
   },
-  updateMyBooking: async (id:number, data: Omit<IBooking, "status" | "user_id">) => {
+  updateMyBooking: async (id:number, data: Omit<IBooking, "status" | "user_id">, csrfToken: string) => {
     try {
-      const res = await axios.patch<IApiBooking>(`${API_URL}/bookings/${id}/user`, data, { withCredentials: true });
+      const res = await axios.patch<IApiBooking>(`${API_URL}/bookings/${id}/user`, data, { 
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+          "Content-Type": "application/json"
+        }
+      });
       const myBookingDataUpdate = res.data;
       
       if (!myBookingDataUpdate) return null;
@@ -97,9 +110,15 @@ export const bookingApi = {
       throw new Error("Erreur inconnue");
     }
   },
-  cancelMyBooking: async(id:number) => {
+  cancelMyBooking: async(id:number, csrfToken: string) => {
     try {
-      const res = await axios.patch<IApiBooking>(`${API_URL}/bookings/${id}/cancel`, {}, { withCredentials: true });
+      const res = await axios.patch<IApiBooking>(`${API_URL}/bookings/${id}/cancel`, {}, { 
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+          "Content-Type": "application/json"
+        }
+      });
       const myBookingDataCancel = res.data;
       
       if (!myBookingDataCancel) return null;

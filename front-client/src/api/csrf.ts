@@ -5,8 +5,11 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export const csrfApi = {
   getCsrfToken: async(): Promise<string | null> => {
     try {
-      const res = await axios.get(`${API_URL}/csrf-token`);
-      const token = res.data;
+      const res = await axios.get(`${API_URL}/csrf-token`, {
+        withCredentials: true, 
+      });
+      const token = res.data.csrfToken;
+      // console.log(token);
       return token;
 
     } catch (err) {
