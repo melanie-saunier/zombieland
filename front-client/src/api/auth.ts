@@ -45,9 +45,16 @@ export const authApi = {
    * Login
    * @param data LoginInput
    */
-  login: async (data: ILoginInput): Promise<IUser | null> => {
+  login: async (data: ILoginInput, csrfToken: string): Promise<IUser | null> => {
     try {
-      const res = await axios.post(`${API_URL}/auth/login`, data, { withCredentials: true });
+      console.log(csrfToken);
+      const res = await axios.post(`${API_URL}/auth/login`, data, { 
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+          "Content-Type": "application/json"
+        }
+      });
       
       const userData = res.data;
       if (!userData) return null;

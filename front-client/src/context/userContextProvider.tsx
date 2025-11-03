@@ -64,13 +64,14 @@ export default function UserContextProvider({ children }: Props) {
       try {
         // On recupère le token csrf de l'API
         const csrfToken = await csrfApi.getCsrfToken();
+
         setCsrfToken(csrfToken);
         // On récupère l'utilisateur courrant (via la route GET)
         const currentUser = await authApi.getCurrentUser();
         setUser(currentUser);
         // ici on met setLogged à true si l'utilisateur courant n'est pas null
         setLogged(currentUser !== null);
-        
+        console.log(csrfToken);
       } catch (err) {
         console.error("Erreur lors de la récupération du user :", err);
         setUser(null);

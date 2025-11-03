@@ -7,6 +7,7 @@ const corsOptions = {
   methods: ["GET", "POST", "PATCH", "DELETE", "PUT"],
   credentials: true, // obligatoire pour envoyer les cookies HTTPOnly
   optionSuccessStatus: 200,
+  allowedHeaders: ["Content-Type", "x-csrf-token"],
 };
 
 // Création de notre middleware de CORS exportable
