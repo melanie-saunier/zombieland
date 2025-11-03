@@ -45,9 +45,16 @@ export const authApi = {
    * Login
    * @param data LoginInput
    */
-  login: async (data: ILoginInput): Promise<IUser | null> => {
+  login: async (data: ILoginInput, csrfToken: string): Promise<IUser | null> => {
     try {
-      const res = await axios.post(`${API_URL}/auth/login`, data, { withCredentials: true });
+      // console.log(csrfToken);
+      const res = await axios.post(`${API_URL}/auth/login`, data, { 
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+          "Content-Type": "application/json"
+        }
+      });
       
       const userData = res.data;
       if (!userData) return null;
@@ -71,9 +78,15 @@ export const authApi = {
    * Register
    * @param data RegisterInput
    */
-  register: async (data: IRegisterInput): Promise<IUser | null> => {
+  register: async (data: IRegisterInput, csrfToken: string): Promise<IUser | null> => {
     try {
-      const res = await axios.post(`${API_URL}/auth/register`, data, { withCredentials: true });
+      const res = await axios.post(`${API_URL}/auth/register`, data, { 
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+          "Content-Type": "application/json"
+        }
+      });
       const userData = res.data;
       if (!userData) return null;
 
@@ -97,16 +110,28 @@ export const authApi = {
    * Logout
    * Supprime le cookie côté serveur
    */
-  logout: async (): Promise<void> => {
+  logout: async (csrfToken: string): Promise<void> => {
     try {
-      await axios.post(`${API_URL}/auth/logout`, {}, { withCredentials: true });
+      await axios.post(`${API_URL}/auth/logout`, {}, { 
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+          "Content-Type": "application/json"
+        }
+      });
     } catch (err) {
       console.error("Erreur lors du logout :", err);
     }
   },
-  updateMe: async (data: IUpdateMeInput): Promise<IUser | null> => {
+  updateMe: async (data: IUpdateMeInput, csrfToken: string): Promise<IUser | null> => {
     try {
-      const res = await axios.put(`${API_URL}/auth/me`, data, { withCredentials: true });
+      const res = await axios.put(`${API_URL}/auth/me`, data, { 
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+          "Content-Type": "application/json"
+        }
+      });
       const userData = res.data;
       if (!userData) return null;
   
@@ -128,9 +153,15 @@ export const authApi = {
       throw new Error("Erreur inconnue");
     }
   },
-  updatePassword: async (data: IUpdatePasswordInput): Promise<IUser | null> => {
+  updatePassword: async (data: IUpdatePasswordInput, csrfToken: string): Promise<IUser | null> => {
     try {
-      const res = await axios.patch(`${API_URL}/auth/me/password`, data, { withCredentials: true });
+      const res = await axios.patch(`${API_URL}/auth/me/password`, data, { 
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+          "Content-Type": "application/json"
+        }
+      });
       const userData = res.data;
       if (!userData) return null;
   
@@ -146,7 +177,7 @@ export const authApi = {
   
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        const message = err.response?.data?.error || "Erreur lors de la mise à jour du mot de passe";
+        const message = err.response?.data?.error || "Erreur lors de la mise à jour du profil";
         throw new Error(message); // on remonte l'erreur pour le handle
       }
       throw new Error("Erreur inconnue");

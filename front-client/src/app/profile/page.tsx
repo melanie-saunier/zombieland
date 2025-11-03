@@ -11,6 +11,7 @@ import useUserContext from "@/context/useUserContext";
 import { authApi } from "@/api/auth";
 import { IUser } from "@/@types/user";
 import Loader from "@/components/Loader";
+import { csrfApi } from "@/api/csrf";
 
 /**
  * Composant principal : ProfilePage
@@ -21,7 +22,7 @@ import Loader from "@/components/Loader";
  *  - Les messages d’erreur et de succès
  */
 export default function ProfilePage() {
-  const { user, setUser } = useUserContext();
+  const { user, setUser, csrfToken } = useUserContext();
   // state pour stocker les données éditées temporairement
   const [editedUser, setEditedUser] = useState<IUser>({
     id: 0,
@@ -75,8 +76,11 @@ export default function ProfilePage() {
 
     try {
       setError(null); // Réinitialise les erreurs
+
+      const token = csrfToken || await csrfApi.getCsrfToken();
+      
       // fetch vers l'API pour modifier les infos utilisateur
-      const user = await authApi.updateMe({firstname: editedUser.firstname, lastname: editedUser.lastname, email: editedUser.email});
+      const user = await authApi.updateMe({firstname: editedUser.firstname, lastname: editedUser.lastname, email: editedUser.email}, token!);
       // on met à jour le context
       setUser(user);
       setSuccessMessage("Profil mis à jour !");
@@ -127,8 +131,10 @@ export default function ProfilePage() {
     }
 
     try {
+      const token = csrfToken || await csrfApi.getCsrfToken();
+
       // fetch vers l'api pour modifier le mot de passe
-      await authApi.updatePassword({oldPassword: passwordState.oldPassword, newPassword: passwordState.newPassword, confirmedPassword: passwordState.confirmedPassword});
+      await authApi.updatePassword({oldPassword: passwordState.oldPassword, newPassword: passwordState.newPassword, confirmedPassword: passwordState.confirmedPassword}, token!);
       // Si tout se passe bien :
       setSuccessMessage("Ton mot de passe a bien été mis à jour !");
       // remet le state password à zero

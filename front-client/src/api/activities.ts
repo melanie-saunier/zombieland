@@ -1,6 +1,6 @@
 // src/api/activities.ts
 
-import IActivity from "@/@types/activity";
+import {IActivity} from "@/@types/activity";
 import axios from "axios";
 import { notFound } from "next/navigation";
 

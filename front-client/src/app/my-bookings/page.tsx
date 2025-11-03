@@ -1,171 +1,180 @@
-// src/app/my-bookings/page.tsx 
-
 "use client";
-import { useState } from "react";
-import { X, AlertCircle } from "lucide-react";
-import MyBookingCard from "@/components/MyBookingsCard"; // Composant affichant une carte de réservation
-import { Booking, ReservationDisplay } from "@/@types/my-bookings";
-import { transformBookingToDisplay, formatDate } from "@/utils/mybookingsUtils";
+
+import { useEffect, useState } from "react";
+import { bookingApi } from "@/api/booking";
+import useUserContext from "@/context/useUserContext";
+import { IMyBookingWithTotalPrice } from "@/@types/booking";
+import MyBookingsCard from "@/components/MyBookingCard";
+import Loader from "@/components/Loader";
+import EditBookingModal from "@/components/EditBookingModal";
+import CancelBookingModal from "@/components/CancelBookingModal";
 import { MAX_TICKETS_PER_BOOKING } from "@/utils/bookingUtils";
+import { csrfApi } from "@/api/csrf";
 
-// Mock data aligné sur le backend
-// TODO: Remplacer par fetch /api/bookings
-const mockBackendBookings: Booking[] = [
-  {
-    id: 1,
-    visit_date: "2025-11-05",
-    nb_people: 3,
-    status: true, // active
-    user_id: 1,
-    created_at: "2025-10-15T10:30:00Z",
-    updated_at: "2025-10-15T10:30:00Z",
-    bookingPrices: [
-      { 
-        id: 1, 
-        applied_price: 90,
-        booking_id: 1,
-        price_id: 1,
-        price: { id: 1, label: "Tarif unique", value: 30 } 
-      }
-    ]
-  },
-  {
-    id: 2,
-    visit_date: "2025-10-25", // Date passée
-    nb_people: 2,
-    status: true, // toujours active mais passée
-    user_id: 1,
-    created_at: "2025-09-20T14:20:00Z",
-    updated_at: "2025-09-20T14:20:00Z",
-    bookingPrices: [
-      { 
-        id: 2, 
-        applied_price: 60,
-        booking_id: 2,
-        price_id: 1,
-        price: { id: 1, label: "Tarif unique", value: 30 }
-      }
-    ]
-  },
-  {
-    id: 3,
-    visit_date: "2025-11-15",
-    nb_people: 4,
-    status: true, // active
-    user_id: 1,
-    created_at: "2025-10-28T09:15:00Z",
-    updated_at: "2025-10-28T09:15:00Z",
-    bookingPrices: [
-      { 
-        id: 3, 
-        applied_price: 120,
-        booking_id: 3,
-        price_id: 1,
-        price: { id: 1, label: "Tarif unique", value: 30 }
-      }
-    ]
-  },
-  {
-    id: 4,
-    visit_date: "2025-11-30",
-    nb_people: 6,
-    status: false, // annulée
-    user_id: 1,
-    created_at: "2025-11-01T16:45:00Z",
-    updated_at: "2025-11-02T10:00:00Z",
-    bookingPrices: [
-      { 
-        id: 4, 
-        applied_price: 180,
-        booking_id: 4,
-        price_id: 1,
-        price: { id: 1, label: "Tarif unique", value: 30 }
-      }
-    ]
-  },
-];
-
-const TICKET_PRICE = 30; // Aligné sur backend: data/seed-db.sql → price.value = 30.00
 
 export default function MyBookingsPage() {
+  const { user, csrfToken } = useUserContext();
   // État backend (structure BDD)
   // Cet état représente les données “brutes” venant du backend.
-  // TODO: fetch API
-  const [backendBookings, setBackendBookings] = useState<Booking[]>(mockBackendBookings);
+  const [myBookings, setmyBookings] = useState<IMyBookingWithTotalPrice[]>([]);
+  const [isLoadingMyBookings, setIsLoadingMyBookings] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   
-  // Transformation pour affichage
-  // On convertit chaque objet Booking (structure BDD) en un objet plus simple ReservationDisplay,
-  // plus adapté à l’affichage (par exemple : formatage des dates, calcul du prix total, etc.)
-  const displayReservations = backendBookings.map(b => transformBookingToDisplay(b, TICKET_PRICE)); 
+  //pour la modal de modification:
+  const [selectedBooking, setSelectedBooking] = useState<IMyBookingWithTotalPrice | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  // pour la gestion d'erreur dans la modal de modification
+  const [errorForm, setErrorForm] = useState<string | null>(null);
 
-  // Réservation actuellement sélectionnée (pour modifier ou annuler)
-  const [selected, setSelected] = useState<ReservationDisplay | null>(null);
-  // Type de modal actuellement ouvert (“modify” pour modifier, “cancel” pour annuler, “confirm” pour confirmer la modif)
-  const [modalType, setModalType] = useState<"modify" | "cancel" | "confirm" | null>(null);
-  // Contenu du formulaire utilisé pour la modification d'une réservation
-  const [form, setForm] = useState({ visitDate: "", ticketCount: 1 });
+  // pour la modal d'annulation de réservation
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
 
-  // --- Fonctions d’ouverture des modales ---
-  const openModify = (res: ReservationDisplay) => {
-    setSelected(res);  // On mémorise la réservation sélectionnée
-    setForm({ visitDate: res.visitDate, ticketCount: res.ticketCount }); // On pré-remplit le formulaire
-    setModalType("modify"); // On ouvre la modale de modification
-  };
 
-  const openCancel = (res: ReservationDisplay) => {
-    setSelected(res); // On sélectionne la réservation
-    setModalType("cancel"); // On ouvre la modale d'annulation
-  };
+  useEffect(() => {
+    // chargement des reservations du users au chargement de la page
+    const fetchMyBookings = async () => {
+      if (!user?.id) return;
+      setIsLoadingMyBookings(true);
+      setError(null);
 
-   // --- Gestion de la modification ---
-  const handleModify = (e: React.FormEvent) => {
-    e.preventDefault(); // Empêche le rechargement de la page
-    setModalType("confirm"); // Passe à l’étape de confirmation
-  };
+      try {
+        const myBookingsData = await bookingApi.getMyBooking(user?.id);
+        if (!myBookingsData) {
+          setmyBookings([]);
+          return;
+        }
+        const bookingsWithTotal = myBookingsData?.map(booking => ({
+          ...booking,
+          total_price: booking.nb_people * booking.bookingPrice,
+        }));
+        
+        setmyBookings(bookingsWithTotal);
+       
+      } catch(error) {
+        console.error("Erreur lors du chargement des réservations :", error);
+        setError(
+          error instanceof Error
+            ? error.message
+            : "Une erreur est survenue lors du chargement des réservations."
+        );
+      } finally {
+        setIsLoadingMyBookings(false);
+      }
+    };
+    fetchMyBookings();
+  }, [user?.id]);
 
-  const confirmModify = () => {
-    if (!selected) return; // Si aucune réservation n'est sélectionnée, on arrête la fonction
-    
-    // Mise à jour côté backend (PATCH /api/bookings/:id) *
-    setBackendBookings(
-      backendBookings.map((b) => // On met à jour le booking backend
-        b.id === selected.id // Si l'id du booking backend est égal à l'id de la réservation sélectionnée, on met à jour le booking
-          ? {
-              ...b, // On met à jour le booking backend
-              visit_date: form.visitDate,
-              nb_people: form.ticketCount, // On met à jour le nombre de personnes
-            }
-          : b // Sinon, on garde la réservation inchangée
-      )
-    ); 
-    // TODO: On met à jour le booking backend
-    resetModal(); // On ferme les modales et on réinitialise
-  }; 
 
-  // --- Gestion de l’annulation ---
-  const confirmCancel = () => {
-    if (!selected) return; // Si aucune réservation n'est sélectionnée, on arrête la fonction
-    
-    // Mise à jour du status backend (PATCH /api/bookings/:id → status: false)
-    setBackendBookings(
-      backendBookings.map((b) => // On met à jour le booking backend
-        b.id === selected.id // Si l'id du booking backend est égal à l'id de la réservation sélectionnée, on met à jour le booking
-          ? { 
-              ...b, // On met à jour le booking backend
-              status: false, // Backend: false = cancelled
-            }
-          : b // Sinon, on garde la réservation inchangée
-      )
-    ); 
-    // TODO: On met à jour le booking backend
-    resetModal(); // On ferme les modales et on réinitialise
-  }; 
+  // fonction pour soumission du formulaire de modification de la reservation
+  async function handleUpdateBooking(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault(); // empêche le rechargement de la page
+    if (!selectedBooking) return;
+    // on récupère la saisie utilisateur
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+  
+    const visit_date = formData.get("visit_date") as string;
+    const nb_people = Number(formData.get("nb_people"));
 
-  // --- Réinitialisation de l’état des modales --
-  const resetModal = () => {
-    setSelected(null); // On réinitialise la réservation sélectionnée
-    setModalType(null); // On réinitialise le type de modal
-  }; 
+    // si la personne met moins de 1 ou plus de 15 billets on envoie une erreur
+    if (nb_people < 1 || nb_people > MAX_TICKETS_PER_BOOKING) {
+      setErrorForm("Le nombre de personnes doit être entre 1 et 15.");
+      return;
+    }
+    // validation de la date: ne peut pas être antérieur à today
+    const today = new Date;
+    today.setHours(0, 0, 0, 0);
+    //on utilise la fct setHours pour passer du format jour + heure à un format jour et heure à zero
+    // ce format "sans heure" sera donc comparable à notre visit_date
+
+    // on fait newDate sur visit_date car la saisie dans l'input est une string, donc on le converti en date
+    //on pourra donc le comparer à today et l'envoyer en format Date au back
+    const visitDateFormatted = new Date(visit_date);
+    if (visitDateFormatted <=  today) {
+      setErrorForm("La date de visite ne peut pas être antérieure à aujourd'hui.");
+      return;
+    }
+    // remise à zéro du state d'erreur:
+    setErrorForm(null);
+
+    try {
+      const token = csrfToken || await csrfApi.getCsrfToken();
+      const updatedBooking = await bookingApi.updateMyBooking(selectedBooking.id, {
+        visit_date: visitDateFormatted,
+        nb_people,
+      }, token!);
+  
+      if (updatedBooking) {
+        setmyBookings((prev) =>
+          // on parcours booking(state) pour trouver le booking qui a été modifié et remplacé ces données par les données à jour de l'api
+          prev.map((booking) =>
+            booking.id === selectedBooking.id
+              ? { ...booking, 
+                visit_date: new Date(updatedBooking.visit_date), 
+                nb_people: updatedBooking.nb_people,
+                total_price: updatedBooking.nb_people * booking.bookingPrice,
+              }
+              : booking
+          )
+        );
+      }
+  
+      // Fermeture de la modale
+      setIsEditModalOpen(false);
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour :", error);
+      setErrorForm("Impossible de modifier la réservation.");
+    }
+  }
+  // fonction pour annuler une réservation
+  async function handleCancelBooking()  {
+    if (!selectedBooking) return;
+
+    try {
+      const token = csrfToken || await csrfApi.getCsrfToken();
+      // Appel API pour annuler la réservation: passer le status à false
+      const cancelledBooking = await bookingApi.cancelMyBooking(selectedBooking.id, token!);
+
+      if (cancelledBooking) {
+        // on met à jour le state myBookings avec les données recues de l'API apres annulation
+        setmyBookings((prev) =>
+          prev.map((booking) =>
+            booking.id === selectedBooking.id
+              ? { ...booking, 
+                status: cancelledBooking.status, 
+              }
+              : booking
+          )
+        );
+      }
+
+      // on ferme la modale
+      setIsCancelModalOpen(false);
+      
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour :", error);
+      setErrorForm("Impossible d'annuler la réservation.");
+    }
+  }
+
+  if (isLoadingMyBookings) {
+    return (
+      <div className="bg-radial from-[#961990] to-[#000000] min-h-screen flex items-center justify-center">
+        <Loader />
+      </div>
+    );
+  }
+  if (error) {
+    return (
+      <div className="bg-radial from-[#961990] to-[#000000] min-h-screen flex items-center justify-center">
+        <div className="bg-red-900/30 border-2 border-red-500 rounded-lg p-6 max-w-md text-center">
+          <h2 className="text-red-300 font-bold text-xl mb-2">Erreur de chargement</h2>
+          <p className="text-red-300">{error}</p>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
     <div className="bg-radial from-[#961990] to-[#000000] p-12">
@@ -177,198 +186,52 @@ export default function MyBookingsPage() {
         </header>
 
         {/* Liste des réservations */}
-        {displayReservations.length === 0 ? (
+        {myBookings.length === 0 ? (
           // Cas où l’utilisateur n’a aucune réservation
           <div className="bg-neutral-700 border border-primary-300 rounded-lg p-8 text-center shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
-            <p className="text-neutral-50 text-lg">Vous n'avez aucune réservation pour le moment.</p>
+            <p className="text-neutral-50 text-lg">Vous n&apos;avez aucune réservation pour le moment.</p>
           </div>
         ) : (
           // Cas normal : on affiche les cartes de réservation
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {displayReservations.map((res) => (
-              <MyBookingCard 
-                key={res.id} 
-                reservation={res} 
-                onModify={openModify} 
-                onCancel={openCancel} 
+            {myBookings.map((res) => (
+              <MyBookingsCard 
+                key={res.id}
+                reservation = {res}
+                onEdit={() => {
+                  // on remplit le state avec la reservation de la carte et on passe le state de la modal à true pour l'afficher
+                  setSelectedBooking(res);
+                  setIsEditModalOpen(true);
+                }}
+                onCancel= {
+                  () => {
+                    setSelectedBooking(res);
+                    setIsCancelModalOpen(true);
+                  }
+                }
               />
             ))}
           </div>
         )}
       </div>
-
-      {/* Modale de modification */}
-      {modalType === "modify" && selected && (
-        // On affiche cette modale uniquement si le type de modal est "modify" et qu'une réservation est sélectionnée
-        <Modal title="Modifier la réservation" onClose={resetModal}>
-          <form onSubmit={handleModify} className="space-y-6">
-            {/* Champ date */}
-            <fieldset>
-              <label className="block text-sm font-semibold text-primary-200 mb-2">
-                Date de visite
-              </label>
-              <input
-                type="date"
-                value={form.visitDate}
-                // On met à jour le state avec la nouvelle valeur saisie
-                onChange={(e) => setForm({ ...form, visitDate: e.target.value })}
-                min={new Date().toISOString().split("T")[0]} // Empêche de sélectionner une date passée
-                className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-300 transition-all"
-                required
-              />
-            </fieldset>
-
-            {/* Champ nombre de personnes */}
-            <fieldset>
-              <label className="block text-sm font-semibold text-primary-200 mb-2">
-                Nombre de personnes
-              </label>
-              <input
-                type="number"
-                value={String(form.ticketCount)} // Convertit le nombre en string pour l'input
-                // Parse la valeur saisie et remplace par 1 si invalide
-                onChange={(e) => setForm({ ...form, ticketCount: parseInt(e.target.value) || 1 })}
-                min="1"
-                max={MAX_TICKETS_PER_BOOKING}
-                className="w-full px-4 py-3 bg-neutral-700/50 border border-primary-500 rounded-lg text-neutral-50 focus:outline-none focus:ring-2 focus:ring-primary-300 transition-all"
-                required
-              />
-            </fieldset>
-
-            {/* Calcul automatique du nouveau prix */}
-            <div className="bg-secondary-500/20 border-2 border-secondary-300 rounded-lg p-4 text-center shadow-[0_0_12px_0_rgba(139,255,132,0.5)]">
-              <p className="text-sm text-primary-200 mb-1">Nouveau prix total</p>
-              <p className="text-3xl font-bold text-secondary-200">{(form.ticketCount * TICKET_PRICE).toFixed(2)}€</p>
-            </div>
-            {/* Bouton de soumission */}
-            <button
-              type="submit"
-              className="w-full px-6 py-3 button_booking text-neutral-50 font-bold rounded-lg hover:scale-105 transition-all"
-            >
-              Continuer
-            </button>
-          </form>
-        </Modal>
+      {/* // modal de modification */}
+      {isEditModalOpen && selectedBooking && (
+        <EditBookingModal  
+          selectedBooking={selectedBooking}
+          onClose={() => setIsEditModalOpen(false)}
+          handleUpdateBooking={handleUpdateBooking}
+          errorForm={errorForm}/>
       )}
-
-      {/* Modal Confirmer */}
-      {modalType === "confirm" && selected && (
-        // Affichage uniquement si l'utilisateur a cliqué sur "Continuer" dans la modale modify
-        <Modal title="Confirmer les modifications" icon={<AlertCircle className="h-8 w-8 text-secondary-200" />} onClose={resetModal}>
-          <div className="space-y-4 mb-6">
-            <p className="text-neutral-50">Confirmer la modification de votre réservation ?</p>
-            <div className="space-y-2">
-              {/* On affiche un résumé des modifications à confirmer grâce au composant SummaryRow*/}
-              <SummaryRow label="Nouvelle date" value={formatDate(form.visitDate)} />
-              <SummaryRow label="Personnes" value={String(form.ticketCount)} />
-              <SummaryRow label="Prix total" value={`${(form.ticketCount * TICKET_PRICE).toFixed(2)}€`} highlight />
-            </div>
-          </div>
-          {/* Deux boutons : Retour ou Confirmer */}
-          <ActionButtons onCancel={resetModal} onConfirm={confirmModify} confirmLabel="Confirmer" />
-        </Modal>
-      )}
-
-      {/* Modal Annuler */}
-      {modalType === "cancel" && selected && (
-        // Affichage uniquement si l'utilisateur a cliqué sur le bouton d'annulation dans la carte de réservation
-        <Modal title="Confirmer l'annulation" icon={<AlertCircle className="h-8 w-8 text-red-400" />} borderColor="border-red-500" onClose={resetModal}>
-          <div className="space-y-4 mb-6">
-            <p className="text-neutral-50">Êtes-vous sûr de vouloir annuler cette réservation ?</p>
-            <div className="space-y-2">
-              {/* On affiche un résumé de la réservation à annuler grâce au composant SummaryRow*/}
-              <SummaryRow label="Date de visite" value={formatDate(form.visitDate)} />
-              <SummaryRow label="Personnes" value={String(selected.ticketCount)} />
-            </div>
-            <p className="text-sm text-red-400 font-semibold">⚠️ Cette action est irréversible.</p>
-          </div>
-          {/* Deux boutons : Retour ou Annuler */}
-          <ActionButtons onCancel={resetModal} onConfirm={confirmCancel} confirmLabel="Annuler la réservation" danger />
-        </Modal>
+      {/* modal d'annulation de réservation */}
+      {isCancelModalOpen && selectedBooking && (
+        <CancelBookingModal
+          selectedBooking={selectedBooking}
+          onClose={() => setIsCancelModalOpen(false)}
+          handleCancelBooking={handleCancelBooking}
+          errorForm={errorForm}
+        />
       )}
     </div>
+
   );
 }
-
-/** Composants utilitaires */
-
-/** 
- * SummaryRow : Composant pour afficher une ligne résumé label / valeur
- * @param label - Le texte du label (ex : "Date de visite")
- * @param value - La valeur correspondante (ex : "05 novembre 2025")
- * @param highlight - Booléen pour mettre en valeur la valeur (ex : prix total)
- */
-const SummaryRow = ({ label, value, highlight = false }: { label: string; value: string; highlight?: boolean }) => (
-  <div className="flex justify-between bg-neutral-700/50 border border-primary-500 rounded-lg p-3">
-    <span className="text-primary-200">{label}</span>
-    <span className={`font-medium ${highlight ? "text-secondary-200 text-lg font-bold" : "text-neutral-50"}`}>{value}</span>
-  </div>
-);
-
-/** 
- * ActionButtons : Composant pour afficher deux boutons d'action (Retour / Confirmer)
- * @param onCancel - fonction appelée lors du clic sur "Retour"
- * @param onConfirm - fonction appelée lors du clic sur "Confirmer"
- * @param confirmLabel - texte du bouton de confirmation
- * @param danger - booléen pour styliser le bouton de confirmation en rouge (ex : annulation)
- */
-const ActionButtons = ({ onCancel, onConfirm, confirmLabel, danger = false }: {
-  onCancel: () => void;
-  onConfirm: () => void;
-  confirmLabel: string;
-  danger?: boolean;
-}) => (
-  <div className="flex gap-3">
-    <button
-      onClick={onCancel}
-      className="flex-1 px-6 py-3 bg-neutral-700/50 hover:bg-neutral-700 border border-primary-500 rounded-lg font-medium text-neutral-50 transition-colors"
-    >
-      Retour
-    </button>
-    <button
-      onClick={onConfirm}
-      className={`flex-1 px-6 py-3 font-bold rounded-lg transition-all hover:scale-105 ${
-        danger ? "bg-red-900/30 hover:bg-red-900/50 text-red-400 border border-red-500" : "button_booking text-neutral-50"
-      }`}
-    >
-      {confirmLabel}
-    </button>
-  </div>
-);
-
-/** 
- * Modal : Composant générique pour afficher une modale centrée
- * @param title - Titre de la modale
- * @param icon - Icône optionnelle à gauche du titre
- * @param borderColor - Couleur de la bordure (par défaut violet)
- * @param onClose - Fonction appelée lors du clic sur la croix pour fermer
- * @param children - Contenu de la modale (formulaire, résumé, etc.)
- */
-const Modal = ({ 
-  title, 
-  icon, 
-  borderColor = "border-primary-300", 
-  onClose, 
-  children 
-}: {
-  title: string;
-  icon?: React.ReactNode;
-  borderColor?: string;
-  onClose: () => void;
-  children: React.ReactNode;
-}) => (
-  <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-    <div className={`bg-neutral-700 border-2 ${borderColor} rounded-lg shadow-[0_0_30px_0_rgba(180,130,255,0.6)] max-w-md w-full p-6`}>
-      <div className="flex items-center justify-between mb-6">
-        <div className="flex items-center gap-3">
-          {icon}
-          <h2 className="text-2xl font-bold text-primary-300">{title}</h2>
-        </div>
-        <button onClick={onClose} className="text-primary-200 hover:text-neutral-50 transition-colors">
-          <X className="h-6 w-6" />
-        </button>
-      </div>
-      {children}
-    </div>
-  </div>
-);

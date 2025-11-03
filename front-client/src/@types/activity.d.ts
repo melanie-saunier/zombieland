@@ -1,4 +1,4 @@
-export default interface IActivity {
+export interface IActivity {
   id: number;
   name: string;
   description: string;
@@ -10,13 +10,13 @@ export default interface IActivity {
   level: ILevel;
 }
 
-interface ICategory {
+export interface ICategory {
   id: number;
   name: string;
   color: string;
 }
 
-interface ILevel {
+export interface ILevel {
   id: number;
   name: string;
   value: number;
