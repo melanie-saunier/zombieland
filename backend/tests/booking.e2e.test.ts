@@ -196,7 +196,7 @@ describe("Booking routes e2e", () => {
       const res = await request(app)
         .patch("/api/bookings/2/user")
         .set("Cookie", memberCookie)
-        .send({ visit_date: new Date("2026-11-30"), nb_people: 3 });
+        .send({ visit_date: new Date("2025-11-30").toISOString().split("T")[0], nb_people: 3 });
 
       expect(res.status).toBe(200);
       expect(res.body.nb_people).toBe(3);

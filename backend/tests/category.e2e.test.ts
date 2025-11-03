@@ -9,9 +9,6 @@ describe("Category routes e2e", () => {
   // -----------------------------
   describe("GET /categories", () => {
     it("should return all categories", async () => {
-      const categoriesInDb = await Category.findAll();
-      console.log("Categories in DB:", categoriesInDb);
-
       const res = await request(app).get("/api/categories");
 
       if (res.status === 404) {

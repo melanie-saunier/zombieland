@@ -77,9 +77,6 @@ export const bookingController = {
    * @param res 
    */
   async createOne(req: Request, res: Response) {
-    if (req.body.visit_date) {
-      req.body.visit_date = new Date(req.body.visit_date);
-    }
     // Validation des données reçues avec Zod
     const validation = bookingSchema.safeParse(req.body);
 
@@ -88,20 +85,15 @@ export const bookingController = {
 
     // Si la validation réussit, on récupère les données validées et typées
     const data = validation.data;
-    
+
+    // Vérifier que le prix "Tarif unique" existe
+    const price = await Price.findOne({ where: { label: "Tarif unique" } });
+    if (!price) return res.status(400).json({ message:"No price found with label: Tarif unique" });
+        
     // Transaction pour garantir la cohérence
     const booking = await sequelize.transaction(async (t) => {
-
       // On crée un nouveau booking
       const newBooking  = await Booking.create(data, { transaction: t });    
-
-      // Recherche du tarif "Tarif unique"
-      const price = await Price.findOne({
-        where: { label: "Tarif unique" },
-        transaction: t,
-      });
-
-      if (!price) return res.status(400).json({ message:"No price found with label: Tarif unique"});
 
       // Création de la ligne dans la table de liaison
       await BookingPrice.create(
@@ -128,9 +120,6 @@ export const bookingController = {
    * @param res 
    */
   async updateOneById(req: Request, res: Response) {
-    if (req.body.visit_date) {
-      req.body.visit_date = new Date(req.body.visit_date);
-    }
     // Validation des données reçues avec Zod
     const validation = updateBookingSchema.safeParse(req.body);
 
@@ -161,9 +150,6 @@ export const bookingController = {
    * @param res 
    */
   async updateBookingForUser(req: AuthRequest, res: Response) {
-    if (req.body.visit_date) {
-      req.body.visit_date = new Date(req.body.visit_date);
-    }
     const { id } = idSchema.parse(req.params);
     const booking = await Booking.findByPk(id);
 

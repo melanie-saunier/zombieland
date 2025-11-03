@@ -93,7 +93,7 @@ describe("Price routes e2e", () => {
       expect(res.status).toBe(201);
       expect(res.body).toHaveProperty("id");
       expect(res.body.label).toBe(newPrice.label);
-      expect(res.body.value).toBe(newPrice.value);
+      expect(parseFloat(res.body.value)).toBe(newPrice.value);
     });
 
     it("should fail if not admin", async () => {
