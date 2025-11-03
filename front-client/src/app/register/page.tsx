@@ -1,12 +1,44 @@
 // src/app/register/page.tsx 
 
 "use client";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 export default function RegisterPage() {
   // pour faire un focus sur le premier input(input email)lorsque l'on arrive sur la page
   const inpuRef = useRef<HTMLInputElement>(null);
+
+  // pour les messages d’erreur ou de succès
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  
+  async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setErrorMessage(null);
+    setSuccessMessage(null);
+    // on récupère les données du form
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+    // on vérifie le honeyPot si il est rempli, c'est un bot donc on stop
+    const honeypot = formData.get("honeypot") as string;
+    if (honeypot) {
+      setErrorMessage("Erreur de validation du formulaire.");
+      return; // bot détecté
+    }
+    const email = formData.get("email") as string;
+    const firstname = formData.get("firstname") as string;
+    const lastname = formData.get("lastname") as string;
+    const password = formData.get("password") as string;
+    const confirmation = formData.get("confirmation") as string;
+    // verif des password si identique
+    if (password !== confirmation) {
+      setErrorMessage("Les mots de passe ne correspondent pas.");
+      return;
+    }
+    // validation des autres à faire
+    
+  }
   useEffect(() => {
     inpuRef.current?.focus();
   }, []);
@@ -68,7 +100,7 @@ export default function RegisterPage() {
           <div className="flex flex-col w-64 md:w-80">
             <label htmlFor="confirmation" className="font-bold">Confirmation du mot de passe</label>
             <input  
-              type="confirmation" 
+              type="password" 
               name="confirmation" 
               id="confirmation" 
               className="input_style" 
