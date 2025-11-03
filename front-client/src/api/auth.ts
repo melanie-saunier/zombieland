@@ -101,6 +101,7 @@ export const authApi = {
       return user;
 
     } catch (err) {
+      
       console.error("Erreur lors de l'inscription :", err);
       return null;
     }
