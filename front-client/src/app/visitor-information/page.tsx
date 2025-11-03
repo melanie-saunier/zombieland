@@ -1,14 +1,70 @@
 // src/app/visitor-information/page.tsx 
+"use client";
 
 import { Bell, Clock, Euro, MapPin, Phone, Mail, Bus, Car } from "lucide-react";
 import LinkButton from "@/components/LinkButton";
+import { useEffect, useState } from "react";
+import { IPrice } from "@/@types/price";
+import { pricesApi } from "@/api/prices";
+import Loader from "@/components/Loader";
 
-export const metadata = {
-  title: "Informations utiles | ZOMBIELAND",
-  description: "Horaires, tarifs, accès parking et contacts pour préparer votre visite à Zombieland.",
-};
 
 export default function VisitorInformationPage() {
+  const [pricing, setPricing] = useState<IPrice | null>(null);
+  const [isLoadingPrice, setIsLoadingPrice] = useState(true); // État de chargement du prix
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTicketPrice = async () => {
+      try {
+        setIsLoadingPrice(true); // on affiche le loader
+  
+        const prices = await pricesApi.getPrices();
+  
+        if(!prices) {
+          setError("Impossible de charger les tarifs. Veuillez réessayer.");
+          return;
+        }
+        // on veut le prix "Tarif unique"
+        const uniquePrice = prices.find((price) => price.label === "Tarif unique");
+  
+        if(!uniquePrice) {
+          setError("Tarif unique introuvable.");
+          return;
+        }
+        // on sauvegarde le prix dans l'état
+        setPricing(uniquePrice);
+   
+      } catch (error) {
+        console.error("Erreur de chargement du prix:", error);
+        setError("Impossible de charger les tarifs. Veuillez réessayer.");
+      } finally {
+        setIsLoadingPrice(false); // on masque le loader
+      }
+    };
+  
+    fetchTicketPrice(); // Appel de la fonction dès le premier rendu
+  }, []);
+
+  if(isLoadingPrice) {
+    return (<div className="h-100 flex flex-col justify-center items-center m-4">
+      <Loader /> 
+    </div> );
+  }
+ 
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="bg-red-900/30 border-2 border-red-500 rounded-lg p-6 max-w-md text-center">
+          <h2 className="text-red-300 font-bold text-xl mb-2">Erreur de chargement</h2>
+          <p className="text-red-300">{error}</p>
+        </div>
+      </div>
+    );
+  }
+  //on doit rajouter return null si on a pas de prix pour que TS comprenne bien que pricing ne peut pas être null
+  if (!pricing) return null;
+
   return (
     <>
       <section className="px-4 py-10 md:px-8 md:py-16 bg-neutral-700">
@@ -53,7 +109,7 @@ export default function VisitorInformationPage() {
               </h2>
               <div className="border-2 border-primary-300 rounded-lg p-8 shadow-[0_0_20px_rgba(248,52,253,0.3)] hover:shadow-[0_0_30px_rgba(248,52,253,0.5)] transition-all duration-300 max-w-lg" style={{backgroundColor: "#201041"}}>
                 <div className="flex items-baseline justify-center gap-3 mb-3">
-                  <p className="text-3xl md:text-4xl font-bold text-primary-300">45 €</p>
+                  <p className="text-3xl md:text-4xl font-bold text-primary-300">{pricing.value} €</p>
                   <p className="text-lg text-neutral-50/80">/ personne</p>
                 </div>
                 <p className="text-neutral-50/70 mb-6 leading-relaxed text-center">
