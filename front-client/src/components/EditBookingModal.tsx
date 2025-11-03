@@ -50,6 +50,7 @@ export default function EditBookingModal({
             <input
               name="visit_date"
               type="date"
+              // split T pour retirer l'heure et TZ ... et juste ave  une date 2025-11-02
               defaultValue={new Date(selectedBooking.visit_date).toISOString().split("T")[0]}
               className="w-full mt-1 p-2 rounded bg-neutral-800 border border-primary-300"
             />
