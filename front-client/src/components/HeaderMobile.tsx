@@ -31,7 +31,7 @@ export default function HeaderMobile() {
   const navItems = [
     { name: "Accueil", path: "/", Icon: House, always: true },
     { name: "Mon profil", path: "/profile", Icon: UserPen, logged: true },
-    { name: "Mes réservations", path: "/bookings", Icon: CalendarCheck, logged: true },
+    { name: "Mes réservations", path: "/my-bookings", Icon: CalendarCheck, logged: true },
     { name: "Activités", path: "/activities", Icon: Rocket, always: true },
     { name: "Informations", path: "/visitor-information", Icon: SignpostBig, always: true },
     { name: "À propos", path: "/about", Icon: Info, always: true },
@@ -72,10 +72,10 @@ export default function HeaderMobile() {
                 return (
                   <li key={item.name}>
                     <button
-                        onClick={() => {
-                          setMenuOpen(false);  // fermer le menu
-                          logout();      // puis déconnexion
-                        }}
+                      onClick={() => {
+                        setMenuOpen(false);  // fermer le menu
+                        logout();      // puis déconnexion
+                      }}
                       className="flex items-center w-full text-left px-4 py-2 hover:bg-neutral-600 rounded"
                     >
                       <item.Icon color="var(--color-primary-purple-500)" className="mx-2" size={24} />
