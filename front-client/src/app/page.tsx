@@ -1,5 +1,3 @@
-// src/app/page.tsx (home page)
-
 "use client";
 import CardActivity from "@/components/CardActivity";
 import LinkButton from "@/components/LinkButton";
@@ -16,16 +14,35 @@ import { useEffect, useState } from "react";
 import IActivity from "@/@types/activity";
 import fetchMostScaryActivities from "@/api/activities";
 import Loader from "@/components/Loader";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   
   // State pour le fetch des activités avec state d'erreur et de loading
   const [activities, setActivities] = useState<IActivity[]>([]);
   const [errorActivities, setErrorActivities] = useState<string | null>(null);
-  const [isLoadingActivities, setIsLoadingActivities] = useState(true);
+  const [isLoadingActivities, setIsLoadingActivities] = useState(true); // état pour le loading des activités
+  const router = useRouter(); // hook pour rediriger l'utilisateur vers la page de vérification d'âge
   
+  // 🆕 État pour la vérification d'âge
+  const [isCheckingAge, setIsCheckingAge] = useState(true); // état pour la vérification d'âge (true = en cours de vérification, false = vérification terminée)
+  
+  // Vérification de l'âge au chargement de la page d'accueil
+  useEffect(() => { // use effect pour vérifier l'âge au chargement de la page d'accueil
+    const ageVerified = localStorage.getItem("zombieland_age_verified");
+    if (!ageVerified) { // si l'âge n'est pas vérifié, on redirige vers la page de vérification d'âge
+      router.push("/age-verification"); // on redirige vers la page de vérification d'âge
+    } else {
+      // Si l'âge est vérifié, on autorise l'affichage
+      setIsCheckingAge(false);
+    }
+  }, [router]); // on dépend du router pour rediriger l'utilisateur vers la page de vérification d'âge
+
   // use effect pour récupérer les données avec un fetch
-  useEffect(() => {
+  useEffect(() => { // use effect pour récupérer les données avec un fetch
+    // Ne charge les activités que si l'âge est vérifié
+    if (isCheckingAge) return; // si l'âge n'est pas vérifié, on ne charge pas les activités
+
     // on récup les données des activités
     const loadActivities = async () => {
       // on remet le state d'erreur à zéro
@@ -34,20 +51,29 @@ export default function Home() {
       setErrorActivities(null);
       try {
         // appelle de la fonction qui fetch les activités avec axios
-        const dataActivities = await fetchMostScaryActivities();
-        setActivities(dataActivities);
+        const dataActivities = await fetchMostScaryActivities(); // on récupère les données des activités
+        setActivities(dataActivities); // on met les données des activités dans le state
   
       } catch(err) {
-        console.error(err);
-        setErrorActivities("Erreur lors de la récupération des activitées"); 
+        console.error(err); // on affiche l'erreur dans la console
+        setErrorActivities("Erreur lors de la récupération des activitées"); // on met l'erreur dans le state
       } finally {
         // quand c'est chargé on met loading à false
-        setIsLoadingActivities(false);
+        setIsLoadingActivities(false); // on met le loading à false
       }
     };
     // on appelle la fonction de récupération des données:
-    loadActivities();
-  }, []);
+    loadActivities(); // on appelle la fonction de récupération des données
+  }, [isCheckingAge]);
+
+  // 🆕 Affiche un loader pendant la vérification d'âge
+  if (isCheckingAge) { // si l'âge n'est pas vérifié, on affiche un loader
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-neutral-700"> 
+        <div className="loader"></div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -78,10 +104,10 @@ export default function Home() {
             Bienvenue à Zombieland ! 
             </h1>
             <p className="font-bold md:text-2xl w-3/4 m-auto md:m-0">
-            L’aventure commence là où la peur prend vie… 
+            L'aventure commence là où la peur prend vie… 
             </p>
             <p className="text-xs italic md:text-base w-3/4 m-auto md:m-0">
-            Zombies, frissons et fous rires vous attendent dans un univers où les ombres bougent, les morts se réveillent, et chaque pas vous rapproche un peu plus de l’inconnu. 
+            Zombies, frissons et fous rires vous attendent dans un univers où les ombres bougent, les morts se réveillent, et chaque pas vous rapproche un peu plus de l'inconnu. 
             </p>
             <p className="font-bold md:text-2xl w-3/4 m-auto pb-4 md:m-0">
             Survivrez-vous à Zombieland ?
