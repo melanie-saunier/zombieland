@@ -4,10 +4,13 @@ import fetchAllCategories from "@/api/categories";
 import { fetchAllActivities } from "@/api/activities";
 
 // Mock des modules API
+//on remplace les appels api/activities par ce mock
 jest.mock("@/api/activities", () => ({
+  // on imite la fct qui fect les activités, avec .fn() on pourra appeler notre mock et lui mettre des arguments
   fetchAllActivities: jest.fn(),
 }));
-
+//on remplace les appels api/categoried par ce mock
+// categories est export default donc on precise ES6 et default, pareil que precedement .fn pourra appeler le mock et donner des arguments
 jest.mock("@/api/categories", () => ({
   __esModule: true,
   default: jest.fn(),
@@ -45,7 +48,9 @@ describe("ActivitiesPage integration", () => {
   ];
 
   beforeEach(() => {
+    // avant chaque test, on demonte les composants
     cleanup();
+    // on rempli nos mocks de actvities et catgeories avec nos fausses données
     (fetchAllActivities as jest.Mock).mockResolvedValue(mockActivities);
     (fetchAllCategories as jest.Mock).mockResolvedValue(mockCategories);
   });

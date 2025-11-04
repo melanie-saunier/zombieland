@@ -5,20 +5,29 @@ import { IUser } from "@/@types/user";
 import { csrfApi } from "@/api/csrf";
 import { authApi } from "@/api/auth";
 
+// quand un module appelle @/api/csrf il faut prendre ce mock
 jest.mock("@/api/csrf", () => ({
   csrfApi: { getCsrfToken: jest.fn().mockResolvedValue("mocked-csrf-token") },
+  //si il y a un appel de csrfApi.getCsrfToken() ca utilise le mocked "mocked-csrf-token" et résoud la promesse
 }));
 
+// on remplace l'appel  @api/auth par ce mock
 jest.mock("@/api/auth", () => ({
   authApi: {
+    // on imite les fonctions dont on a besoin dans nos tests
+    // ici on imite l'appel de la fct getCurrentUser et on renvoie null comme si aucun user n'etait connecté 
     getCurrentUser: jest.fn().mockResolvedValue(null),
+    // ici on simule la réussite du logout
     logout: jest.fn().mockResolvedValue(undefined),
   },
 }));
 
 describe("UserContextProvider", () => {
+  // après chaque tests (it) on nettoie pour repartir au propre et ne pas avoir de résidu des tests précédents
   afterEach(() => {
+    // démonte tous les composants créé dans le render
     cleanup();
+    // réinitialise tous les mocks
     jest.clearAllMocks();
   });
 
@@ -26,7 +35,9 @@ describe("UserContextProvider", () => {
     let contextValue!: IUserContext;
 
     render(
+      // on simule une app réelle ou le context englobe tout
       <UserContextProvider>
+        {/*  consumer permet d'accèder au valeurs du context */}
         <UserContext.Consumer>
           {(value) => {
             contextValue = value!;
