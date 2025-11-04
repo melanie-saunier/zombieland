@@ -1,3 +1,7 @@
+// verify-hash.js
+// pour l'utiliser dans la console : 
+// dans le terminal (1ere argument : hash entre '', 2eme arguement : mdp à comparer entre '')
+// node verify-hash.js '$argon2id$v=19$m=65536,t=3,p=4$U8Lkz...etc...' 'P@ssword1234!'
 import argon2 from "argon2";
 
 const hashFromDB = process.argv[2];       // le hash stocké en BDD

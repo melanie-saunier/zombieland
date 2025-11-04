@@ -181,15 +181,15 @@ export default function MyBookingsPage() {
       <div className="max-w-6xl mx-auto space-y-8">
         {/* Header */}
         <header className="text-center">
-          <h1 className="title text-4xl md:text-5xl font-bold mb-2">Mes Réservations</h1>
-          <p className="text-lg text-neutral-50">Gérez mes réservations</p>
+          <h1 className="title text-4xl md:text-5xl font-bold mb-2">Tes Réservations</h1>
+          <p className="text-lg text-neutral-50">Gére tes réservations</p>
         </header>
 
         {/* Liste des réservations */}
         {myBookings.length === 0 ? (
           // Cas où l’utilisateur n’a aucune réservation
           <div className="bg-neutral-700 border border-primary-300 rounded-lg p-8 text-center shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
-            <p className="text-neutral-50 text-lg">Vous n&apos;avez aucune réservation pour le moment.</p>
+            <p className="text-neutral-50 text-lg">Tu n’as aucune réservation pour le moment.</p>
           </div>
         ) : (
           // Cas normal : on affiche les cartes de réservation

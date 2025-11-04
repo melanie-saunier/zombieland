@@ -19,17 +19,17 @@ INSERT INTO role (name) VALUES
   ('admin'),
   ('super admin');
 
--- USERS
+-- USERS (même mot de passe pour tous les users : P@ssword123456)
 INSERT INTO "user" (email, lastname, firstname, password, role_id)
-SELECT 'manon.thez@oclock.school', 'Thez', 'Manon', 'P@ssword123456', r.id FROM role r WHERE r.name = 'admin'
+SELECT 'manon.thez@oclock.school', 'Thez', 'Manon', '$argon2id$v=19$m=65536,t=3,p=4$gKBIYhzNHFdrCwiip1N86Q$0JR3AHHzTnfdyNr5ZBU8uUGTpXuqRa0wMV4YwzxwogI', r.id FROM role r WHERE r.name = 'admin'
 UNION ALL
-SELECT 'melanie.saunier@oclock.school', 'Saunier', 'Mélanie', 'P@ssword123456', r.id FROM role r WHERE r.name = 'admin'
+SELECT 'melanie.saunier@oclock.school', 'Saunier', 'Mélanie', '$argon2id$v=19$m=65536,t=3,p=4$gKBIYhzNHFdrCwiip1N86Q$0JR3AHHzTnfdyNr5ZBU8uUGTpXuqRa0wMV4YwzxwogI', r.id FROM role r WHERE r.name = 'admin'
 UNION ALL
-SELECT 'kari.routier@oclock.school', 'Routier', 'Kari', 'P@ssword123456', r.id FROM role r WHERE r.name = 'admin'
+SELECT 'kari.routier@oclock.school', 'Routier', 'Kari', '$argon2id$v=19$m=65536,t=3,p=4$gKBIYhzNHFdrCwiip1N86Q$0JR3AHHzTnfdyNr5ZBU8uUGTpXuqRa0wMV4YwzxwogI', r.id FROM role r WHERE r.name = 'admin'
 UNION ALL
-SELECT 'maximilien.berbudeau@oclock.school', 'Berbudeau', 'Maximilien', 'P@ssword123456', r.id FROM role r WHERE r.name = 'admin'
+SELECT 'maximilien.berbudeau@oclock.school', 'Berbudeau', 'Maximilien', '$argon2id$v=19$m=65536,t=3,p=4$gKBIYhzNHFdrCwiip1N86Q$0JR3AHHzTnfdyNr5ZBU8uUGTpXuqRa0wMV4YwzxwogI', r.id FROM role r WHERE r.name = 'admin'
 UNION ALL
-SELECT 'octave.lechat@gmail.com', 'Lechat', 'Octave', 'P@ssword123456', r.id FROM role r WHERE r.name = 'member';
+SELECT 'octave.lechat@gmail.com', 'Lechat', 'Octave', '$argon2id$v=19$m=65536,t=3,p=4$gKBIYhzNHFdrCwiip1N86Q$0JR3AHHzTnfdyNr5ZBU8uUGTpXuqRa0wMV4YwzxwogI', r.id FROM role r WHERE r.name = 'member';
 
 -- LEVELS
 INSERT INTO level (name, value) VALUES
@@ -157,9 +157,13 @@ VALUES ('Tarif unique', 30.00);
 
 -- BOOKING
 INSERT INTO booking (visit_date, nb_people, status, user_id)
-SELECT 
-  CURRENT_DATE + INTERVAL '7 days', 4, true, u.id
-FROM "user" u WHERE u.email = 'octave.lechat@gmail.com';
+SELECT CURRENT_DATE + INTERVAL '7 days', 4, true, u.id FROM "user" u WHERE u.email = 'octave.lechat@gmail.com'
+UNION ALL
+SELECT CURRENT_DATE + INTERVAL '7 days', 2, true, u.id FROM "user" u WHERE u.email = 'octave.lechat@gmail.com'
+UNION ALL
+SELECT CURRENT_DATE + INTERVAL '10 days', 3, false, u.id FROM "user" u WHERE u.email = 'octave.lechat@gmail.com'
+UNION ALL
+SELECT CURRENT_DATE - INTERVAL '5 days', 2, true, u.id FROM "user" u WHERE u.email = 'octave.lechat@gmail.com';
 
 -- BOOKING_PRICE
 INSERT INTO booking_price (applied_price, booking_id, price_id)

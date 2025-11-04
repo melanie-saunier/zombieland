@@ -19,7 +19,7 @@ export default function CancelBookingModal({
         <h2 className="text-2xl font-bold mb-4">Annuler la réservation</h2>
 
         <p className="text-sm text-primary-200 mb-6">
-        Êtes-vous sûr de vouloir annuler la réservation du{" "}
+        Es-tu sûr·e de vouloir annuler la réservation du{" "}
           {new Date(selectedBooking.visit_date).toLocaleDateString()} pour{" "}
           {selectedBooking.nb_people} personne(s) ?
         </p>

@@ -44,7 +44,7 @@ router.get("/csrf-token", (req, res) => {
     sameSite: "lax", // empêche l'envoi du cookie depuis un autre site (mitigation CSRF)
     // secure: process.env.NODE_ENV === "production", // cookie sécurisé seulement en prod
     maxAge: 15 * 60 * 1000, // durée du cookie de 15min
-    path: "/", 
+    path: "/", //TODO: ajouter un commentaire pour expliquer ce paramètre
   });
 
   // On transmet notre token sous forme de json pour le front
