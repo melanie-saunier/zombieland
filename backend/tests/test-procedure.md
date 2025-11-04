@@ -1,6 +1,6 @@
 # Procédure pour lancer les tests E2E
 
-Cette procédure décrit comment préparer et lancer les tests End-to-End (E2E) pour le projet Zombieland.
+Cette procédure décrit comment préparer et lancer les tests End-to-End (E2E) pour le projet **Zombieland**.
 
 ---
 
@@ -12,6 +12,15 @@ Cette procédure décrit comment préparer et lancer les tests End-to-End (E2E) 
 ```sql
 CREATE DATABASE zombieland_test OWNER zombieland;
 ```
+
+3. Se placer dans le dossier `backend/data`.
+4. Créer les tables à l’aide du fichier `create-table.sql` :
+
+```bash
+psql postgres://zombieland:zombieland@localhost:5432/zombieland_test -f create-table.sql
+```
+
+> ⚙️ Cette étape initialise la structure de la base de données avant l’insertion des données de test.
 
 ---
 
@@ -59,4 +68,4 @@ JWT_SECRET=<ton_secret>
 ```
 
 * Les tests E2E peuvent modifier les données : **toujours reseeder la BDD avant un nouveau lancement**.
-
+* ⚠️ **Ne pas démarrer le back manuellement avant les tests** : il sera lancé automatiquement pendant le processus de test.

@@ -52,17 +52,6 @@ export const authController = {
       password: hashedPassword,
       role_id: roleToSet.id
     });
-    
-    // On génère notre JWT en incluant le userID et le nom du rôle de l'utilisateur qu'on vient de créer
-    const token = generateAccessToken({ userId: userCreated.id, role: roleToSet.name});
-
-    // On place notre token dans un cookie httpOnly
-    res.cookie("token", token, {
-      httpOnly: true,
-      secure: false,  // TODO: mettre à true en production: en HTTPS
-      sameSite: "lax", //protege des attaques CSRF, CORS, fuite de données intersites
-      maxAge: 3 * 60 * 60 * 1000, // 3 heures
-    }); 
 
     // Conversion en objet simple
     const user = userCreated.toJSON();

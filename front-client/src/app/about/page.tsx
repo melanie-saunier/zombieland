@@ -51,7 +51,7 @@ export default function AboutPage() {
         {/* Section Équipe */}
         <div className="mb-16">
           <h2 className="text-2xl md:text-3xl font-bold text-neutral-50 mb-4 border-b-2 border-primary-300 pb-3 inline-block">
-            L’ équipe qui fait vivre l’horreur
+            L’équipe qui fait vivre l’horreur
           </h2>
           <p className="text-neutral-50 md:text-lg mt-6 mb-10">
             Derrière chaque frisson se cache une équipe de passionnés : créatifs, techniciens, comédiens et cascadeurs qui unissent leurs talents pour vous offrir une expérience unique où l’adrénaline rencontre l’art.
@@ -89,7 +89,7 @@ export default function AboutPage() {
       <div className="mb-12 max-w-6xl mx-auto px-4">
         <div>
           <h3 className="text-2xl md:text-3xl font-bold mb-8 text-center pb-3 text-neutral-50" >
-            Notre Histoire & Nos Valeurs !
+            Notre Histoire & Nos Valeurs
           </h3>
         </div>
         <div className="max-w-4xl mx-auto space-y-6 text-neutral-50/80 leading-relaxed">

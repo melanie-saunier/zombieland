@@ -73,6 +73,7 @@ export default function LoginPage() {
       <div className="relative z-10">
         <h1 className="title text-3xl md:text-5xl text-center">Connexion</h1>
         <p className="text-center text-base md:text-xl p-2 text-shadow-lg/30">Ton pass pour l’expérience Zombieland t’attend !</p>
+        <p className="text-center text-base md:text-l p-2 text-shadow-lg/30 italic">Identifie-toi pour survivre à l’apocalypse et réserver tes billets.</p>
         {/* Formulaire de connexion */}
         <form 
           className="flex flex-col items-center gap-4 pb-2"
@@ -138,7 +139,7 @@ export default function LoginPage() {
 
         {/* Lien vers la page d'inscription */}
         <p className="text-center drop-shadow-lg/30">
-          Pas encore de compte ? <Link href={"/register"} className="font-semibold underline hover:text-primary-purple-200 transition">Créer un compte ici</Link></p>
+          Pas encore de compte ? <Link href={"/register"} className="font-semibold underline hover:text-primary-purple-200 transition">Crée un compte ici</Link></p>
       </div>
     </div>
   );

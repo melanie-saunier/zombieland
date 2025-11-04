@@ -303,7 +303,7 @@ export default function BookingPage() {
               <div className="p-6 bg-neutral-700 rounded-lg border border-primary-300 shadow-[0_0_12px_0_rgba(180,130,255,0.3)]">
                 <h2 className="text-xl font-bold text-neutral-50 mb-6 pb-2 border-b border-primary-300 flex items-center gap-2">
                   <CalendarIcon size={24} className="text-primary-300" />
-              Détails de votre réservation
+              Détails de ta réservation
                 </h2>
 
                 <div className="grid md:grid-cols-2 gap-6">
@@ -439,7 +439,7 @@ export default function BookingPage() {
         {/* Message d'ambiance */}
         <div className="p-4 bg-primary-500/20 rounded-lg border border-primary-300 text-center">
           <p className="text-sm text-neutral-50">
-            💀 Préparez-vous à vivre une expérience terrifiante à ZombieLand ! 💀
+            💀 Prépare-toi à vivre une expérience terrifiante à ZombieLand ! 💀
           </p>
         </div>
       </div>

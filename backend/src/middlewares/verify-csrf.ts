@@ -8,12 +8,12 @@ export function verifyCsrf(req : RequestWithCookies, res: Response, next: NextFu
   // On recupère le token dans les headers de la requete
   const token = req.headers["x-csrf-token"] || req.body?._csrf;
 
-  // Si pas de secret ou token, on renvoi une erreur
+  // Si pas de secret, on renvoie une erreur
   if (!secret) {
     return res.status(403).json({ error: "Missing CSRF secret" });
   }
 
-  // Si pas de secret ou token, on renvoi une erreur
+  // Si pas de token, on renvoie une erreur
   if (!token) {
     return res.status(403).json({ error: "Missing CSRF token " });
   }
