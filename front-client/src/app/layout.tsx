@@ -7,7 +7,7 @@ import NavBarMobile from "@/components/NavBarMobile";
 import NavBarDesktop from "@/components/NavBarDesktop";
 import SocialMediaBarDesktop from "@/components/SocialMediaBarDesktop";
 import UserContextProvider from "@/context/userContextProvider";
-import AgeVerificationModal from "@/app/age-verification/page"; // ← Ajout
+import AgeVerificationModal from "@/app/age-verification/page";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
