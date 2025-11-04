@@ -6,28 +6,26 @@ import { useRouter } from "next/navigation";
 
 export default function AgeVerificationModal() {
   const router = useRouter();
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false); // Initialisé à false pour éviter le mismatch
 
-  // Vérifie si l'utilisateur a déjà confirmé son âge
-  useEffect(() => { // use effect pour vérifier si l'utilisateur a déjà confirmé son âge
-    if (typeof window !== "undefined") {
-      const ageVerified = localStorage.getItem("ageVerified");
-      if (ageVerified) { // si l'utilisateur a déjà confirmé son âge, on ferme la modal
-        setShowModal(false);
-      }
+  // Vérifie si l'utilisateur a déjà confirmé son âge (côté client uniquement)
+  useEffect(() => {
+    const ageVerified = localStorage.getItem("ageVerified"); // on récupère le cookie d'âge
+    if (!ageVerified) { // si l'utilisateur n'a pas confirmé son âge, on affiche la modal
+      setShowModal(true);
     }
-  }, []);
+  }, []); // on dépend du localStorage pour vérifier si l'utilisateur a déjà confirmé son âge 
 
-  const handleConfirmAge = () => {
-    localStorage.setItem("ageVerified", "true"); // on met le cookie d'âge à true
+  const handleConfirmAge = () => { // fonction pour fermer la modal
+    localStorage.setItem("ageVerified", "true"); // on met le cookie d'âge à true pour éviter de rediriger l'utilisateur vers la page de vérification d'âge
     setShowModal(false);
-  }; // on ferme la modal
+  };
 
   const handleUnderAge = () => { // fonction pour rediriger l'utilisateur vers le site de Disney
     router.push("https://www.disney.fr");
   };
 
-  if (!showModal) return null;
+  if (!showModal) return null; // si la modal n'est pas affichée, on ne rend pas le composant
 
   return (
     <div
