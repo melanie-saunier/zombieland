@@ -1,38 +1,50 @@
-import { IUser } from "@/@types/user";
-import { authApi } from "@/api/auth";
-import { csrfApi } from "@/api/csrf";
-import UserContext, { IUserContext } from "@/context/userContext";
+import { render, waitFor, act, cleanup } from "@testing-library/react";
 import UserContextProvider from "@/context/userContextProvider";
-import { act, render, waitFor } from "@testing-library/react";
+import UserContext, { IUserContext } from "@/context/userContext";
+import { IUser } from "@/@types/user";
+import { csrfApi } from "@/api/csrf";
+import { authApi } from "@/api/auth";
 
-describe("UserContext", () => {
-  // on vérifie que le context est initialisé correctement:
-  // user est null et logged: false
-  it("has initial values", () => {
-    let contextValue: IUserContext;
+jest.mock("@/api/csrf", () => ({
+  csrfApi: { getCsrfToken: jest.fn().mockResolvedValue("mocked-csrf-token") },
+}));
+
+jest.mock("@/api/auth", () => ({
+  authApi: {
+    getCurrentUser: jest.fn().mockResolvedValue(null),
+    logout: jest.fn().mockResolvedValue(undefined),
+  },
+}));
+
+describe("UserContextProvider", () => {
+  afterEach(() => {
+    cleanup();
+    jest.clearAllMocks();
+  });
+
+  it("has initial values", async () => {
+    let contextValue!: IUserContext;
 
     render(
-      // on simule une app réelle ou le context englobe tout
       <UserContextProvider>
-        {/*  consumer permet d'accèder au valeurs du context */}
         <UserContext.Consumer>
-          {value => {
-            if (!value) throw new Error("UserContext not found");
-            // on met les valeurs du context dans contextValue 
-            contextValue = value;
+          {(value) => {
+            contextValue = value!;
             return null;
           }}
         </UserContext.Consumer>
       </UserContextProvider>
     );
 
-    expect(contextValue!.user).toBeNull();
-    expect(contextValue!.logged).toBe(false);
+    // attendre que le useEffect initial ait fini
+    await waitFor(() => {
+      expect(contextValue.user).toBeNull();
+      expect(contextValue.logged).toBe(false);
+    });
   });
-  // vérification de login
-  it("updates context when login is called", async () => {
+
+  it("updates context correctly on login and logout", async () => {
     let contextValue!: IUserContext;
-    // on crée un faux user
     const mockUser: IUser = {
       id: 1,
       firstname: "John",
@@ -40,44 +52,42 @@ describe("UserContext", () => {
       email: "john@example.com",
       role: "user",
     };
-  
+
     render(
       <UserContextProvider>
         <UserContext.Consumer>
-          {value => {
-            if (!value) throw new Error("UserContext not found");
-            contextValue = value;
+          {(value) => {
+            contextValue = value!;
             return null;
           }}
         </UserContext.Consumer>
       </UserContextProvider>
     );
-    //vérification du state initial
-    expect(contextValue!.user).toBeNull();
-    expect(contextValue!.logged).toBe(false);
-  
-    // Appel de login
-    // contextValue.login(mockUser);
+
+    // attendre que le useEffect initial ait fini
+    await waitFor(() => {
+      expect(contextValue.user).toBeNull();
+      expect(contextValue.logged).toBe(false);
+    });
+
+    // login
     await act(async () => {
       contextValue.login(mockUser);
     });
-  
-    // Vérifie que le contexte a été mis à jour , il faut await la mise à jour
+
     await waitFor(() => {
-      expect(contextValue!.user).toEqual(mockUser);
-      expect(contextValue!.logged).toBe(true);
+      expect(contextValue.user).toEqual(mockUser);
+      expect(contextValue.logged).toBe(true);
     });
 
-    // simule le logout
-    // await contextValue!.logout();
+    // logout
     await act(async () => {
-      await contextValue!.logout();
+      await contextValue.logout();
     });
 
-    //on vérifie le retour du state à l'initial
     await waitFor(() => {
-      expect(contextValue!.user).toBeNull();
-      expect(contextValue!.logged).toBe(false);
+      expect(contextValue.user).toBeNull();
+      expect(contextValue.logged).toBe(false);
     });
   });
   // vérification de la récupération du token csrf
@@ -107,35 +117,38 @@ describe("UserContext", () => {
       expect(contextValue.csrfToken).toBe(mockCsrfToken);
     });
   });
-  //gestion des erreurs dans le useEffect du context
-  //si il y a une erreur dans le fetch pour avoir le token csrf ou le currentUser : user reste null et logged à false
-  describe("UserContext - error handling", () => {
-    it("handles API errors gracefully", async () => {
-      let contextValue!: IUserContext;
-  
-      // on simule que les appels API échouent
-      jest.spyOn(csrfApi, "getCsrfToken").mockRejectedValue(new Error("CSRF error"));
-      jest.spyOn(authApi, "getCurrentUser").mockRejectedValue(new Error("Auth error"));
-  
+ 
+});
+
+//gestion des erreurs dans le useEffect du context
+//si il y a une erreur dans le fetch pour avoir le token csrf ou le currentUser : user reste null et logged à false
+describe("UserContext - error handling", () => {
+  it("handles API errors gracefully", async () => {
+    let contextValue!: IUserContext;
+
+    // on simule que les appels API échouent
+    jest.spyOn(csrfApi, "getCsrfToken").mockRejectedValue(new Error("CSRF error"));
+    jest.spyOn(authApi, "getCurrentUser").mockRejectedValue(new Error("Auth error"));
+
+    // Wrap render in act
+    await act(async () => {
       render(
         <UserContextProvider>
           <UserContext.Consumer>
-            {value => {
-              if (!value) throw new Error("UserContext not found");
-              contextValue = value;
+            {(value) => {
+              contextValue = value!;
               return null;
             }}
           </UserContext.Consumer>
         </UserContextProvider>
       );
-  
-      await waitFor(() => {
-        // Le contexte doit rester dans l'état initial user null et logged false et csrfToken null
-        expect(contextValue.user).toBeNull();
-        expect(contextValue.logged).toBe(false);
-        expect(contextValue.csrfToken).toBeNull();
-      });
+    });
+
+    await waitFor(() => {
+      // Le contexte doit rester dans l'état initial
+      expect(contextValue.user).toBeNull();
+      expect(contextValue.logged).toBe(false);
+      expect(contextValue.csrfToken).toBeNull();
     });
   });
 });
-
