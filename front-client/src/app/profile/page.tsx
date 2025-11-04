@@ -89,8 +89,14 @@ export default function ProfilePage() {
       // Message temporaire pendant 3 secondes
       setTimeout(() => setSuccessMessage(null), 3000);
 
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Erreur de sauvegarde");
+    } catch (e) {
+      if (e instanceof Error) {
+        if (e.message.includes("An account with this email address already exists.")) {
+          setError("Un compte avec cet email existe déjà.");
+        } else {
+          setError("Erreur lors de la mise à jour du compte.");
+        }
+      }
     }
   };
 

@@ -59,7 +59,14 @@ export default function LoginPage() {
     } catch (e) {
       // Gestion des erreurs (ex: 401 Unauthorized)
       console.log("Erreur lors du login :", e);
-      setError("Email ou mot de passe incorrect");
+      if (e instanceof Error) {
+        if (e.message.includes("Bad credentials")) {
+          setError("E-mail ou mot de passe incorrect");
+        } else {
+          setError("Erreur lors de connexion.");
+        }
+      }
+     
     }
   };
 

@@ -70,7 +70,13 @@ export const authApi = {
       
     } catch (err) {
       console.error("Erreur lors du login :", err);
-      return null;
+      if (axios.isAxiosError(err)) {
+        const message = err.response?.data?.error || "Erreur de connexion";
+        throw new Error(message); // on remonte l'erreur pour le handle
+      }
+      throw new Error("Erreur inconnue");
+
+      
     }
   },
 
@@ -101,9 +107,13 @@ export const authApi = {
       return user;
 
     } catch (err) {
-      
-      console.error("Erreur lors de l'inscription :", err);
-      return null;
+      if (axios.isAxiosError(err)) {
+        const message = err.response?.data?.error || "Erreur lors de la mise à jour du mot de passe";
+        throw new Error(message); // on remonte l'erreur pour le handle
+      }
+      throw new Error("Erreur inconnue");
+      // console.error("Erreur lors de l'inscription :", err);
+      // return null;
     }
   },
 

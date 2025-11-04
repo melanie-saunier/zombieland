@@ -86,13 +86,13 @@ export const authController = {
       ]
     });
 
-    if(!userFound) return res.status(404).json({ error: "Bad credentials" });
+    if(!userFound) return res.status(401).json({ error: "Bad credentials" });
 
     // Puis on vérifie que le MPD correspond avec celui en BDD
     const isValidPassword = await argon2.verify(userFound.password, password);
 
      // Si les 2 passwords ne correspondent pas, on renvoie une erreur 400
-    if(!isValidPassword) return res.status(400).json({ error: "Bad credentials" });
+    if(!isValidPassword) return res.status(401).json({ error: "Bad credentials" });
     
     // On définit "roleName" avec le role de notre userFound. Si c'est undefined, ça sera "member" par défaut
     const roleName = userFound.role?.name || "member"; 

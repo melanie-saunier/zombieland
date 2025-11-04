@@ -92,7 +92,13 @@ export default function RegisterPage() {
     } catch(e) {
       // Gestion des erreurs (ex: 401 Unauthorized)
       console.log("Erreur lors du login :", e);
-      setErrors(["Une erreur est survenue lors de l'inscription."]);
+      if (e instanceof Error) {
+        if (e.message.includes("An account with this email address already exists.")) {
+          setErrors(["Un compte avec cet email existe déjà."]);
+        } else {
+          setErrors(["Erreur lors de l'inscription."]);
+        }
+      }
     }
   }
 
