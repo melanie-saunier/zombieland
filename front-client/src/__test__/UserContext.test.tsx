@@ -82,7 +82,7 @@ describe("UserContextProvider", () => {
 
     // logout
     await act(async () => {
-      await contextValue.logout();
+      contextValue.logout();
     });
 
     await waitFor(() => {
