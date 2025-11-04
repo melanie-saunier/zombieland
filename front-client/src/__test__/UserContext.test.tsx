@@ -1,4 +1,6 @@
 import { render, waitFor, act, cleanup } from "@testing-library/react";
+// en haut de ton fichier de test
+import * as nextNavigation from "next/navigation";
 import UserContextProvider from "@/context/userContextProvider";
 import UserContext, { IUserContext } from "@/context/userContext";
 import { IUser } from "@/@types/user";
@@ -21,12 +23,26 @@ jest.mock("@/api/auth", () => ({
     logout: jest.fn().mockResolvedValue(undefined),
   },
 }));
+// mock du router navigation (utilisé dans le context logout qui redirige vers la home)
+jest.mock("next/navigation", () => ({
+  useRouter: jest.fn(),
+}));
 
 describe("UserContextProvider", () => {
-  // après chaque tests (it) on nettoie pour repartir au propre et ne pas avoir de résidu des tests précédents
-  afterEach(() => {
+  // variable du mock de redirection (router navigation) qui permettra de vérifier la redirection sur la home au logout
+  let pushMock: jest.Mock;
+  beforeEach(() => {
     // démonte tous les composants créé dans le render
     cleanup();
+    // on remplit notre mock de navigation avant chaque test
+    pushMock = jest.fn();
+    (nextNavigation.useRouter as jest.Mock).mockReturnValue({
+      push: pushMock,
+    });
+  });
+  // après chaque tests (it) on nettoie pour repartir au propre et ne pas avoir de résidu des tests précédents
+  afterEach(() => {
+
     // réinitialise tous les mocks
     jest.clearAllMocks();
   });
@@ -99,6 +115,8 @@ describe("UserContextProvider", () => {
     await waitFor(() => {
       expect(contextValue.user).toBeNull();
       expect(contextValue.logged).toBe(false);
+      // Vérifier que router.push a été appelé
+      expect(pushMock).toHaveBeenCalledWith("/");
     });
   });
   // vérification de la récupération du token csrf
