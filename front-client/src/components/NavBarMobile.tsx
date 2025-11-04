@@ -47,7 +47,7 @@ export default function NavBarMobile() {
                     className="flex flex-col items-center px-2 py-1 hover:bg-neutral-600 rounded w-full"
                   >
                     <item.Icon
-                      color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                      color={pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}
                       className="mx-2"
                       size={24}
                     />
@@ -65,7 +65,7 @@ export default function NavBarMobile() {
                   className={`${pathname === item.path ? "flex flex-col items-center current_page_text" : "flex flex-col items-center"} px-2 py-1 hover:bg-neutral-600 rounded`}
                 >
                   <item.Icon
-                    color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                    color={pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}
                     className="mx-2"
                     size={24}
                   />

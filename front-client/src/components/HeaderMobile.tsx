@@ -78,7 +78,7 @@ export default function HeaderMobile() {
                       }}
                       className="flex items-center w-full text-left px-4 py-2 hover:bg-neutral-600 rounded"
                     >
-                      <item.Icon color="var(--color-primary-purple-500)" className="mx-2" size={24} />
+                      <item.Icon color="var(--color-primary-500)" className="mx-2" size={24} />
                       {item.name}
                     </button>
                   </li>
@@ -94,7 +94,7 @@ export default function HeaderMobile() {
                     onClick={() => setMenuOpen(false)}
                   >
                     <item.Icon
-                      color={`${pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}`}
+                      color={`${pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}`}
                       className="mx-2"
                       size={24}
                     />
