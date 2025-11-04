@@ -7,7 +7,7 @@ import NavBarMobile from "@/components/NavBarMobile";
 import NavBarDesktop from "@/components/NavBarDesktop";
 import SocialMediaBarDesktop from "@/components/SocialMediaBarDesktop";
 import UserContextProvider from "@/context/userContextProvider";
-
+import AgeVerificationModal from "@/app/age-verification/page"; // ← Ajout
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -22,7 +22,7 @@ const barlow = Barlow({
 
 export const metadata: Metadata = {
   title: "Accueil | ZOMBIELAND",
-  description: "Bienvenue à ZOMBIELAND, le parc d’attractions le plus terrifiant ! Découvre des activités à sensations, affronte tes peurs et réserve ton billet d’entrée dès maintenant.",
+  description: "Bienvenue à ZOMBIELAND, le parc d'attractions le plus terrifiant ! Découvre des activités à sensations, affronte tes peurs et réserve ton billet d'entrée dès maintenant.",
 };
 
 export default function RootLayout({
@@ -36,6 +36,9 @@ export default function RootLayout({
         className={`${montserrat.variable} ${barlow.variable} antialiased flex flex-col min-h-screen`}
       >
         <UserContextProvider>
+          {/* ← Modal globale de vérification d'âge */}
+          <AgeVerificationModal />
+          
           {/* header mobile */}
           <HeaderMobile/>
           {/* navbar desktop */}
