@@ -9,7 +9,7 @@ import { createContext, Dispatch, SetStateAction } from "react";
  * - `login` : une fonction pour connecter un utilisateur (met à jour le contexte)
  * - `logout` : une fonction pour le déconnecter (réinitialise le contexte)
  */
-interface IUserContext {
+export interface IUserContext {
   user: IUser | null;
   setUser: Dispatch<SetStateAction<IUser | null>>;
   logged: boolean; // état connecté
