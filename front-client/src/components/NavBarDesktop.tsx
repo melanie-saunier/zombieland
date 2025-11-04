@@ -100,7 +100,7 @@ export default function NavBarDesktop() {
           .map((item) => {
             if ((!logged && item.onlyLoggedOut) || (logged && item.logged)) {
               return (
-                <div key={item.path} className="border-b border-t border-solid border-primary-purple-300 w-full">
+                <div key={item.path} className="border-b border-t border-solid border-primary-300 w-full">
                   {item.name === "Se déconnecter" ? (
                     // Pour logout → utiliser un bouton et appeler handleLogout
                     <button
@@ -109,7 +109,7 @@ export default function NavBarDesktop() {
                       hover:scale-110 transition-transform duration-200 text-left`}
                     >
                       <item.Icon
-                        color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                        color={pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}
                         className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
                         size={24}
                       />
@@ -124,7 +124,7 @@ export default function NavBarDesktop() {
                       hover:scale-110 transition-transform duration-200`}
                     >
                       <item.Icon
-                        color={pathname === item.path ? "var(--color-primary-purple-300)" : "var(--color-primary-purple-500)"}
+                        color={pathname === item.path ? "var(--color-primary-300)" : "var(--color-primary-500)"}
                         className={pathname === item.path ? "mx-2 curent_page_icon" : "mx-2"}
                         size={24}
                       />
