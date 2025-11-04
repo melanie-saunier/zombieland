@@ -9,6 +9,7 @@ import UserContext from "./userContext";
 import { IUser } from "@/@types/user";
 import { authApi } from "@/api/auth";
 import { csrfApi } from "@/api/csrf";
+import { useRouter } from "next/navigation";
 
 // On définit les props attendues par le composant : ici, seulement les enfants
 // Ce composant enveloppera toute l’application.
@@ -33,6 +34,8 @@ export default function UserContextProvider({ children }: Props) {
   // state pour récuperer le csrf token
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
+  const router = useRouter();
+
   // Fonction de login : appelée après un POST /login réussi
   // Elle enregistre les données de l’utilisateur dans le state global.
   const login = (userData: IUser) => {
@@ -51,6 +54,9 @@ export default function UserContextProvider({ children }: Props) {
       // Mise à jour du state React
       setUser(null);
       setLogged(false);
+
+      // redirection vers login
+      router.push("/");
     } catch (err) {
       console.error("Erreur lors du logout :", err);
     }
