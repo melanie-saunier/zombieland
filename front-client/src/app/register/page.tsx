@@ -7,6 +7,7 @@ import { authApi } from "@/api/auth";
 import useUserContext from "@/context/useUserContext";
 import { csrfApi } from "@/api/csrf";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function RegisterPage() {
   // pour faire un focus sur le premier input(input email)lorsque l'on arrive sur la page
@@ -16,11 +17,12 @@ export default function RegisterPage() {
 
   const router = useRouter();
   
-
   // pour les messages d’erreur ou de succès
   const [errors, setErrors] = useState<string[]>([]);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-  
+  // State pour montrer ou masquer les mots de passe
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
   
   async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -153,23 +155,41 @@ export default function RegisterPage() {
               required
             />
           </div>
-          <div className="flex flex-col w-64 md:w-80">
+          <div className="flex flex-col w-64 md:w-80 relative">
             <label htmlFor="password" className="font-bold">Mot de passe</label>
             <input 
-              type="password" 
+              type={showPassword ? "text" : "password"}
               name="password" 
               id="password" 
               className="input_style" 
-              required/>
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(prev => !prev)}
+              className="absolute right-2 top-2/3 -translate-y-1/2 text-primary-300 hover:text-primary-200"
+              aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+            >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
-          <div className="flex flex-col w-64 md:w-80">
+          <div className="flex flex-col w-64 md:w-80 relative">
             <label htmlFor="confirmation" className="font-bold">Confirmation du mot de passe</label>
-            <input  
-              type="password" 
+            <input 
+              type={showConfirmation ? "text" : "password"}
               name="confirmation" 
               id="confirmation" 
-              className="input_style" 
-              required/>
+              className="input_style pr-10"
+              required
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmation(prev => !prev)}
+              className="absolute right-2 top-2/3 -translate-y-1/2 text-primary-300 hover:text-primary-200"
+              aria-label={showConfirmation ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+            >
+              {showConfirmation ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
           </div>
           {/* si message d'erreur  */}
           {errors.length > 0 && (

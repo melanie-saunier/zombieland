@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { authApi } from "@/api/auth";
+import { Eye, EyeOff } from "lucide-react";
 
 import useUserContext from "../../context/useUserContext";
 import { csrfApi } from "@/api/csrf";
@@ -21,6 +22,8 @@ export default function LoginPage() {
   // State pour gérer l'affichage des messages d'erreur et de succès
   const [error, setError] = useState<null | string>(null);
   const [success, setSuccess] = useState<null | string>(null);
+  // State pour montrer ou masquer le mot de passe
+  const [showPassword, setShowPassword] = useState(false);
   
   // Focus automatique sur le champ email au montage du composant
   useEffect(() => {
@@ -113,15 +116,23 @@ export default function LoginPage() {
             />
           </div>
           {/* Champ Mot de passe */}
-          <div className="flex flex-col w-64 md:w-80">
+          <div className="flex flex-col w-64 md:w-80 relative">
             <label htmlFor="password" className="font-bold">Mot de passe</label>
             <input 
-              type="password" 
+              type={showPassword ? "text" : "password"} // change selon le state
               name="password" 
               id="password" 
               className="input_style" 
               required/>
-          </div>
+            <button
+              type="button"
+              onClick={() => setShowPassword((prev) => !prev)}
+              className="absolute right-2 top-2/3 -translate-y-1/2 text-primary-300 hover:text-primary-200"
+              aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
+              >
+              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+            </button>
+            </div>
           {/* Bouton de soumission */}
           {!success && (
             <button type="submit" className="button_booking m-2 p-2 md:m-4 md:py-4 md:px-12 font-bold">
