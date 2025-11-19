@@ -15,7 +15,7 @@ export function verifyCsrf(req : RequestWithCookies, res: Response, next: NextFu
 
   // Si pas de token, on renvoie une erreur
   if (!token) {
-    return res.status(403).json({ error: "Missing CSRF token " });
+    return res.status(403).json({ error: "Missing CSRF token" });
   }
   
   // On valide le token avec verify

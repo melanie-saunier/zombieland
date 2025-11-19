@@ -89,6 +89,10 @@ export const bookingController = {
     // Vérifier que le prix "Tarif unique" existe
     const price = await Price.findOne({ where: { label: "Tarif unique" } });
     if (!price) return res.status(400).json({ message:"No price found with label: Tarif unique" });
+
+    // Vérifier si une réservation existe déjà à cette date avec status = true
+    const bookingsWithSameDate = await Booking.findOne({ where: { visit_date: data.visit_date, status: true }})
+    if (bookingsWithSameDate) return res.status(400).json({ message: "A booking already exists for this date with active status" });
         
     // Transaction pour garantir la cohérence
     const booking = await sequelize.transaction(async (t) => {

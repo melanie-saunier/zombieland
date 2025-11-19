@@ -268,6 +268,10 @@ export default function BookingPage() {
   //on doit rajouter return null si on a pas de prix pour que TS comprenne bien que pricing ne peut pas être null
   if (!pricing) return null;
 
+  // Dictionnaire de traduction pour les messages du back
+  const errorTranslations: Record<string, string> = {
+    "A booking already exists for this date with active status": "Vous avez déjà une réservation confirmée à cette date. Vous pouvez la modifier dans l'onglet Mes réservations",
+  };
 
   return (
     <section className="bg-radial from-[#961990] to-[#000000] min-h-screen p-4 md:p-8">
@@ -286,9 +290,13 @@ export default function BookingPage() {
               ⚠️ Erreurs de validation
             </h3>
             <ul className="list-disc list-inside text-red-300 text-sm space-y-1">
-              {errors.map((error, i) => (
-                <li key={i}>{error}</li>
-              ))}
+              {errors.map((error, i) => {
+                // Cherche si le message d'erreur contient une clé du dictionnaire
+                const translated = Object.entries(errorTranslations).find(([key]) =>
+                  error.includes(key)
+                )?.[1] || error; // sinon, on garde le message original
+                return <li key={i}>{translated}</li>;
+              })}
             </ul>
           </div>
         )}
