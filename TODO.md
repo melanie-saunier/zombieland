@@ -3,7 +3,7 @@
 Mis à jour par Manon le 19/11/2025
 
 - ✅ Yeux sur MDP dans login et register (comme dans Profile, lors du changement de mot de passe)
-- ⬜ Eviter les attaques "Brute Force" => limiter le nombre de requêtes pour LOGIN
+- ✅ Eviter les attaques "Brute Force" => limiter le nombre de requêtes pour LOGIN
 - ✅ Back : si on veut faire une réservation un jour où on a déjà une réservation => bloqué
 - ⬜ Lien MDP oublié
 - ⬜ Dockeriser l'app (Dockerfile sur back et front + docker compose)

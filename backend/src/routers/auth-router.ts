@@ -2,6 +2,7 @@ import { Router } from "express";
 import { authController } from "../controllers/auth-controller";
 import { authenticateToken } from "../middlewares/authenticate-token";
 import { verifyCsrf } from "../middlewares/verify-csrf";
+import loginLimiter from "../middlewares/login-limiter";
 
 export const authRouter = Router();
 
@@ -61,7 +62,7 @@ authRouter.post("/register", verifyCsrf, authController.register);
  * @return {object} 404 - User not found
  * @return {object} 500 - Internal server error
  */
-authRouter.post("/login", verifyCsrf, authController.login);
+authRouter.post("/login", verifyCsrf, loginLimiter, authController.login);
 
 /**
  * GET /auth/me
