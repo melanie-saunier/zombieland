@@ -256,7 +256,7 @@ export const authController = {
     // On récupère l'utilisateur correspondant à l'email
     const user = await User.findOne({ where: { email } });
     // Cas où on ne trouve pas d' user : On renvoie quand même un message générique pour ne pas révéler l'existence d'un compte
-    if (!user) return res.status(200).json({ message: "NOT OK - If a user exists with this email, a reset link has been sent" });
+    if (!user) return res.status(200).json({ message: "If a user exists with this email, a reset link has been sent" });
 
     // Génère un token aléatoire sécurisé de 32 octets (256 bits) et le convertit en chaîne hexadécimale de 64 caractères
     const token = crypto.randomBytes(32).toString("hex");
@@ -270,7 +270,7 @@ export const authController = {
 
     // Générer le lien de réinitialisation
     // TODO: à mettre à jour quand on sera avec Docker
-    const resetLink = `http://localhost:3001/api/auth/reset-password/${token}`;
+    const resetLink = `http://localhost:3000/reset-password/${token}`;
 
     // Envoyer l'email
     await sendEmail(
@@ -280,7 +280,7 @@ export const authController = {
       <a href="${resetLink}">${resetLink}</a>`
     );
 
-    res.status(200).json({ message: "OK - If a user exists with this email, a reset link has been sent" });
+    res.status(200).json({ message: "If a user exists with this email, a reset link has been sent" });
   }, 
 
   /**

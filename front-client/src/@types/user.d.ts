@@ -30,3 +30,9 @@ export interface IUpdatePasswordInput {
   newPassword: string;
   confirmedPassword: string;
 }
+
+export interface IReinitializePasswordInput {
+  token: string;
+  newPassword: string;
+  confirmedPassword: string;
+}

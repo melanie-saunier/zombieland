@@ -1,7 +1,7 @@
 // src/api/auth.ts
 
 import axios from "axios";
-import type { IUser, ILoginInput, IRegisterInput, IUpdateMeInput, IUpdatePasswordInput } from "@/@types/user";
+import type { IUser, ILoginInput, IRegisterInput, IUpdateMeInput, IUpdatePasswordInput, IReinitializePasswordInput } from "@/@types/user";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
@@ -134,6 +134,11 @@ export const authApi = {
       console.error("Erreur lors du logout :", err);
     }
   },
+
+  /**
+   * updateMe
+   * Modifier son profil
+   */
   updateMe: async (data: IUpdateMeInput, csrfToken: string): Promise<IUser | null> => {
     try {
       const res = await axios.put(`${API_URL}/auth/me`, data, { 
@@ -164,6 +169,11 @@ export const authApi = {
       throw new Error("Erreur inconnue");
     }
   },
+
+  /**
+   * updatePassword
+   * Modifier son mot de passe
+   */
   updatePassword: async (data: IUpdatePasswordInput, csrfToken: string): Promise<IUser | null> => {
     try {
       const res = await axios.patch(`${API_URL}/auth/me/password`, data, { 
@@ -194,4 +204,59 @@ export const authApi = {
       throw new Error("Erreur inconnue");
     }
   },
+
+  /**
+   * Forgot password
+   * Envoie un email avec lien de reset de mot de passe
+   */
+  forgotPassword: async (email: string, csrfToken: string): Promise<string> => {
+    try {
+      const res = await axios.post(`${API_URL}/auth/forgot-password`, { email }, {
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+          "Content-Type": "application/json"
+        }
+      });
+
+      return res.data.message;
+
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const message = err.response?.data?.error || "Erreur lors de la demande de réinitialisation";
+        throw new Error(message);
+      }
+      throw new Error("Erreur inconnue");
+    }
+  },
+
+  /**
+   * Reset Password
+   * Réinitialiser le password
+   */
+  resetPassword: async (data: IReinitializePasswordInput, csrfToken: string): Promise<string> => {
+    try {
+      const { token, newPassword, confirmedPassword } = data
+      const res = await axios.post(
+        `${API_URL}/auth/reset-password/${token}`, 
+        { newPassword, confirmedPassword },
+        {
+        withCredentials: true,
+        headers: {
+          "x-csrf-token": csrfToken,
+          "Content-Type": "application/json"
+        }
+      });
+
+      return res.data.message;
+
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        const message = err.response?.data?.error || "Erreur lors du changement de mot de passe";
+        throw new Error(message);
+      }
+      throw new Error("Erreur inconnue");
+    }
+  },
+
 };

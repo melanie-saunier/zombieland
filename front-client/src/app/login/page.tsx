@@ -127,11 +127,18 @@ export default function LoginPage() {
             <button
               type="button"
               onClick={() => setShowPassword((prev) => !prev)}
-              className="absolute right-2 top-2/3 -translate-y-1/2 text-primary-300 hover:text-primary-200"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-primary-300 hover:text-primary-200"
               aria-label={showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"}
               >
               {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
             </button>
+              {/* Lien mot de passe oublié */}
+              <Link 
+                href="/forgot-password" 
+                className="mt-2 text-sm text-primary-300 hover:text-primary-200 underline self-end"
+              >
+                Mot de passe oublié ?
+              </Link>
             </div>
           {/* Bouton de soumission */}
           {!success && (
