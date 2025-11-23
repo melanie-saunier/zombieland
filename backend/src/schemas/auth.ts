@@ -59,3 +59,21 @@ export const updateMePasswordSchema = z.object({
   message: "Les mots de passe ne correspondent pas",
   path: ["confirmedPassword"], // indique où afficher l'erreur
 });
+
+// schema de validation de l'email
+export const emailSchema = z.object({
+  email: z.email("Le format de l'email n'est pas valide")
+});
+
+// schema de validation pour le token lors de la réinitialisation du password
+export const tokenParamSchema = z.object({
+  token: z
+    .string()
+    .length(64, "Invalid token length")
+    .regex(/^[0-9a-f]+$/, "Token must be hexadecimal"),
+});
+
+// schema de validation pour nouveau mdp (réinitialisation)
+export const resetPasswordBodySchema = updateMePasswordSchema.omit({
+  oldPassword: true,
+});

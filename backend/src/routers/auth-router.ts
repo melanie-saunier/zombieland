@@ -107,3 +107,23 @@ authRouter.patch("/me/password", authenticateToken, verifyCsrf, authController.u
  */
 // c'est une route POST car on détruit quelque chose: on a un effet de bord (sur les routes get pas d'effet de bord)
 authRouter.post("/logout", authenticateToken, verifyCsrf, authController.logout);
+
+/**
+ * POST /auth/forgot-password
+ * @tags Auth
+ * @summary Request a password reset email
+ * @param {ForgotPasswordInput} request.body.required
+ * @return {object} 200 - Reset email sent
+ * @return {object} 404 - User not found
+ */
+authRouter.post("/forgot-password", verifyCsrf, authController.forgotPassword);
+
+/**
+ * POST /auth/reset-password
+ * @tags Auth
+ * @summary Reset password using token
+ * @param {ResetPasswordInput} request.body.required
+ * @return {object} 200 - Password updated
+ * @return {object} 400 - Invalid token or invalid passwords
+ */
+authRouter.post("/reset-password/:token", verifyCsrf, authController.resetPassword);

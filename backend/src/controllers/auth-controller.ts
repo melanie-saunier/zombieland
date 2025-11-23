@@ -6,6 +6,9 @@ import { Role } from "../models/association";
 import { generateAccessToken } from "../utils/jwt";
 import { AuthRequest } from "../@types";
 import { Op } from "sequelize";
+import { emailSchema, resetPasswordBodySchema, tokenParamSchema } from "../schemas/auth";
+import crypto from "crypto";
+import { sendEmail } from "../utils/sendEmail";
 
 export const authController = {
   // controller pour créer un compte 
@@ -234,5 +237,91 @@ export const authController = {
       sameSite: "lax",
     });
     res.status(200).json({"message": "Logged out"});
+  }, 
+
+  /**
+   * Generates a password reset token and sends an email to the user
+   * if the email exists in the database. The token expires in 1 hour.
+   * @param req 
+   * @param res 
+   */
+  async forgotPassword(req: Request, res: Response) {
+    const validation = emailSchema.safeParse(req.body);
+    // Si la validation échoue :
+    // error.issues contient la liste des erreurs détectées par Zod
+    if (!validation.success) return res.status(400).json({ errors: validation.error.issues.map(e => e.message) });
+
+    const { email } = validation.data; //data: email
+
+    // On récupère l'utilisateur correspondant à l'email
+    const user = await User.findOne({ where: { email } });
+    // Cas où on ne trouve pas d' user : On renvoie quand même un message générique pour ne pas révéler l'existence d'un compte
+    if (!user) return res.status(200).json({ message: "NOT OK - If a user exists with this email, a reset link has been sent" });
+
+    // Génère un token aléatoire sécurisé de 32 octets (256 bits) et le convertit en chaîne hexadécimale de 64 caractères
+    const token = crypto.randomBytes(32).toString("hex");
+
+    // Stocker le token et sa date d'expiration (1h)
+    user.reset_password_token = token;
+    console.log("le token est : " + user.reset_password_token);
+    user.reset_password_expires = new Date(Date.now() + 3600000); // 1h
+    console.log("user.changed()", user.changed());
+    await user.save();
+
+    // Générer le lien de réinitialisation
+    // TODO: à mettre à jour quand on sera avec Docker
+    const resetLink = `http://localhost:3001/api/auth/reset-password/${token}`;
+
+    // Envoyer l'email
+    await sendEmail(
+      user.email, 
+      "Réinitialisation du mot de passe", 
+      `<p>Cliquez ici pour réinitialiser votre mot de passe :</p>
+      <a href="${resetLink}">${resetLink}</a>`
+    );
+
+    res.status(200).json({ message: "OK - If a user exists with this email, a reset link has been sent" });
+  }, 
+
+  /**
+   * Resets the user's password by verifying the token received via email.
+   * Hashes the new password and clears the reset token and its expiration date.
+   * @param req 
+   * @param res 
+   */
+  async resetPassword(req: Request, res: Response) {
+    // Valider le token des params
+    const tokenValidation = tokenParamSchema.safeParse(req.params);
+    if (!tokenValidation.success) return res.status(400).json({ errors: tokenValidation.error.issues.map(e => e.message) });
+    
+    const { token } = tokenValidation.data;
+    console.log(token);
+
+    // Valider les password du body
+    const bodyValidation = resetPasswordBodySchema.safeParse(req.body);
+    if (!bodyValidation.success) return res.status(400).json({ errors: bodyValidation.error.issues.map(e => e.message) });
+    const { newPassword } = bodyValidation.data;
+
+    // Vérifier que le token existe et n'est pas expiré
+    const user = await User.findOne({
+      where: {
+        reset_password_token: token,
+        reset_password_expires: { [Op.gt]: new Date() }, // token pas expiré
+      }
+    });
+
+    if (!user) return res.status(400).json({ error: "Token invalid or expired" });
+
+    // Hacher le nouveau mot de passe
+    const hashedPassword = await argon2.hash(newPassword);
+
+    // Mettre à jour le mot de passe et réinitialiser le token
+    user.password = hashedPassword;
+    user.reset_password_token = null;
+    user.reset_password_expires = null;
+    await user.save();
+
+    res.status(200).json({ message: "Password has been reset successfully" });
   }
+
 }

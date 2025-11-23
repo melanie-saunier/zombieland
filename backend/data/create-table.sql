@@ -29,6 +29,8 @@ CREATE TABLE "user" (
   firstname VARCHAR(255) NOT NULL,
   password VARCHAR(255) NOT NULL,
   role_id INT NOT NULL REFERENCES role(id),
+  reset_password_token VARCHAR(255),
+  reset_password_expires TIMESTAMP,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

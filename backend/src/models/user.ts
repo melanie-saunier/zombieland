@@ -10,10 +10,12 @@ export class User extends Model {
   declare firstname: string;
   declare password: string;
   declare role_id: number;
+  declare reset_password_token: string | null;
+  declare reset_password_expires: Date | null;
   declare readonly created_at: Date;
   declare readonly updated_at: Date;
 
-   // ⚡ Déclaration de l'association
+   // Déclaration de l'association
    declare role?: Role; // le ? signifie que ça peut être undefined
 }
 
@@ -47,6 +49,14 @@ User.init(
     role_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
+    },
+    reset_password_token: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    reset_password_expires: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   },
     {
