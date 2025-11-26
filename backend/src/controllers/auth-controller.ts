@@ -270,6 +270,7 @@ export const authController = {
 
     // Générer le lien de réinitialisation
     // TODO: à mettre à jour quand on sera avec Docker
+    //route du front
     const resetLink = `http://localhost:3000/reset-password/${token}`;
 
     // Envoyer l'email

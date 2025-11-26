@@ -1,6 +1,6 @@
 # 📧 Mailtrap – Configuration et Utilisation
 
-*(pour l’adresse de service : `zombieland.contact@gmail.com`)*
+*(pour l’adresse de service : `contact.zombieland@gmail.com`)*
 
 Mailtrap est un service qui permet de **tester l’envoi d’emails en environnement de développement** sans envoyer de vrais emails aux utilisateurs.
 Il capture les emails dans une “boîte de réception sandbox”, visible dans le dashboard Mailtrap.
