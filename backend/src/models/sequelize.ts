@@ -28,7 +28,7 @@ if (!dbUrl) {
 // Création d'une nouvelle instance Sequelize avec des paramètres
 export const sequelize = new Sequelize(dbUrl, {
   dialect: 'postgres',
-  logging: console.log,
+  logging: process.env.NODE_ENV !== "test" ? console.log : false,
   define: {
     underscored: true, // Utiliser le format snake_case pour les noms de colonnes
     createdAt: "created_at", // Nom de la colonne pour la date de création
