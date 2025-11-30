@@ -78,7 +78,7 @@ export default function RegisterPage() {
 
     const data = {email, firstname, lastname, password, confirmedPassword };
     try {
-      const token = csrfToken || await csrfApi.getCsrfToken();
+      const token = csrfToken //|| await csrfApi.getCsrfToken();
       
       const user = await authApi.register(data, token!);
 

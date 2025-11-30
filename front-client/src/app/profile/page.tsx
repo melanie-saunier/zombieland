@@ -77,7 +77,7 @@ export default function ProfilePage() {
     try {
       setError(null); // Réinitialise les erreurs
 
-      const token = csrfToken || await csrfApi.getCsrfToken();
+      const token = csrfToken //|| await csrfApi.getCsrfToken();
       
       // fetch vers l'API pour modifier les infos utilisateur
       const user = await authApi.updateMe({firstname: editedUser.firstname, lastname: editedUser.lastname, email: editedUser.email}, token!);
@@ -137,7 +137,7 @@ export default function ProfilePage() {
     }
 
     try {
-      const token = csrfToken || await csrfApi.getCsrfToken();
+      const token = csrfToken //|| await csrfApi.getCsrfToken();
 
       // fetch vers l'api pour modifier le mot de passe
       await authApi.updatePassword({oldPassword: passwordState.oldPassword, newPassword: passwordState.newPassword, confirmedPassword: passwordState.confirmedPassword}, token!);
