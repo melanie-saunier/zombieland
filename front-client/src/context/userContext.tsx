@@ -17,6 +17,7 @@ export interface IUserContext {
   login: (userData: IUser) => void;
   logout: () => void;
   csrfToken: string | null;
+  isLoading: boolean,
 }
 
 /**
