@@ -12,7 +12,7 @@ import { authApi } from "@/api/auth";
 import { IUser } from "@/@types/user";
 import Loader from "@/components/Loader";
 import { csrfApi } from "@/api/csrf";
-import { useRouter } from "next/navigation";
+
 
 /**
  * Composant principal : ProfilePage
@@ -23,8 +23,8 @@ import { useRouter } from "next/navigation";
  *  - Les messages d’erreur et de succès
  */
 export default function ProfilePage() {
-  const { user, setUser, csrfToken, logged, isLoading } = useUserContext();
-  const router = useRouter()
+  const { user, setUser, csrfToken } = useUserContext();
+
   // state pour stocker les données éditées temporairement
   const [editedUser, setEditedUser] = useState<IUser>({
     id: 0,
@@ -58,11 +58,7 @@ export default function ProfilePage() {
       setEditedUser(user);
     }
   }, [user]);
-  useEffect(() => {
-  if (!isLoading && !logged) {
-    router.push("/login");
-  }
-}, [isLoading, logged, router]);
+
 
   // Fonction appelée quand l'utilisateur clique sur "Sauvegarder" pour sauvegarder les modifications de son profil (hors password)
   const handleUpdateSubmit = async (e: React.FormEvent) => {

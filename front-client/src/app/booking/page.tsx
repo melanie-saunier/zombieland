@@ -15,7 +15,7 @@ import Loader from "@/components/Loader";
 import { pricesApi } from "@/api/prices";
 import { IPrice } from "@/@types/price";
 import { csrfApi } from "@/api/csrf";
-import { useRouter } from "next/navigation";
+
 
 
 /**
@@ -27,8 +27,8 @@ import { useRouter } from "next/navigation";
  *  - validation et soumission
  */
 export default function BookingPage() {
-  const { user, csrfToken, isLoading, logged } = useUserContext(); // On récupère l'état de connexion
-  const router = useRouter();
+  const { user, csrfToken} = useUserContext(); // On récupère l'état de connexion
+
   const today = new Date(); // Préparation d'une référence à la date du jour
   today.setHours(0, 0, 0, 0); // On met l'heure à 00:00 pour éviter le décalage horaire
 
@@ -106,11 +106,7 @@ export default function BookingPage() {
 
     fetchTicketPrice(); // Appel de la fonction dès le premier rendu
   }, []);
-  useEffect(() => {
-  if (!isLoading && !logged) {
-    router.push("/login");
-  }
-}, [isLoading, logged, router]);
+
 
   /**
    * handleCalendarChange : appelée quand l’utilisateur choisit une nouvelle date
