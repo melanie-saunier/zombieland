@@ -102,7 +102,7 @@ export const authController = {
     // On place notre token dans un cookie httpOnly
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,  // TODO: mettre à true en production: en HTTPS
+      secure: true,  // TODO: mettre à true en production: en HTTPS
       sameSite: "lax", // mettre strict si front et back sur meme domaine
       maxAge: 3 * 60 * 60 * 1000, // 3 heures
     }); 
@@ -230,7 +230,7 @@ export const authController = {
     // on détruit le cookie qui contient le token
     res.clearCookie("token", {
       httpOnly: true,
-      secure: false, // TODO: mettre true en prod en HTTPS
+      secure: true, // TODO: mettre true en prod en HTTPS
       sameSite: "lax",
     });
     res.status(200).json({"message": "Logged out"});
