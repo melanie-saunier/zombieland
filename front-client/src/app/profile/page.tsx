@@ -12,6 +12,7 @@ import { authApi } from "@/api/auth";
 import { IUser } from "@/@types/user";
 import Loader from "@/components/Loader";
 import { csrfApi } from "@/api/csrf";
+import { useRouter } from "next/navigation";
 
 
 /**
@@ -24,7 +25,7 @@ import { csrfApi } from "@/api/csrf";
  */
 export default function ProfilePage() {
   const { user, setUser, csrfToken } = useUserContext();
-
+  const router = useRouter();
   // state pour stocker les données éditées temporairement
   const [editedUser, setEditedUser] = useState<IUser>({
     id: 0,
@@ -51,7 +52,19 @@ export default function ProfilePage() {
     show: { oldPassword: false, newPassword: false, confirmedPassword: false }, // Gère l'affichage/masquage des mots de passe
     errors: [], // Liste d'erreurs liées au formulaire mot de passe
   });
+    useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = await authApi.getCurrentUser();
+      if (!currentUser) {
+        // Si pas d'utilisateur, redirection vers login
+        router.push("/login");
+      } else {
+        setUser(currentUser);
+      }
+    };
 
+    fetchUser();
+  }, [router]);
   // Quand le user du contexte change (login, refresh, etc.), on met à jour le local
   useEffect(() => {
     if (user) {
