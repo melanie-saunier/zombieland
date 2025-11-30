@@ -105,7 +105,7 @@ export const authController = {
       secure: true,  // TODO: mettre à true en production: en HTTPS
       sameSite: "none", // mettre strict si front et back sur meme domaine
       maxAge: 3 * 60 * 60 * 1000, // 3 heures
-      domain: "https://zombieland-alpha.vercel.app",
+      domain: "zombieland-alpha.vercel.app",
     }); 
 
     const user = userFound.toJSON();
@@ -235,7 +235,7 @@ export const authController = {
       httpOnly: true,
       secure: true, // TODO: mettre true en prod en HTTPS
       sameSite: "none",
-      domain: "https://zombieland-alpha.vercel.app",
+      domain: "zombieland-alpha.vercel.app",
     });
     res.status(200).json({"message": "Logged out"});
   }
