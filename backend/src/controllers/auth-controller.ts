@@ -121,6 +121,8 @@ export const authController = {
    * @param res 
    */
   async getCurrentUser(req: AuthRequest, res: Response) {
+      // Empêche le cache navigateur pour cette route
+  res.setHeader("Cache-Control", "no-store");
     // on récupère le user grâce à l'id stocké la request
     const user = await User.findByPk(req.user!.id, {
       attributes: { exclude: ["password"] }, // on enlève le password
