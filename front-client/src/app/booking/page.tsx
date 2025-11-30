@@ -15,7 +15,7 @@ import Loader from "@/components/Loader";
 import { pricesApi } from "@/api/prices";
 import { IPrice } from "@/@types/price";
 import { csrfApi } from "@/api/csrf";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 
 /**

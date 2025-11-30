@@ -12,7 +12,7 @@ import { authApi } from "@/api/auth";
 import { IUser } from "@/@types/user";
 import Loader from "@/components/Loader";
 import { csrfApi } from "@/api/csrf";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 /**
  * Composant principal : ProfilePage
