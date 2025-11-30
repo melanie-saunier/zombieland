@@ -52,7 +52,7 @@ export default function ProfilePage() {
     show: { oldPassword: false, newPassword: false, confirmedPassword: false }, // Gère l'affichage/masquage des mots de passe
     errors: [], // Liste d'erreurs liées au formulaire mot de passe
   });
-    useEffect(() => {
+  useEffect(() => {
     const fetchUser = async () => {
       const currentUser = await authApi.getCurrentUser();
       if (!currentUser) {

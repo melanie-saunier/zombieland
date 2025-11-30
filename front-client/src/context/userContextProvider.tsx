@@ -31,7 +31,7 @@ export default function UserContextProvider({ children }: Props) {
   // Par défaut, il est null (aucun utilisateur connecté).
   const [user, setUser] = useState<IUser | null>(null);
   const [logged, setLogged] = useState(false);
-  const [isLoading, setIsLoading] = useState(true); 
+  // const [isLoading, setIsLoading] = useState(true); 
   // state pour récuperer le csrf token
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
@@ -60,9 +60,9 @@ export default function UserContextProvider({ children }: Props) {
       router.push("/");
     } catch (err) {
       console.error("Erreur lors du logout :", err);
-    } finally {
-      setIsLoading(false);
-    }
+    } //finally {
+    //   setIsLoading(false);
+    // }
   };
 
   /**
@@ -90,11 +90,11 @@ export default function UserContextProvider({ children }: Props) {
     };
     fetchInitialData();
   }, []);
-    useEffect(() => {
-    if (!isLoading && !logged) {
-      router.push("/login");
-    }
-  }, [isLoading, logged, router]);
+  // useEffect(() => {
+  //   if (!isLoading && !logged) {
+  //     router.push("/login");
+  //   }
+  // }, [isLoading, logged, router]);
 
   /**
    * On retourne le Provider du contexte :
@@ -104,7 +104,7 @@ export default function UserContextProvider({ children }: Props) {
    *  - logout : fonction pour se déconnecter
    */
   return (
-    <UserContext.Provider value={{ user, setUser, logged, isLoading, setLogged, login, logout, csrfToken }}>
+    <UserContext.Provider value={{ user, setUser, logged, setLogged, login, logout, csrfToken }}>
       {children}
     </UserContext.Provider>
   );
