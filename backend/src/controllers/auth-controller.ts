@@ -98,6 +98,7 @@ export const authController = {
     const roleName = userFound.role?.name || "member"; 
     // On génère notre JWT en incluant le userID et le nom du rôle de l'utilisateur qu'on vient de créer (ou "member" par défaut)
     const token = generateAccessToken({ userId: userFound.id, role: roleName});
+    res.setHeader("Cache-Control", "no-store");
 
     // On place notre token dans un cookie httpOnly
     res.cookie("token", token, {
