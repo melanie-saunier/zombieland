@@ -175,7 +175,7 @@ export default function RegisterPage() {
           {errors.length > 0 && (
             <div className="w-fit p-4 my-4 mx-auto bg-red-900/70 border-2 border-red-500 rounded-lg shadow-[0_0_12px_0_rgba(255,0,0,0.3)]" role="alert">
               {errors.map((err) => (
-                <p key={err} className="text-red-300 text-sm space-y-1 text-center">{err}</p>
+                <p key={err} role="alert" className="text-red-300 text-sm space-y-1 text-center">{err}</p>
               ))}
             </div>
           )}

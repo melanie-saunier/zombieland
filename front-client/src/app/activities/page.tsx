@@ -134,6 +134,9 @@ export default function ActivitiesPage() {
             onSubmit={(e) => e.preventDefault()}
             className="input_style flex gap-2 w-full"
           >
+            <label htmlFor="search" className="sr-only">
+              Rechercher une activité par mot-clé
+            </label>
             <Search size={20} />
             <input 
               type="text"
@@ -155,6 +158,9 @@ export default function ActivitiesPage() {
               onSubmit={(e) => e.preventDefault()}
               className="input_style  w-full"
             >
+              <label htmlFor="category" className="sr-only">
+                Filtrer les activités par catégorie
+              </label>
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
