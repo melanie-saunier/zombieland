@@ -10,10 +10,14 @@ import EditBookingModal from "@/components/EditBookingModal";
 import CancelBookingModal from "@/components/CancelBookingModal";
 import { MAX_TICKETS_PER_BOOKING } from "@/utils/bookingUtils";
 import { csrfApi } from "@/api/csrf";
+import { useRouter } from "next/navigation";
+import { authApi } from "@/api/auth";
+
 
 
 export default function MyBookingsPage() {
-  const { user, csrfToken } = useUserContext();
+  const { user, setUser, csrfToken} = useUserContext();
+  const router = useRouter();
   // État backend (structure BDD)
   // Cet état représente les données “brutes” venant du backend.
   const [myBookings, setmyBookings] = useState<IMyBookingWithTotalPrice[]>([]);
@@ -28,7 +32,19 @@ export default function MyBookingsPage() {
 
   // pour la modal d'annulation de réservation
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-
+    useEffect(() => {
+      const fetchUser = async () => {
+        const currentUser = await authApi.getCurrentUser();
+        if (!currentUser) {
+          // Si pas d'utilisateur, redirection vers login
+          router.push("/login");
+        } else {
+          setUser(currentUser);
+        }
+      };
+  
+      fetchUser();
+    }, [router]);
 
   useEffect(() => {
     // chargement des reservations du users au chargement de la page
@@ -63,6 +79,7 @@ export default function MyBookingsPage() {
     };
     fetchMyBookings();
   }, [user?.id]);
+  
 
 
   // fonction pour soumission du formulaire de modification de la reservation

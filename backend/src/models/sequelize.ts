@@ -33,5 +33,11 @@ export const sequelize = new Sequelize(dbUrl, {
     underscored: true, // Utiliser le format snake_case pour les noms de colonnes
     createdAt: "created_at", // Nom de la colonne pour la date de création
     updatedAt: "updated_at", // Nom de la colonne pour la date de mise à jour 
-  }
+  },
+  dialectOptions: {
+    ssl: {
+      require: true,           // oblige SSL
+      rejectUnauthorized: false, // Render ne nécessite pas de certificat côté client
+    },
+  },
 });

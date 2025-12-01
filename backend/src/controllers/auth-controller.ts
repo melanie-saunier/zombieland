@@ -7,6 +7,8 @@ import { generateAccessToken } from "../utils/jwt";
 import { AuthRequest } from "../@types";
 import { Op } from "sequelize";
 
+const isProd = process.env.NODE_ENV === "production";
+
 export const authController = {
   // controller pour créer un compte 
   /**
@@ -98,12 +100,13 @@ export const authController = {
     const roleName = userFound.role?.name || "member"; 
     // On génère notre JWT en incluant le userID et le nom du rôle de l'utilisateur qu'on vient de créer (ou "member" par défaut)
     const token = generateAccessToken({ userId: userFound.id, role: roleName});
+    res.setHeader("Cache-Control", "no-store");
 
     // On place notre token dans un cookie httpOnly
     res.cookie("token", token, {
       httpOnly: true,
-      secure: false,  // TODO: mettre à true en production: en HTTPS
-      sameSite: "lax", // mettre strict si front et back sur meme domaine
+      secure: isProd,  // TODO: mettre à true en production: en HTTPS
+      sameSite: isProd ? "none" : "lax", // mettre strict si front et back sur meme domaine
       maxAge: 3 * 60 * 60 * 1000, // 3 heures
     }); 
 
@@ -120,6 +123,8 @@ export const authController = {
    * @param res 
    */
   async getCurrentUser(req: AuthRequest, res: Response) {
+      // Empêche le cache navigateur pour cette route
+  res.setHeader("Cache-Control", "no-store");
     // on récupère le user grâce à l'id stocké la request
     const user = await User.findByPk(req.user!.id, {
       attributes: { exclude: ["password"] }, // on enlève le password
@@ -230,8 +235,9 @@ export const authController = {
     // on détruit le cookie qui contient le token
     res.clearCookie("token", {
       httpOnly: true,
-      secure: false, // TODO: mettre true en prod en HTTPS
-      sameSite: "lax",
+      secure: isProd,  // TODO: mettre à true en production: en HTTPS
+      sameSite: isProd ? "none" : "lax", // mettre strict si front et back sur meme domaine
+
     });
     res.status(200).json({"message": "Logged out"});
   }
