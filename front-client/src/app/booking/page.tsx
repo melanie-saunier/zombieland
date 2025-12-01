@@ -231,7 +231,7 @@ export default function BookingPage() {
     setErrors([]);
 
     try {
-      const token = csrfToken || await csrfApi.getCsrfToken();
+      const token = csrfToken //|| await csrfApi.getCsrfToken();
 
       await bookingApi.createBooking({
         visit_date: bookingData.visit_date, 

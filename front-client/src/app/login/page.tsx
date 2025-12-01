@@ -34,7 +34,7 @@ export default function LoginPage() {
    */
   const checkCrendentials = async (email: string, password: string) => {
     try {
-      const token = csrfToken || await csrfApi.getCsrfToken();
+      const token = csrfToken //|| await csrfApi.getCsrfToken();
       // Appel à l'API login
       const user = await authApi.login({email, password}, token!);
       // Si aucun utilisateur retourné → identifiants incorrects
