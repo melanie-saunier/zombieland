@@ -37,12 +37,12 @@ router.get("/csrf-token", (req, res) => {
   const secret = csrfToken.secretSync();
   // On génère un token CSRF à partir de ce secret
   const token = csrfToken.create(secret);
-
+  const isProd = process.env.NODE_ENV === "production";
   // mettre le secret dans un cookie httpOnly
   res.cookie("csrf-secret", secret, {
     httpOnly: true, // le cookie n'est pas accessible par JS dans le front, cela protège le secret
-    secure: true,
-    sameSite: "none", // empêche l'envoi du cookie depuis un autre site (mitigation CSRF)
+    secure: isProd,
+    sameSite: isProd ? "none" : "lax", // empêche l'envoi du cookie depuis un autre site (mitigation CSRF)
     // secure: process.env.NODE_ENV === "production", // cookie sécurisé seulement en prod
     maxAge: 15 * 60 * 1000, // durée du cookie de 15min
     path: "/", //TODO: ajouter un commentaire pour expliquer ce paramètre
