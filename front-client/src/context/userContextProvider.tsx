@@ -31,7 +31,7 @@ export default function UserContextProvider({ children }: Props) {
   // Par défaut, il est null (aucun utilisateur connecté).
   const [user, setUser] = useState<IUser | null>(null);
   const [logged, setLogged] = useState(false);
-  // const [isLoading, setIsLoading] = useState(true); 
+
   // state pour récuperer le csrf token
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
 
@@ -60,9 +60,7 @@ export default function UserContextProvider({ children }: Props) {
       router.push("/");
     } catch (err) {
       console.error("Erreur lors du logout :", err);
-    } //finally {
-    //   setIsLoading(false);
-    // }
+    } 
   };
 
   /**
@@ -81,7 +79,7 @@ export default function UserContextProvider({ children }: Props) {
         setUser(currentUser);
         // ici on met setLogged à true si l'utilisateur courant n'est pas null
         setLogged(currentUser !== null);
-        console.log(csrfToken);
+        // console.log(csrfToken);
       } catch (err) {
         console.error("Erreur lors de la récupération du user :", err);
         setUser(null);

@@ -250,7 +250,7 @@ describe("Booking routes e2e", () => {
         .patch("/api/bookings/2/user")
         .set("Cookie", withCookies(memberCookie))
         .set("x-csrf-token", csrfToken)
-        .send({ visit_date: new Date("2025-11-30").toISOString().split("T")[0], nb_people: 3 });
+        .send({ visit_date: new Date("2026-02-02").toISOString().split("T")[0], nb_people: 3 });
 
       expect(res.status).toBe(200);
       expect(res.body.nb_people).toBe(3);

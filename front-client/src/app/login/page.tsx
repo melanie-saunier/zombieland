@@ -34,7 +34,7 @@ export default function LoginPage() {
    */
   const checkCrendentials = async (email: string, password: string) => {
     try {
-      const token = csrfToken || await csrfApi.getCsrfToken();
+      const token = csrfToken //|| await csrfApi.getCsrfToken();
       // Appel à l'API login
       const user = await authApi.login({email, password}, token!);
       // Si aucun utilisateur retourné → identifiants incorrects
@@ -133,7 +133,7 @@ export default function LoginPage() {
         {/* Pour afficher l'erreur de connexion */}
         {error && (
           <div className="w-fit p-4 my-4 mx-auto bg-red-900/70 border-2 border-red-500 rounded-lg shadow-[0_0_12px_0_rgba(255,0,0,0.3)]" role="alert">
-            <p className="text-red-300 text-sm space-y-1 text-center">{error}</p>
+            <p role="alert" className="text-red-300 text-sm space-y-1 text-center">{error}</p>
           </div>
         )}
 

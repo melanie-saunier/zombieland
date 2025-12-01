@@ -115,7 +115,7 @@ export default function MyBookingsPage() {
     setErrorForm(null);
 
     try {
-      const token = csrfToken || await csrfApi.getCsrfToken();
+      const token = csrfToken //|| await csrfApi.getCsrfToken();
       const updatedBooking = await bookingApi.updateMyBooking(selectedBooking.id, {
         visit_date: visitDateFormatted,
         nb_people,
@@ -148,7 +148,7 @@ export default function MyBookingsPage() {
     if (!selectedBooking) return;
 
     try {
-      const token = csrfToken || await csrfApi.getCsrfToken();
+      const token = csrfToken //|| await csrfApi.getCsrfToken();
       // Appel API pour annuler la réservation: passer le status à false
       const cancelledBooking = await bookingApi.cancelMyBooking(selectedBooking.id, token!);
 
