@@ -50,19 +50,19 @@ export default function Footer() {
           <div className="flex justify-center items-center gap-4 mt-4">
             {/* Icône YouTube */}
             <a href={"https://www.youtube.com/"} target="_blank" rel="noopener noreferrer" className="hover:scale-115 transition-transform duration-200">
-              <Image src="/images/icons/youtube-circle.png" alt="Logo de Youtube" width={24} height={24}/>
+              <Image src="/images/icons/youtube-circle.png" alt="Logo de Youtube" aria-label="Suivez-nous sur Youtube (ouvre dans un nouvel onglet)" width={24} height={24}/>
             </a>
             {/* Icône Facebook */}
             <a href={"https://www.facebook.com/?locale=fr_FR"} target="_blank" rel="noopener noreferrer" className="hover:scale-115 transition-transform duration-200">
-              <Image src="/images/icons/facebook.png" alt="Logo de Facebook" width={24} height={24}/>
+              <Image src="/images/icons/facebook.png" alt="Logo de Facebook" aria-label="Suivez-nous sur Facebook (ouvre dans un nouvel onglet)" width={24} height={24}/>
             </a>
             {/* Icône Instagram */}
             <a href={"https://www.instagram.com/"} target="_blank" rel="noopener noreferrer" className="hover:scale-115 transition-transform duration-200">
-              <Image src="/images/icons/instagram.png" alt="Logo de Instagram" width={24} height={24}/>
+              <Image src="/images/icons/instagram.png" alt="Logo de Instagram" aria-label="Suivez-nous sur Instagram (ouvre dans un nouvel onglet)" width={24} height={24}/>
             </a>
             {/* Icône TikTok */}
             <a href={"https://www.tiktok.com/fr/"} target="_blank" rel="noopener noreferrer" className="hover:scale-115 transition-transform duration-200">
-              <Image src="/images/icons/tik-tok.png" alt="Logo de Tik-tok" width={24} height={24}/>
+              <Image src="/images/icons/tik-tok.png" alt="Logo de Tik-tok" aria-label="Suivez-nous sur Tiktok(ouvre dans un nouvel onglet)" width={24} height={24}/>
             </a>
           </div>
         </div>
