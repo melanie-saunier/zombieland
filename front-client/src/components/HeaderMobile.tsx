@@ -59,7 +59,7 @@ export default function HeaderMobile() {
       </header>
 
       {/* Menu mobile (affiché seulement si menuOpen = true) */}
-      <nav className={`${menuOpen ? "bg-neutral-700/85 py-4 flex justify-center fixed z-50 w-full top-16" : "hidden"}`}>
+      <nav className={`${menuOpen ? "bg-neutral-700 py-4 flex justify-center fixed z-50 w-full top-16" : "hidden"}`}>
 
         <ul className="text-neutral-50 flex flex-col gap-2">
           {/* On fait un map sur notre liste d'items de navigation et qui affichent en fonction des propriétés always, logged et onlyLoggedOut*/}

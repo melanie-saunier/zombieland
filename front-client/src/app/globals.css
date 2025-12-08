@@ -10,13 +10,13 @@
   --color-bg-team-card: #201041;
 
   /* Primaire (violet / rose néon) */
-  --color-primary-200: #fa91e7;
-  --color-primary-300: #f834fd;
+  --color-primary-200: #d65ac8;
+  --color-primary-300: #c01cc9;
   --color-primary-500: #851175;
 
   /* Secondaire (vert néon) */
-  --color-secondary-200: #64cc29;
-  --color-secondary-300: #4ea11e;
+  --color-secondary-200: #3a8f14;
+  --color-secondary-300: #2f7a11;
   --color-secondary-500: #24520a;
 }
 
@@ -108,17 +108,14 @@ h5 {
   width: inherit;
 }
 
-
-.title {
+ .title {
   color: var(--color-neutral-50);
+  /* Réduire et simplifier les shadows pour a11y */
   text-shadow:
-    3px 3px 0 var(--color-secondary-300),
-    6px 6px 0 var(--color-secondary-500),
-    0 0 20px var(--color-primary-300),   
-    0 0 40px var(--color-primary-500);   
-  font-style: normal;
+    2px 2px 0 var(--color-secondary-500),
+    0 0 8px var(--color-primary-500);
   font-weight: 700;
-  letter-spacing: -1.92px;
+  letter-spacing: -0.5px; 
   text-transform: uppercase;
 }
 
