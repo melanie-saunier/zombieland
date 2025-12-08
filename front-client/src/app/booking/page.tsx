@@ -322,10 +322,10 @@ export default function BookingPage() {
               Détails de ta réservation
                 </h2>
 
-                <div className="grid md:grid-cols-2 gap-6">
+                <div className="flex flex-col md:flex-row justify-around gap-6">
               
                   {/* Calendrier */}
-                  <div className="flex flex-col gap-2">
+                  <div className="w-full md:w-1/2 flex flex-col gap-2">
                     <label 
                       htmlFor="booking-calendar"
                       className="text-lg text-primary-200 font-semibold"
@@ -353,7 +353,7 @@ export default function BookingPage() {
                   </div>
 
                   {/* Nombre de billets + Total */}
-                  <div className="flex flex-col gap-6">
+                  <div className="w-full md:w-1/2 flex flex-col gap-6">
                     <div className="flex flex-col gap-3">
                       <label 
                         htmlFor="ticket-count"

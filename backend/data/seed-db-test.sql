@@ -43,10 +43,10 @@ INSERT INTO level (name, value) VALUES
 
 -- CATEGORIES
 INSERT INTO category (name, color) VALUES
-  ('Frissons mécaniques', '#1BE7FF'),
+  ('Frissons mécaniques', '#0077AA'),
   ('Instinct de survie', '#C41E3A'),
   ('Réalité inhumaine', '#7A00FF'),
-  ('Freak shows', '#E3C014');
+  ('Freak shows', '#8E7200');
 
 -- ACTIVITIES
 INSERT INTO activity (name, description, duration, min_height, pregnancy_warning, image_ref, level_id, category_id)
