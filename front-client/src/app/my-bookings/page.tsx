@@ -12,11 +12,15 @@ import { MAX_TICKETS_PER_BOOKING } from "@/utils/bookingUtils";
 import { csrfApi } from "@/api/csrf";
 import { useRouter } from "next/navigation";
 import { authApi } from "@/api/auth";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 
 
 export default function MyBookingsPage() {
-  const { user, setUser, csrfToken} = useUserContext();
+  const { user, isLoading, csrfToken} = useUserContext();
+  // on vérifie si il y a un user avec la route /me si pas de user on redirige vers la home
+  useAuthGuard();
+
   const router = useRouter();
   // État backend (structure BDD)
   // Cet état représente les données “brutes” venant du backend.
@@ -32,19 +36,6 @@ export default function MyBookingsPage() {
 
   // pour la modal d'annulation de réservation
   const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
-    useEffect(() => {
-      const fetchUser = async () => {
-        const currentUser = await authApi.getCurrentUser();
-        if (!currentUser) {
-          // Si pas d'utilisateur, redirection vers login
-          router.push("/login");
-        } else {
-          setUser(currentUser);
-        }
-      };
-  
-      fetchUser();
-    }, [router]);
 
   useEffect(() => {
     // chargement des reservations du users au chargement de la page
@@ -173,7 +164,9 @@ export default function MyBookingsPage() {
       setErrorForm("Impossible d'annuler la réservation.");
     }
   }
-
+  if (isLoading) return <Loader />; // loader avant tout rendu
+  if (!user) return null; // redirection gérée par useAuthGuard
+  
   if (isLoadingMyBookings) {
     return (
       <div className="bg-radial from-[#961990] to-[#000000] min-h-screen flex items-center justify-center">
@@ -181,6 +174,7 @@ export default function MyBookingsPage() {
       </div>
     );
   }
+
   if (error) {
     return (
       <div className="bg-radial from-[#961990] to-[#000000] min-h-screen flex items-center justify-center">
@@ -191,6 +185,7 @@ export default function MyBookingsPage() {
       </div>
     );
   }
+
 
 
   return (

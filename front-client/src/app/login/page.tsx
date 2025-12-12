@@ -7,7 +7,8 @@ import { useRouter } from "next/navigation";
 import { authApi } from "@/api/auth";
 
 import useUserContext from "../../context/useUserContext";
-import { csrfApi } from "@/api/csrf";
+import Loader from "@/components/Loader";
+
 
 export default function LoginPage() {
   // pour faire un focus sur le premier input(input email) lorsque l'on arrive sur la page
@@ -16,7 +17,9 @@ export default function LoginPage() {
   const router = useRouter();
 
   // Récupération des fonctions du contexte utilisateur
-  const { login, csrfToken } = useUserContext();
+  const {isLoading, user, login, csrfToken } = useUserContext();
+  const [justLoggedIn, setJustLoggedIn] = useState(false); //permet de savoir si le user vient de se connecter (si true, il vient de se connecter, si false, il est déjà connecté et essaye d'accèder à la page login et doit etre stoppé et renvoyé vers la home)
+
 
   // State pour gérer l'affichage des messages d'erreur et de succès
   const [error, setError] = useState<null | string>(null);
@@ -26,6 +29,12 @@ export default function LoginPage() {
   useEffect(() => {
     inputRef.current?.focus();
   }, []);
+useEffect(() => {
+  if (isLoading) return;          // on attend le contexte
+  if (user && !justLoggedIn) {    // si connecté *et* pas juste connecté ici
+    router.replace("/");          // redirection immédiate pour les visiteurs déjà connectés
+  }
+}, [isLoading, user, justLoggedIn, router]);
 
   /**
    * Vérifie les identifiants saisis
@@ -45,7 +54,7 @@ export default function LoginPage() {
 
       // On met à jour le context user 
       login(user);
-
+      setJustLoggedIn(true);
 
       // Message de succès
       setSuccess(`Bienvenue ${user.firstname} ! Tu vas être redirigé·e vers la page d'accueil.`);
@@ -55,6 +64,7 @@ export default function LoginPage() {
       setTimeout(() => {
         router.push("/"); // redirection vers la home
       }, 2000);
+
 
     } catch (e) {
       // Gestion des erreurs (ex: 401 Unauthorized)
@@ -69,6 +79,8 @@ export default function LoginPage() {
      
     }
   };
+  if (isLoading) return <Loader />;             // tant que contexte non chargé
+  if (user && !justLoggedIn) return <Loader />; // déjà connecté → loader (redirection en cours)
 
   return(
     <div className="relative flex flex-col justify-center bg-[url('/images/background.png')] bg-no-repeat bg-cover bg-center min-h-[500px] md:min-h-screen p-4 md:p-8">

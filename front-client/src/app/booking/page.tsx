@@ -17,6 +17,7 @@ import { IPrice } from "@/@types/price";
 import { csrfApi } from "@/api/csrf";
 import { authApi } from "@/api/auth";
 import { useRouter } from "next/navigation";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 
 
@@ -29,8 +30,10 @@ import { useRouter } from "next/navigation";
  *  - validation et soumission
  */
 export default function BookingPage() {
-  const { user, setUser, csrfToken} = useUserContext(); // On récupère l'état de connexion
-  const router = useRouter();
+  const { user, isLoading, csrfToken} = useUserContext(); // On récupère l'état de connexion
+  // on vérifie si il y a un user avec la route /me si pas de user on redirige vers la home
+  useAuthGuard();
+
   const today = new Date(); // Préparation d'une référence à la date du jour
   today.setHours(0, 0, 0, 0); // On met l'heure à 00:00 pour éviter le décalage horaire
 
@@ -108,19 +111,19 @@ export default function BookingPage() {
 
     fetchTicketPrice(); // Appel de la fonction dès le premier rendu
   }, []);
-    useEffect(() => {
-      const fetchUser = async () => {
-        const currentUser = await authApi.getCurrentUser();
-        if (!currentUser) {
-          // Si pas d'utilisateur, redirection vers login
-          router.push("/login");
-        } else {
-          setUser(currentUser);
-        }
-      };
+    // useEffect(() => {
+    //   const fetchUser = async () => {
+    //     const currentUser = await authApi.getCurrentUser();
+    //     if (!currentUser) {
+    //       // Si pas d'utilisateur, redirection vers login
+    //       router.push("/login");
+    //     } else {
+    //       setUser(currentUser);
+    //     }
+    //   };
   
-      fetchUser();
-    }, [router]);
+    //   fetchUser();
+    // }, [router]);
 
   /**
    * handleCalendarChange : appelée quand l’utilisateur choisit une nouvelle date
@@ -283,7 +286,8 @@ export default function BookingPage() {
   }
   //on doit rajouter return null si on a pas de prix pour que TS comprenne bien que pricing ne peut pas être null
   if (!pricing) return null;
-
+  if (isLoading) return <Loader />; // loader avant tout rendu
+  if (!user) return null; // redirection gérée par useAuthGuard
 
   return (
     <section className="bg-radial from-[#961990] to-[#000000] min-h-screen p-4 md:p-8">

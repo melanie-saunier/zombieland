@@ -31,6 +31,8 @@ export default function UserContextProvider({ children }: Props) {
   // Par défaut, il est null (aucun utilisateur connecté).
   const [user, setUser] = useState<IUser | null>(null);
   const [logged, setLogged] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
 
   // state pour récuperer le csrf token
   const [csrfToken, setCsrfToken] = useState<string | null>(null);
@@ -84,6 +86,8 @@ export default function UserContextProvider({ children }: Props) {
         console.error("Erreur lors de la récupération du user :", err);
         setUser(null);
         setLogged(false);
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchInitialData();
@@ -102,7 +106,7 @@ export default function UserContextProvider({ children }: Props) {
    *  - logout : fonction pour se déconnecter
    */
   return (
-    <UserContext.Provider value={{ user, setUser, logged, setLogged, login, logout, csrfToken }}>
+    <UserContext.Provider value={{ user, setUser, logged, setLogged, isLoading, login, logout, csrfToken }}>
       {children}
     </UserContext.Provider>
   );
