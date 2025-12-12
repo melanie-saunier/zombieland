@@ -14,12 +14,7 @@ import { bookingApi } from "@/api/booking";
 import Loader from "@/components/Loader";
 import { pricesApi } from "@/api/prices";
 import { IPrice } from "@/@types/price";
-import { csrfApi } from "@/api/csrf";
-import { authApi } from "@/api/auth";
-import { useRouter } from "next/navigation";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
-
-
 
 /**
  * Composant principal : BookingPage
@@ -111,19 +106,7 @@ export default function BookingPage() {
 
     fetchTicketPrice(); // Appel de la fonction dès le premier rendu
   }, []);
-    // useEffect(() => {
-    //   const fetchUser = async () => {
-    //     const currentUser = await authApi.getCurrentUser();
-    //     if (!currentUser) {
-    //       // Si pas d'utilisateur, redirection vers login
-    //       router.push("/login");
-    //     } else {
-    //       setUser(currentUser);
-    //     }
-    //   };
-  
-    //   fetchUser();
-    // }, [router]);
+
 
   /**
    * handleCalendarChange : appelée quand l’utilisateur choisit une nouvelle date

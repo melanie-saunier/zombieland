@@ -92,11 +92,6 @@ export default function UserContextProvider({ children }: Props) {
     };
     fetchInitialData();
   }, []);
-  // useEffect(() => {
-  //   if (!isLoading && !logged) {
-  //     router.push("/login");
-  //   }
-  // }, [isLoading, logged, router]);
 
   /**
    * On retourne le Provider du contexte :

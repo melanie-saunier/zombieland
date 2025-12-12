@@ -9,9 +9,7 @@ import Loader from "@/components/Loader";
 import EditBookingModal from "@/components/EditBookingModal";
 import CancelBookingModal from "@/components/CancelBookingModal";
 import { MAX_TICKETS_PER_BOOKING } from "@/utils/bookingUtils";
-import { csrfApi } from "@/api/csrf";
 import { useRouter } from "next/navigation";
-import { authApi } from "@/api/auth";
 import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 
