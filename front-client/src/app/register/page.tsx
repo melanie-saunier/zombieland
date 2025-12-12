@@ -5,14 +5,14 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { authApi } from "@/api/auth";
 import useUserContext from "@/context/useUserContext";
-import { csrfApi } from "@/api/csrf";
 import { useRouter } from "next/navigation";
+import Loader from "@/components/Loader";
 
 export default function RegisterPage() {
   // pour faire un focus sur le premier input(input email)lorsque l'on arrive sur la page
   const inpuRef = useRef<HTMLInputElement>(null);
 
-  const { csrfToken } = useUserContext();
+  const { csrfToken, user, isLoading} = useUserContext();
 
   const router = useRouter();
   
@@ -21,7 +21,15 @@ export default function RegisterPage() {
   const [errors, setErrors] = useState<string[]>([]);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   
-  
+  useEffect(() => {
+  // tant que le contexte charge, on ne fait rien
+  if (isLoading) return;
+
+  // si l'utilisateur est déjà connecté → on le vire
+  if (user) {
+    router.replace("/"); // redirection vers home
+  }
+}, [user, isLoading, router]);
   async function handleRegister(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setErrors([]);
@@ -89,6 +97,7 @@ export default function RegisterPage() {
       setSuccessMessage("Inscription réussie ! Redirection en cours...");
 
       setTimeout(() => router.push("/login"), 2000);
+
     } catch(e) {
       // Gestion des erreurs (ex: 401 Unauthorized)
       console.log("Erreur lors du login :", e);
@@ -105,6 +114,8 @@ export default function RegisterPage() {
   useEffect(() => {
     inpuRef.current?.focus();
   }, []);
+
+  if(isLoading) return <Loader />;
 
   return(
     <div className="relative bg-[url('/images/background.png')] bg-no-repeat bg-cover bg-center min-h-[600px] md:min-h-screen p-4 md:p-8">

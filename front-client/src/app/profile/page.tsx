@@ -11,8 +11,8 @@ import useUserContext from "@/context/useUserContext";
 import { authApi } from "@/api/auth";
 import { IUser } from "@/@types/user";
 import Loader from "@/components/Loader";
-import { csrfApi } from "@/api/csrf";
 import { useRouter } from "next/navigation";
+import { useAuthGuard } from "@/hooks/useAuthGuard";
 
 
 /**
@@ -24,7 +24,9 @@ import { useRouter } from "next/navigation";
  *  - Les messages d’erreur et de succès
  */
 export default function ProfilePage() {
-  const { user, setUser, csrfToken } = useUserContext();
+  const { user, isLoading, setUser, csrfToken } = useUserContext();
+  useAuthGuard();
+
   const router = useRouter();
   // state pour stocker les données éditées temporairement
   const [editedUser, setEditedUser] = useState<IUser>({
@@ -178,11 +180,8 @@ export default function ProfilePage() {
     }
   };
 
- 
-  if (!user) return (
-    <div className="h-100 flex flex-col justify-center items-center m-4">
-      <Loader /> 
-    </div> ); // chargement des données utilisateur
+  if (isLoading) return <Loader />; // loader avant tout rendu
+  if (!user) return null; // redirection gérée par useAuthGuard
 
   return (
     // SECTION PRINCIPALE — englobe toute la page profil
